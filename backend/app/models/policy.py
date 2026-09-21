@@ -1,18 +1,21 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
 
 
-class Agent(Base):
-    __tablename__ = "agents"
+class Policy(Base):
+    __tablename__ = "policies"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True
+    )
 
-    owner_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
+    agent_id: Mapped[int] = mapped_column(
+        ForeignKey("agents.id"),
         nullable=False,
         index=True
     )
@@ -27,10 +30,15 @@ class Agent(Base):
         nullable=True
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False,
-        default="ACTIVE"
+    policy_type: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False
+    )
+
+    enabled: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -45,15 +53,8 @@ class Agent(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False
     )
-    api_keys = relationship(
-    "AgentAPIKey",
-    back_populates="agent",
-    cascade="all, delete-orphan"
-)
-    policies = relationship(
-    "Policy",
-    back_populates="agent",
-    cascade="all, delete-orphan"
-)
 
-    owner = relationship("User", back_populates="agents")
+    agent = relationship(
+        "Agent",
+        back_populates="policies"
+    )
