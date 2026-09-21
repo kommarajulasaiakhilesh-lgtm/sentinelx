@@ -3,7 +3,9 @@ from fastapi import FastAPI, Depends
 from app.db.database import Base, engine
 from app.models.user import User
 from app.models.agent import Agent
+
 from app.api.auth import router as auth_router
+from app.api.agents import router as agents_router
 
 from app.api.dependencies import (
     get_current_user,
@@ -25,6 +27,10 @@ app = FastAPI(
 
 app.include_router(
     auth_router
+)
+
+app.include_router(
+    agents_router
 )
 
 
