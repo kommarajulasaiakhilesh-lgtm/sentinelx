@@ -10,7 +10,9 @@ class AgentAPIKeyResponse(BaseModel):
     expires_at: datetime | None
     is_active: bool
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True
+    )
 
 
 class AgentAPIKeyCreateResponse(BaseModel):

@@ -1,15 +1,19 @@
+from datetime import datetime, timezone
+
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
     APIKeyHeader
 )
-
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.core.security import decode_access_token
-from app.core.agent_api_key import verify_agent_api_key
+from app.core.agent_api_key import (
+    verify_agent_api_key,
+    extract_key_selector
+)
 
 from app.models.user import User
 from app.models.agent import Agent
@@ -17,7 +21,7 @@ from app.models.agent_api_key import AgentAPIKey
 
 
 # ============================================================
-# USER JWT AUTHENTICATION
+# USER AUTHENTICATION
 # ============================================================
 
 security = HTTPBearer()
@@ -67,7 +71,7 @@ def get_current_user(
 
 
 # ============================================================
-# ROLE-BASED AUTHORIZATION
+# ROLE AUTHORIZATION
 # ============================================================
 
 def require_role(required_role: str):
@@ -97,55 +101,99 @@ agent_api_key_header = APIKeyHeader(
 
 
 def get_current_agent(
-    api_key: str | None = Security(
-        agent_api_key_header
-    ),
+    api_key: str | None = Security(agent_api_key_header),
     db: Session = Depends(get_db)
 ):
-    # No API key supplied
+    # --------------------------------------------------------
+    # Check API key exists
+    # --------------------------------------------------------
+
     if not api_key:
         raise HTTPException(
             status_code=401,
             detail="Agent API key is required"
         )
 
-    # Get all active API keys
-    api_keys = (
+    # --------------------------------------------------------
+    # Extract public key selector
+    # --------------------------------------------------------
+
+    key_selector = extract_key_selector(api_key)
+
+    if key_selector is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid agent API key"
+        )
+
+    # --------------------------------------------------------
+    # Find matching active API key
+    # --------------------------------------------------------
+
+    stored_key = (
         db.query(AgentAPIKey)
         .filter(
+            AgentAPIKey.key_selector == key_selector,
             AgentAPIKey.is_active == True
         )
-        .all()
+        .first()
     )
 
-    # Compare supplied API key with stored Argon2 hashes
-    for stored_key in api_keys:
+    if stored_key is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid agent API key"
+        )
 
-        if verify_agent_api_key(
-            api_key,
-            stored_key.key_hash
-        ):
+    # --------------------------------------------------------
+    # Verify complete API key against Argon2 hash
+    # --------------------------------------------------------
 
-            # Find the associated active agent
-            agent = (
-                db.query(Agent)
-                .filter(
-                    Agent.id == stored_key.agent_id,
-                    Agent.status == "ACTIVE"
-                )
-                .first()
-            )
+    if not verify_agent_api_key(
+        api_key,
+        stored_key.key_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid agent API key"
+        )
 
-            if agent is None:
-                raise HTTPException(
-                    status_code=401,
-                    detail="Agent is inactive or not found"
-                )
+    # --------------------------------------------------------
+    # Check API key expiration
+    # --------------------------------------------------------
 
-            return agent
+    now = datetime.now(timezone.utc)
 
-    # No matching API key found
-    raise HTTPException(
-        status_code=401,
-        detail="Invalid agent API key"
+    if (
+        stored_key.expires_at is not None
+        and stored_key.expires_at <= now
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Agent API key has expired"
+        )
+
+    # --------------------------------------------------------
+    # Find active agent
+    # --------------------------------------------------------
+
+    agent = (
+        db.query(Agent)
+        .filter(
+            Agent.id == stored_key.agent_id,
+            Agent.status == "ACTIVE"
+        )
+        .first()
     )
+
+    if agent is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Agent is inactive or not found"
+        )
+
+    # --------------------------------------------------------
+    # Authentication successful
+    # --------------------------------------------------------
+
+    return agent

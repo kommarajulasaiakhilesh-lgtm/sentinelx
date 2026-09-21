@@ -20,6 +20,13 @@ class AgentAPIKey(Base):
         index=True
     )
 
+    key_selector: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False,
+        unique=True,
+        index=True
+    )
+
     key_hash: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
