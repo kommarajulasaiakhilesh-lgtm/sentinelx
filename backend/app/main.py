@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 
 from app.db.database import Base, engine
 from app.models.user import User
-
+from app.models.agent import Agent
 from app.api.auth import router as auth_router
 
 from app.api.dependencies import (

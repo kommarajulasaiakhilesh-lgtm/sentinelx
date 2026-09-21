@@ -1,6 +1,6 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import relationship
 from app.db.database import Base
 
 
@@ -42,3 +42,8 @@ class User(Base):
         nullable=False,
         default=True
     )
+    agents = relationship(
+    "Agent",
+    back_populates="owner",
+    cascade="all, delete-orphan"
+)
