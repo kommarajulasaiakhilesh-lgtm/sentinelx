@@ -1,3 +1,4 @@
+
 from sqlalchemy.orm import Session
 
 from app.models.agent import Agent
@@ -16,32 +17,51 @@ def evaluate_policy(
             Policy.agent_id == agent.id,
             Policy.enabled == True
         )
+        .order_by(
+            Policy.priority,
+            Policy.id
+        )
         .all()
     )
+
+    normalized_input = input_text.lower()
 
     for policy in policies:
 
         if policy.policy_type == "PROMPT_INJECTION":
 
-            suspicious_patterns = [
-                "ignore previous instructions",
-                "ignore all previous instructions",
-                "reveal system prompt",
-                "show system prompt",
-                "disregard previous instructions",
-                "bypass your instructions"
-            ]
+            # If a custom condition exists,
+            # use it instead of the default patterns.
+            if policy.condition:
 
-            normalized_input = input_text.lower()
+                if policy.condition.lower() in normalized_input:
 
-            for pattern in suspicious_patterns:
-
-                if pattern in normalized_input:
                     return {
-                        "decision": "BLOCK",
-                        "reason": "Prompt injection detected",
-                        "policy_type": "PROMPT_INJECTION"
+                        "decision": policy.action,
+                        "reason": "Policy condition matched",
+                        "policy_type": policy.policy_type
                     }
+
+            else:
+
+                suspicious_patterns = [
+                    "ignore previous instructions",
+                    "ignore all previous instructions",
+                    "reveal system prompt",
+                    "show system prompt",
+                    "disregard previous instructions",
+                    "bypass your instructions"
+                ]
+
+                for pattern in suspicious_patterns:
+
+                    if pattern in normalized_input:
+
+                        return {
+                            "decision": policy.action,
+                            "reason": "Prompt injection detected",
+                            "policy_type": policy.policy_type
+                        }
 
     return {
         "decision": "ALLOW",

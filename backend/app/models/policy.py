@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey,Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
@@ -34,6 +34,25 @@ class Policy(Base):
         String(50),
         nullable=False
     )
+    action: Mapped[str] = mapped_column(
+    String(20),
+    default="BLOCK",
+    nullable=False
+)
+
+    priority: Mapped[int] = mapped_column(
+    Integer,
+    default=100,
+    nullable=False
+)
+
+
+    condition: Mapped[str | None] = mapped_column(
+    Text,
+    nullable=True
+)
+
+
 
     enabled: Mapped[bool] = mapped_column(
         Boolean,

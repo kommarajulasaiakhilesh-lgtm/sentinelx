@@ -49,12 +49,15 @@ def create_policy(
             detail="Agent not found"
         )
 
-    policy = Policy(
-        agent_id=agent.id,
-        name=policy_data.name,
-        description=policy_data.description,
-        policy_type=policy_data.policy_type
-    )
+    policy = Policy (
+    agent_id=agent.id,
+    name=policy_data.name,
+    description=policy_data.description,
+    policy_type=policy_data.policy_type,
+    action=policy_data.action,
+    priority=policy_data.priority,
+    condition=policy_data.condition,
+     )
 
     db.add(policy)
     db.commit()
