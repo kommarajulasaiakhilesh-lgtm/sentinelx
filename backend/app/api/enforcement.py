@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from app.schemas.security_event import SecurityEventCreate
+from app.services.security_event_service import create_security_event
 
 from app.api.dependencies import get_current_agent
 from app.db.database import get_db
@@ -36,6 +38,17 @@ def evaluate_request(
     result = evaluate_policy(
         agent=current_agent,
         input_text=request.input_text,
+        db=db
+    )
+    create_security_event(
+        event_data=SecurityEventCreate(
+            agent_id=current_agent.id,
+            policy_id=None,
+            event_type="POLICY_CHECK",
+            action=result["decision"],
+            decision=result["decision"],
+            reason=result["reason"]
+        ),
         db=db
     )
 

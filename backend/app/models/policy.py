@@ -77,3 +77,8 @@ class Policy(Base):
         "Agent",
         back_populates="policies"
     )
+
+    security_events = relationship(
+        "SecurityEvent",
+        back_populates="policy"
+    )

@@ -55,5 +55,10 @@ class Agent(Base):
     back_populates="agent",
     cascade="all, delete-orphan"
 )
+    security_events = relationship(
+        "SecurityEvent",
+        back_populates="agent",
+        cascade="all, delete-orphan"
+    )
 
     owner = relationship("User", back_populates="agents")
