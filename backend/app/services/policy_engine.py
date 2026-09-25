@@ -28,10 +28,12 @@ def evaluate_policy(
 
     for policy in policies:
 
+        # ====================================================
+        # PROMPT INJECTION POLICY
+        # ====================================================
+
         if policy.policy_type == "PROMPT_INJECTION":
 
-            # If a custom condition exists,
-            # use it instead of the default patterns.
             if policy.condition:
 
                 if policy.condition.lower() in normalized_input:
@@ -39,7 +41,8 @@ def evaluate_policy(
                     return {
                         "decision": policy.action,
                         "reason": "Policy condition matched",
-                        "policy_type": policy.policy_type
+                        "policy_type": policy.policy_type,
+                        "policy_id": policy.id
                     }
 
             else:
@@ -60,11 +63,67 @@ def evaluate_policy(
                         return {
                             "decision": policy.action,
                             "reason": "Prompt injection detected",
-                            "policy_type": policy.policy_type
+                            "policy_type": policy.policy_type,
+                            "policy_id": policy.id
+                        }
+
+        # ====================================================
+        # TOOL ACTION POLICY
+        # ====================================================
+
+        elif policy.policy_type == "TOOL_ACTION":
+
+            if policy.condition:
+
+                policy_condition = policy.condition.lower()
+
+                # ------------------------------------------------
+                # Exact resource match
+                #
+                # Example:
+                # policy = file.read:secret.txt
+                # request = file.read:secret.txt
+                # ------------------------------------------------
+
+                if policy_condition == normalized_input:
+
+                    return {
+                        "decision": policy.action,
+                        "reason": "Tool action policy matched",
+                        "policy_type": policy.policy_type,
+                        "policy_id": policy.id
+                    }
+
+                # ------------------------------------------------
+                # Broad tool-action match
+                #
+                # Example:
+                # policy = file.read
+                # request = file.read:test.txt
+                #
+                # This means the policy applies to ALL resources
+                # used by that tool action.
+                # ------------------------------------------------
+
+                if ":" in normalized_input:
+
+                    tool_action = normalized_input.split(
+                        ":",
+                        1
+                    )[0]
+
+                    if policy_condition == tool_action:
+
+                        return {
+                            "decision": policy.action,
+                            "reason": "Tool action policy matched",
+                            "policy_type": policy.policy_type,
+                            "policy_id": policy.id
                         }
 
     return {
         "decision": "ALLOW",
         "reason": "No active security policy violation detected",
-        "policy_type": None
+        "policy_type": None,
+        "policy_id": None
     }

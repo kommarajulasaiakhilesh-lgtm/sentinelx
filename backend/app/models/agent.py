@@ -65,5 +65,10 @@ class Agent(Base):
         back_populates="agent",
         cascade="all, delete-orphan"
     )
+    tools = relationship(
+    "Tool",
+    back_populates="agent",
+    cascade="all, delete-orphan"
+)
 
     owner = relationship("User", back_populates="agents")

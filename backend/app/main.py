@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends
-
+from app.api.tools import router as tools_router
 from app.api import analytics
 from app.api.security_events import router as security_events_router
-
+from app.models.tool import Tool
 from app.models.agent_api_key import AgentAPIKey
 from app.db.database import Base, engine
 from app.models.user import User
@@ -41,6 +41,9 @@ app.include_router(
 app.include_router(
     agents_router
 )
+app.include_router(
+    tools_router
+)
 
 app.include_router(
     policies_router
@@ -57,6 +60,7 @@ app.include_router(
 app.include_router(
     analytics.router
 )
+
 
 
 @app.get("/")

@@ -293,3 +293,129 @@ def test_disabled_condition_policy_is_ignored():
         )
         db.commit()
         db.close()
+def test_tool_action_broad_policy_matches_resource():
+    db = SessionLocal()
+
+    try:
+        agent = db.query(Agent).filter(
+            Agent.id == 1
+        ).first()
+
+        assert agent is not None
+
+        policy = Policy(
+            agent_id=agent.id,
+            name="Test Broad Tool Policy",
+            description="Blocks all file reads",
+            policy_type="TOOL_ACTION",
+            action="BLOCK",
+            priority=1,
+            condition="file.read",
+            enabled=True
+        )
+
+        db.add(policy)
+        db.commit()
+
+        result = evaluate_policy(
+            agent=agent,
+            input_text="file.read:test.txt",
+            db=db
+        )
+
+        assert result["decision"] == "BLOCK"
+        assert result["policy_type"] == "TOOL_ACTION"
+
+    finally:
+        db.query(Policy).filter(
+            Policy.name == "Test Broad Tool Policy"
+        ).delete(
+            synchronize_session=False
+        )
+        db.commit()
+        db.close()
+
+
+def test_tool_action_resource_specific_policy_matches_correct_resource():
+    db = SessionLocal()
+
+    try:
+        agent = db.query(Agent).filter(
+            Agent.id == 1
+        ).first()
+
+        assert agent is not None
+
+        policy = Policy(
+            agent_id=agent.id,
+            name="Test Secret File Policy",
+            description="Blocks secret.txt",
+            policy_type="TOOL_ACTION",
+            action="BLOCK",
+            priority=1,
+            condition="file.read:secret.txt",
+            enabled=True
+        )
+
+        db.add(policy)
+        db.commit()
+
+        result = evaluate_policy(
+            agent=agent,
+            input_text="file.read:secret.txt",
+            db=db
+        )
+
+        assert result["decision"] == "BLOCK"
+        assert result["policy_type"] == "TOOL_ACTION"
+
+    finally:
+        db.query(Policy).filter(
+            Policy.name == "Test Secret File Policy"
+        ).delete(
+            synchronize_session=False
+        )
+        db.commit()
+        db.close()
+
+
+def test_tool_action_resource_specific_policy_allows_other_resource():
+    db = SessionLocal()
+
+    try:
+        agent = db.query(Agent).filter(
+            Agent.id == 1
+        ).first()
+
+        assert agent is not None
+
+        policy = Policy(
+            agent_id=agent.id,
+            name="Test Specific Resource Policy",
+            description="Blocks only secret.txt",
+            policy_type="TOOL_ACTION",
+            action="BLOCK",
+            priority=1,
+            condition="file.read:secret.txt",
+            enabled=True
+        )
+
+        db.add(policy)
+        db.commit()
+
+        result = evaluate_policy(
+            agent=agent,
+            input_text="file.read:test.txt",
+            db=db
+        )
+
+        assert result["decision"] == "ALLOW"
+
+    finally:
+        db.query(Policy).filter(
+            Policy.name == "Test Specific Resource Policy"
+        ).delete(
+            synchronize_session=False
+        )
+        db.commit()
+        db.close()
