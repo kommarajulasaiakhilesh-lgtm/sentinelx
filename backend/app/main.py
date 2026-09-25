@@ -1,15 +1,21 @@
 from fastapi import FastAPI, Depends
+
+from app.api import analytics
 from app.api.security_events import router as security_events_router
+
 from app.models.agent_api_key import AgentAPIKey
 from app.db.database import Base, engine
 from app.models.user import User
 from app.models.agent import Agent
 from app.models.policy import Policy
 from app.models.security_event import SecurityEvent
+from app.models.security_analytics import SecurityAnalytics
+
 from app.api.auth import router as auth_router
 from app.api.agents import router as agents_router
 from app.api.policies import router as policies_router
 from app.api.enforcement import router as enforcement_router
+
 from app.api.dependencies import (
     get_current_user,
     require_role
@@ -35,13 +41,22 @@ app.include_router(
 app.include_router(
     agents_router
 )
+
 app.include_router(
     policies_router
 )
+
 app.include_router(
-  enforcement_router
+    enforcement_router
 )
-app.include_router(security_events_router)
+
+app.include_router(
+    security_events_router
+)
+
+app.include_router(
+    analytics.router
+)
 
 
 @app.get("/")
