@@ -1,15 +1,20 @@
 from fastapi import FastAPI, Depends
+
 from app.api.tools import router as tools_router
 from app.api import analytics
 from app.api.security_events import router as security_events_router
+from app.api.security_alerts import router as security_alerts_router
+
 from app.models.tool import Tool
 from app.models.agent_api_key import AgentAPIKey
-from app.db.database import Base, engine
 from app.models.user import User
 from app.models.agent import Agent
 from app.models.policy import Policy
 from app.models.security_event import SecurityEvent
 from app.models.security_analytics import SecurityAnalytics
+from app.models.security_alert import SecurityAlert
+
+from app.db.database import Base, engine
 
 from app.api.auth import router as auth_router
 from app.api.agents import router as agents_router
@@ -41,6 +46,7 @@ app.include_router(
 app.include_router(
     agents_router
 )
+
 app.include_router(
     tools_router
 )
@@ -56,11 +62,11 @@ app.include_router(
 app.include_router(
     security_events_router
 )
+app.include_router(security_alerts_router)
 
 app.include_router(
     analytics.router
 )
-
 
 
 @app.get("/")

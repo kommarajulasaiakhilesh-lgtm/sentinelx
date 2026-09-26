@@ -66,3 +66,8 @@ class SecurityEvent(Base):
         "Policy",
         back_populates="security_events"
     )
+
+    security_alerts = relationship(
+        "SecurityAlert",
+        back_populates="security_event"
+    )

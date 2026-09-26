@@ -1,7 +1,9 @@
+
 from sqlalchemy.orm import Session
 
 from app.models.security_event import SecurityEvent
 from app.schemas.security_event import SecurityEventCreate
+from app.services.security_alert_service import detect_security_alert
 
 
 def create_security_event(
@@ -22,5 +24,10 @@ def create_security_event(
     db.add(event)
     db.commit()
     db.refresh(event)
+
+    detect_security_alert(
+        db=db,
+        security_event=event
+    )
 
     return event

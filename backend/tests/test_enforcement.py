@@ -10,6 +10,8 @@ from app.models.policy import Policy
 
 from app.models.security_event import SecurityEvent
 
+from app.models.security_alert import SecurityAlert
+
 from app.services.policy_engine import evaluate_policy
 
 from app.services.runtime_guardrail_service import (
@@ -18,8 +20,6 @@ from app.services.runtime_guardrail_service import (
 )
 
 from app.api.dependencies import get_current_agent
-
-from app.db.database import get_db
 
 from app.models.tool import Tool
 
@@ -747,6 +747,7 @@ def test_tool_action_api_blocks_when_rate_limit_exceeded():
 
         db.close()
 
+
 def test_repeated_blocked_tool_actions():
 
     db = SessionLocal()
@@ -791,6 +792,7 @@ def test_repeated_blocked_tool_actions():
         )
 
         db.commit()
+
         db.close()
 
 
@@ -815,7 +817,9 @@ def test_tool_action_api_blocks_repeated_blocked_actions():
         )
 
         db.add(tool)
+
         db.commit()
+
         db.refresh(tool)
 
         for _ in range(5):
@@ -863,6 +867,36 @@ def test_tool_action_api_blocks_repeated_blocked_actions():
 
         app.dependency_overrides.clear()
 
+        # IMPORTANT:
+        # SecurityAlert references SecurityEvent through
+        # security_event_id.
+        #
+        # Therefore alerts must be deleted FIRST,
+        # before deleting the SecurityEvent rows.
+
+        test_event_ids = db.query(
+            SecurityEvent.id
+        ).filter(
+            SecurityEvent.agent_id == 1,
+            SecurityEvent.reason.in_([
+                "Test repeated blocked API action",
+                "Repeated blocked tool actions detected"
+            ])
+        ).all()
+
+        event_ids = [
+            event_id
+            for (event_id,) in test_event_ids
+        ]
+
+        if event_ids:
+
+            db.query(SecurityAlert).filter(
+                SecurityAlert.security_event_id.in_(event_ids)
+            ).delete(
+                synchronize_session=False
+            )
+
         db.query(SecurityEvent).filter(
             SecurityEvent.agent_id == 1,
             SecurityEvent.reason == "Test repeated blocked API action"
@@ -885,4 +919,5 @@ def test_tool_action_api_blocks_repeated_blocked_actions():
         )
 
         db.commit()
+
         db.close()
