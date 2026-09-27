@@ -1,11 +1,16 @@
 from datetime import datetime
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict
 
 
 class AgentCreate(BaseModel):
     name: str
     description: str | None = None
+
+class AgentStatusUpdate(BaseModel):
+    status: Literal["ACTIVE", "SUSPENDED"]
 
 
 class AgentResponse(BaseModel):

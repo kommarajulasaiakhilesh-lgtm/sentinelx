@@ -6,7 +6,11 @@ from app.db.database import get_db
 from app.models.agent import Agent
 from app.models.agent_api_key import AgentAPIKey
 from app.models.user import User
-from app.schemas.agent import AgentCreate, AgentResponse
+from app.schemas.agent import (
+    AgentCreate,
+    AgentResponse,
+    AgentStatusUpdate
+)
 from app.schemas.agent_api_key import (
     AgentAPIKeyCreateResponse,
     AgentAPIKeyResponse
@@ -233,7 +237,7 @@ def get_agent_api_keys(
 )
 def update_agent_status(
     agent_id: int,
-    status_data: dict,
+    status_data:  AgentStatusUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -254,17 +258,7 @@ def update_agent_status(
 
     new_status = status_data.get("status")
 
-    allowed_statuses = [
-        "ACTIVE",
-        "SUSPENDED"
-    ]
-
-    if new_status not in allowed_statuses:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid agent status"
-        )
-
+    new_status = status_data.status
     agent.status = new_status
 
     db.commit()
