@@ -1,10 +1,14 @@
 from fastapi import FastAPI, Depends
+from app.models.sentinelx_control import SentinelXControl
+from app.models.control_mapping import ControlMapping
+from app.models.evidence import Evidence
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.tools import router as tools_router
 from app.api import analytics
 from app.api.security_events import router as security_events_router
 from app.api.security_alerts import router as security_alerts_router
-
+from app.models.framework import Framework
+from app.models.framework import FrameworkControl
 from app.models.tool import Tool
 from app.models.agent_api_key import AgentAPIKey
 from app.models.user import User
@@ -13,14 +17,17 @@ from app.models.policy import Policy
 from app.models.security_event import SecurityEvent
 from app.models.security_analytics import SecurityAnalytics
 from app.models.security_alert import SecurityAlert
-
+from app.api.frameworks import router as frameworks_router
 from app.db.database import Base, engine
-
+from app.models.sentinelx_control import SentinelXControl
 from app.api.auth import router as auth_router
 from app.api.agents import router as agents_router
 from app.api.policies import router as policies_router
+from app.api.evidence import router as evidence_router
 from app.api.enforcement import router as enforcement_router
-
+from app.api.control_mappings import router as control_mappings_router
+from app.api.sentinelx_controls import router as sentinelx_controls_router
+from app.api.compliance import router as compliance_router
 from app.api.dependencies import (
     get_current_user,
     require_role
@@ -77,7 +84,13 @@ app.include_router(security_alerts_router)
 app.include_router(
     analytics.router
 )
-
+app.include_router(
+    frameworks_router
+)
+app.include_router(sentinelx_controls_router)
+app.include_router(control_mappings_router)
+app.include_router(evidence_router)
+app.include_router(compliance_router)
 
 @app.get("/")
 def root():

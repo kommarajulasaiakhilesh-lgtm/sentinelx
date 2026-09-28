@@ -8,6 +8,7 @@ import {
   BarChart3,
   Bot,
   CircleDot,
+  FileCheck2,
   Gauge,
   LayoutDashboard,
   Shield,
@@ -59,6 +60,11 @@ const securityNavigation = [
     label: "Analytics",
     href: "/analytics",
     icon: BarChart3,
+  },
+  {
+    label: "Compliance",
+    href: "/compliance",
+    icon: FileCheck2,
   },
 ];
 
