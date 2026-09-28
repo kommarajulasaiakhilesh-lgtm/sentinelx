@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.tools import router as tools_router
 from app.api import analytics
 from app.api.security_events import router as security_events_router
@@ -36,6 +36,16 @@ app = FastAPI(
     title="SentinelX",
     description="AI Agent Security Control Plane",
     version="0.1.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
