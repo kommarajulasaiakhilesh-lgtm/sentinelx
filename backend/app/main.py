@@ -12,6 +12,7 @@ from app.models.framework import FrameworkControl
 from app.models.tool import Tool
 from app.models.agent_api_key import AgentAPIKey
 from app.models.user import User
+from app.api.security_tests import router as security_tests_router
 from app.models.agent import Agent
 from app.models.policy import Policy
 from app.models.security_event import SecurityEvent
@@ -56,41 +57,20 @@ app.add_middleware(
 )
 
 
-app.include_router(
-    auth_router
-)
-
-app.include_router(
-    agents_router
-)
-
-app.include_router(
-    tools_router
-)
-
-app.include_router(
-    policies_router
-)
-
-app.include_router(
-    enforcement_router
-)
-
-app.include_router(
-    security_events_router
-)
+app.include_router(auth_router)
+app.include_router(agents_router)
+app.include_router(policies_router)
+app.include_router(enforcement_router)
+app.include_router(tools_router)
+app.include_router(security_events_router)
 app.include_router(security_alerts_router)
-
-app.include_router(
-    analytics.router
-)
-app.include_router(
-    frameworks_router
-)
-app.include_router(sentinelx_controls_router)
-app.include_router(control_mappings_router)
+app.include_router(analytics.router)
+app.include_router(frameworks_router)
 app.include_router(evidence_router)
+app.include_router(control_mappings_router)
+app.include_router(sentinelx_controls_router)
 app.include_router(compliance_router)
+app.include_router(security_tests_router)
 
 @app.get("/")
 def root():

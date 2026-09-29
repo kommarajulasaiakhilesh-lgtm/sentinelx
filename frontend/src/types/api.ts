@@ -82,3 +82,28 @@ export interface SecurityMetrics {
   block_rate: number;
   violation_rate: number;
 }
+export interface SecurityTestScenario {
+  id: number;
+  name: string;
+  category: string;
+  description?: string | null;
+  attack_input?: string | null;
+  agent_id?: number | null;
+  tool_name?: string | null;
+  action?: string | null;
+  resource?: string | null;
+  expected_decision: string;
+  enabled: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SecurityTestRun {
+  id: number;
+  scenario_id: number;
+  actual_decision?: string | null;
+  expected_decision: string;
+  result: string;
+  details?: string | null;
+  executed_at: string;
+}

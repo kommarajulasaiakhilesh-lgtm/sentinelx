@@ -9,6 +9,7 @@ import {
   Bot,
   CircleDot,
   FileCheck2,
+  FlaskConical,
   Gauge,
   LayoutDashboard,
   Shield,
@@ -46,6 +47,11 @@ const primaryNavigation = [
 ];
 
 const securityNavigation = [
+  {
+    label: "Security Testing",
+    href: "/security-tests",
+    icon: FlaskConical,
+  },
   {
     label: "Security Events",
     href: "/events",
