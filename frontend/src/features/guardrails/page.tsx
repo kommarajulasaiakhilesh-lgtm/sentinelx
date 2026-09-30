@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -23,36 +24,161 @@ function MetricCard({
   label,
   value,
   detail,
-  icon: Icon,
+  icon,
 }: {
   label: string;
   value: string | number;
   detail: string;
-  icon: typeof ShieldCheck;
+  icon: ReactNode;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-      <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-cyan-400/5 blur-2xl" />
+    <article className="security-surface security-surface-hover relative overflow-hidden p-5">
+      <div className="pointer-events-none absolute -right-8 -top-8 size-24 rounded-full bg-cyan-400/5 blur-2xl" />
 
-      <div className="relative flex items-start justify-between">
-        <div>
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold text-white">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-white">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">
-            {detail}
-          </p>
+          <p className="mt-1 text-xs text-slate-500">{detail}</p>
         </div>
 
-        <div className="rounded-xl border border-cyan-400/15 bg-cyan-400/10 p-3 text-cyan-300">
-          <Icon className="h-5 w-5" />
+        <div className="shrink-0 rounded-xl border border-cyan-400/15 bg-cyan-400/10 p-3 text-cyan-300">
+          {icon}
         </div>
       </div>
+    </article>
+  );
+}
+
+function StatusLine({
+  label,
+  healthy,
+}: {
+  label: string;
+  healthy: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-slate-800/70 bg-slate-950/40 px-4 py-3">
+      <div className="flex min-w-0 items-center gap-3">
+        {healthy ? (
+          <CheckCircle2 className="size-4 shrink-0 text-emerald-400" />
+        ) : (
+          <ShieldOff className="size-4 shrink-0 text-red-400" />
+        )}
+
+        <span className="truncate text-sm text-slate-300">{label}</span>
+      </div>
+
+      <span
+        className={`shrink-0 text-[9px] font-semibold uppercase tracking-[0.15em] ${
+          healthy ? "text-emerald-300" : "text-red-300"
+        }`}
+      >
+        {healthy ? "Operational" : "Attention"}
+      </span>
+    </div>
+  );
+}
+
+function DecisionBadge({ decision }: { decision: string }) {
+  const normalized = decision.toUpperCase();
+
+  const blocked = normalized.includes("BLOCK");
+  const warning = normalized.includes("WARN");
+
+  const className = blocked
+    ? "border-red-400/20 bg-red-400/10 text-red-300"
+    : warning
+      ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
+      : "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
+
+  return (
+    <span
+      className={`inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] ${className}`}
+    >
+      <span
+        className={`size-1.5 rounded-full ${
+          blocked
+            ? "bg-red-400"
+            : warning
+              ? "bg-amber-400"
+              : "bg-emerald-400"
+        }`}
+      />
+
+      {normalized}
+    </span>
+  );
+}
+
+function PipelineStage({
+  number,
+  title,
+  description,
+  icon,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  icon: ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <div className="security-surface-hover h-full rounded-xl p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex size-9 items-center justify-center rounded-lg border border-cyan-400/15 bg-cyan-400/10 text-cyan-300">
+            {icon}
+          </div>
+
+          <span className="font-mono text-[9px] text-slate-700">
+            {number}
+          </span>
+        </div>
+
+        <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          {title}
+        </p>
+
+        <p className="mt-1 text-xs leading-5 text-slate-400">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="flex min-h-56 items-center justify-center">
+      <div className="flex items-center gap-2 text-sm text-slate-500">
+        <LoaderCircle className="size-4 animate-spin text-cyan-400" />
+        Loading runtime activity...
+      </div>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex min-h-56 flex-col items-center justify-center px-6 text-center">
+      <div className="flex size-14 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10">
+        <Activity className="size-6 text-cyan-300" />
+      </div>
+
+      <h3 className="mt-4 font-semibold text-white">
+        No runtime decisions yet
+      </h3>
+
+      <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+        Runtime policy decisions will appear here when agents begin submitting
+        actions for evaluation.
+      </p>
     </div>
   );
 }
@@ -84,99 +210,118 @@ export default function GuardrailsPage() {
     agentsLoading || eventsLoading || blockedLoading;
 
   return (
-    <div className="space-y-8">
-      {/* HERO */}
-      <section className="relative overflow-hidden rounded-3xl border border-emerald-400/10 bg-gradient-to-br from-emerald-400/[0.08] via-transparent to-cyan-500/[0.05] p-6 sm:p-8">
-        <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-emerald-400/10 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-40 w-64 rounded-full bg-cyan-400/5 blur-3xl" />
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header */}
+      <section className="relative overflow-hidden rounded-2xl border border-emerald-400/10 bg-emerald-400/[0.025] p-6 sm:p-8">
+        <div className="security-grid absolute inset-0 opacity-30" />
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-300">
-              <ShieldCheck className="h-3.5 w-3.5" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
+              <ShieldCheck className="size-3.5" />
               Runtime Protection
+            </span>
+
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
+              Guardrails online
+            </span>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                Runtime Guardrails
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                Observe the security boundary between AI-agent intent and
+                runtime execution. SentinelX evaluates actions before they
+                reach protected resources.
+              </p>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-emerald-400">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              Guardrails online
+            <div className="flex shrink-0 items-center gap-2 rounded-xl border border-emerald-400/10 bg-emerald-400/[0.035] px-4 py-3">
+              <LockKeyhole className="size-4 text-emerald-300" />
+
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-emerald-400">
+                  Enforcement state
+                </p>
+
+                <p className="mt-0.5 text-xs text-slate-400">
+                  Runtime controls active
+                </p>
+              </div>
             </div>
           </div>
 
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Runtime Guardrails
-          </h1>
+          <div className="mt-7 grid gap-2 sm:grid-cols-3">
+            <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-950/30 px-3 py-2.5">
+              <Zap className="size-3.5 text-emerald-400" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-400">
+                Evaluate
+              </span>
+            </div>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            Observe the security boundary between AI-agent intent and
-            runtime execution. SentinelX evaluates actions before they
-            reach protected resources.
-          </p>
+            <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-950/30 px-3 py-2.5">
+              <LockKeyhole className="size-3.5 text-cyan-400" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-400">
+                Enforce
+              </span>
+            </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-slate-500">
-            <span className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-emerald-400" />
-              Evaluate
-            </span>
-
-            <span className="text-slate-700">→</span>
-
-            <span className="flex items-center gap-2">
-              <LockKeyhole className="h-4 w-4 text-cyan-400" />
-              Enforce
-            </span>
-
-            <span className="text-slate-700">→</span>
-
-            <span className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-blue-400" />
-              Audit
-            </span>
+            <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-950/30 px-3 py-2.5">
+              <Activity className="size-3.5 text-blue-400" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-400">
+                Audit
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* METRICS */}
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Metrics */}
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="Protected Agents"
           value={isLoading ? "—" : agents.length}
           detail="Agents under control"
-          icon={ShieldCheck}
+          icon={<ShieldCheck className="size-5" />}
         />
 
         <MetricCard
           label="Active Enforcement"
           value={isLoading ? "—" : activeAgents}
           detail="Currently active agents"
-          icon={Gauge}
+          icon={<Gauge className="size-5" />}
         />
 
         <MetricCard
           label="Actions Blocked"
           value={isLoading ? "—" : blocked}
           detail="Blocked security events"
-          icon={Ban}
+          icon={<Ban className="size-5" />}
         />
 
         <MetricCard
           label="Runtime Events"
-          value={
-            isLoading
-              ? "—"
-              : eventsData?.total ?? 0
-          }
+          value={isLoading ? "—" : eventsData?.total ?? 0}
           detail="Recorded control decisions"
-          icon={Activity}
+          icon={<Activity className="size-5" />}
         />
       </section>
 
-      {/* ENFORCEMENT PIPELINE */}
-      <section className="grid gap-6 xl:grid-cols-[1.45fr_1fr]">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
-          <div className="flex items-center justify-between">
+      {/* Enforcement pipeline */}
+      <section className="grid gap-5 xl:grid-cols-[1.45fr_1fr]">
+        <div className="security-surface p-5 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="font-semibold text-white">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">
+                Decision path
+              </p>
+
+              <h2 className="mt-1 text-lg font-semibold text-white">
                 Enforcement Pipeline
               </h2>
 
@@ -185,124 +330,95 @@ export default function GuardrailsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              LIVE
-            </div>
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/[0.05] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
+              Live
+            </span>
           </div>
 
-          <div className="mt-8 grid gap-3 md:grid-cols-5">
-            {[
-              {
-                title: "REQUEST",
-                icon: Activity,
-                text: "Agent proposes action",
-              },
-              {
-                title: "INSPECT",
-                icon: Gauge,
-                text: "Evaluate context",
-              },
-              {
-                title: "POLICY",
-                icon: LockKeyhole,
-                text: "Apply security rules",
-              },
-              {
-                title: "DECISION",
-                icon: ShieldCheck,
-                text: "Allow / warn / block",
-              },
-              {
-                title: "AUDIT",
-                icon: Activity,
-                text: "Record outcome",
-              },
-            ].map((stage, index) => {
-              const Icon = stage.icon;
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+            <PipelineStage
+              number="01"
+              title="Request"
+              description="Agent proposes action"
+              icon={<Activity className="size-4" />}
+            />
 
-              return (
-                <div key={stage.title} className="relative">
-                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-cyan-400/15 bg-cyan-400/10 text-cyan-300">
-                      <Icon className="h-4 w-4" />
-                    </div>
+            <PipelineStage
+              number="02"
+              title="Inspect"
+              description="Evaluate context"
+              icon={<Gauge className="size-4" />}
+            />
 
-                    <p className="mt-4 text-[9px] font-semibold tracking-[0.18em] text-slate-500">
-                      {stage.title}
-                    </p>
+            <PipelineStage
+              number="03"
+              title="Policy"
+              description="Apply security rules"
+              icon={<LockKeyhole className="size-4" />}
+            />
 
-                    <p className="mt-1 text-xs leading-5 text-slate-400">
-                      {stage.text}
-                    </p>
-                  </div>
+            <PipelineStage
+              number="04"
+              title="Decision"
+              description="Allow, warn, or block"
+              icon={<ShieldCheck className="size-4" />}
+            />
 
-                  {index < 4 && (
-                    <div className="absolute -right-3 top-1/2 z-10 hidden text-slate-700 md:block">
-                      →
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            <PipelineStage
+              number="05"
+              title="Audit"
+              description="Record outcome"
+              icon={<Activity className="size-4" />}
+            />
           </div>
         </div>
 
-        {/* SYSTEM STATUS */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
+        {/* System status */}
+        <div className="security-surface p-5 sm:p-6">
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/10 p-2.5 text-emerald-300">
-              <ShieldCheck className="h-5 w-5" />
+              <ShieldCheck className="size-5" />
             </div>
 
             <div>
-              <h2 className="font-semibold text-white">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-400">
+                Control health
+              </p>
+
+              <h2 className="mt-1 font-semibold text-white">
                 Guardrail Status
               </h2>
-
-              <p className="text-xs text-slate-500">
-                Control-plane protection state
-              </p>
             </div>
           </div>
 
-          <div className="mt-6 space-y-3">
-            {[
-              ["Policy evaluation", true],
-              ["Agent authentication", true],
-              ["Action enforcement", true],
-              ["Security event audit", true],
-            ].map(([label, healthy]) => (
-              <div
-                key={String(label)}
-                className="flex items-center justify-between rounded-xl border border-white/5 bg-black/20 px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  {healthy ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  ) : (
-                    <ShieldOff className="h-4 w-4 text-red-400" />
-                  )}
+          <div className="mt-6 space-y-2.5">
+            <StatusLine label="Policy evaluation" healthy />
+            <StatusLine label="Agent authentication" healthy />
+            <StatusLine label="Action enforcement" healthy />
+            <StatusLine label="Security event audit" healthy />
+          </div>
 
-                  <span className="text-sm text-slate-300">
-                    {label}
-                  </span>
-                </div>
+          <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-400/10 bg-emerald-400/[0.025] p-4">
+            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-400" />
 
-                <span className="text-[9px] font-semibold tracking-[0.15em] text-emerald-300">
-                  OPERATIONAL
-                </span>
-              </div>
-            ))}
+            <p className="text-xs leading-5 text-slate-500">
+              The runtime protection boundary is operational and ready to
+              evaluate agent actions.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* RECENT DECISIONS */}
-      <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+      {/* Recent decisions */}
+      <section className="security-surface overflow-hidden">
+        <div className="flex flex-col gap-3 border-b border-slate-800/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
-            <h2 className="font-semibold text-white">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">
+              Runtime telemetry
+            </p>
+
+            <h2 className="mt-1 font-semibold text-white">
               Recent Runtime Decisions
             </h2>
 
@@ -311,52 +427,31 @@ export default function GuardrailsPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-white/10 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-500">
-            LIVE FEED
-          </div>
+          <span className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            <span className="size-1.5 rounded-full bg-cyan-400" />
+            Live feed
+          </span>
         </div>
 
         {isLoading ? (
-          <div className="flex min-h-56 items-center justify-center">
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <LoaderCircle className="h-4 w-4 animate-spin" />
-              Loading runtime activity...
-            </div>
-          </div>
+          <LoadingState />
         ) : events.length === 0 ? (
-          <div className="flex min-h-56 items-center justify-center px-6 text-center">
-            <div>
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10">
-                <Activity className="h-6 w-6 text-cyan-300" />
-              </div>
-
-              <h3 className="mt-4 font-semibold text-white">
-                No runtime decisions yet
-              </h3>
-
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-                Runtime policy decisions will appear here when agents
-                begin submitting actions for evaluation.
-              </p>
-            </div>
-          </div>
+          <EmptyState />
         ) : (
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-slate-800/60">
             {events.map((event) => {
-              const decision =
-                event.decision.toUpperCase();
-
+              const decision = event.decision.toUpperCase();
               const isBlocked = decision.includes("BLOCK");
               const isWarn = decision.includes("WARN");
 
               return (
                 <div
                   key={event.id}
-                  className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-3 px-5 py-4 transition-colors hover:bg-white/[0.015] sm:flex-row sm:items-center sm:justify-between sm:px-6"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex min-w-0 items-center gap-4">
                     <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-lg border ${
+                      className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
                         isBlocked
                           ? "border-red-400/15 bg-red-400/10 text-red-300"
                           : isWarn
@@ -365,39 +460,27 @@ export default function GuardrailsPage() {
                       }`}
                     >
                       {isBlocked ? (
-                        <Ban className="h-4 w-4" />
+                        <Ban className="size-4" />
                       ) : isWarn ? (
-                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTriangle className="size-4" />
                       ) : (
-                        <CheckCircle2 className="h-4 w-4" />
+                        <CheckCircle2 className="size-4" />
                       )}
                     </div>
 
-                    <div>
-                      <p className="text-sm font-medium text-white">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-white">
                         {event.event_type}
                       </p>
 
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 truncate text-xs text-slate-500">
                         Agent #{event.agent_id}
-                        {event.action
-                          ? ` · ${event.action}`
-                          : ""}
+                        {event.action ? ` · ${event.action}` : ""}
                       </p>
                     </div>
                   </div>
 
-                  <span
-                    className={`w-fit rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.14em] ${
-                      isBlocked
-                        ? "border-red-400/20 bg-red-400/10 text-red-300"
-                        : isWarn
-                          ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
-                          : "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                    }`}
-                  >
-                    {decision}
-                  </span>
+                  <DecisionBadge decision={decision} />
                 </div>
               );
             })}
@@ -405,21 +488,23 @@ export default function GuardrailsPage() {
         )}
       </section>
 
-      {/* BOTTOM SECURITY NOTE */}
-      <div className="flex items-start gap-3 rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.025] p-5">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-cyan-400" />
+      {/* Enforcement note */}
+      <section className="rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.025] p-5">
+        <div className="flex items-start gap-3">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-cyan-400" />
 
-        <div>
-          <p className="text-sm font-medium text-cyan-200">
-            Runtime enforcement boundary
-          </p>
+          <div>
+            <p className="text-sm font-medium text-cyan-200">
+              Runtime enforcement boundary
+            </p>
 
-          <p className="mt-1 text-xs leading-5 text-slate-500">
-            SentinelX evaluates agent actions before execution and
-            records security decisions for audit and analytics.
-          </p>
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              SentinelX evaluates agent actions before execution and records
+              security decisions for audit and analytics.
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

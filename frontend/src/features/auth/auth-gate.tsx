@@ -6,7 +6,9 @@ import {
   type ReactNode,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
+
 import { useAuth } from "@/hooks/use-auth";
+import { AppShell } from "@/components/layout/app-shell";
 
 const emptySubscribe = () => () => {};
 
@@ -36,7 +38,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hydrated) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#06080c]">
+      <main className="flex min-h-screen items-center justify-center bg-[#06090e]">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
 
@@ -50,7 +52,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!token && pathname !== "/login") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#06080c]">
+      <main className="flex min-h-screen items-center justify-center bg-[#06090e]">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
 
@@ -62,5 +64,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  if (pathname === "/login") {
+    return <>{children}</>;
+  }
+
+  return <AppShell>{children}</AppShell>;
 }
