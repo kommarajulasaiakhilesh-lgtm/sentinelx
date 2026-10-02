@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.models.sentinelx_control import SentinelXControl
 from app.models.control_mapping import ControlMapping
 from app.models.evidence import Evidence
-from fastapi.middleware.cors import CORSMiddleware
 from app.api.tools import router as tools_router
 from app.api import analytics
 from app.api.security_events import router as security_events_router
@@ -20,7 +21,7 @@ from app.models.security_analytics import SecurityAnalytics
 from app.models.security_alert import SecurityAlert
 from app.api.frameworks import router as frameworks_router
 from app.db.database import Base, engine
-from app.models.sentinelx_control import SentinelXControl
+from app.core.config import CORS_ORIGINS
 from app.api.auth import router as auth_router
 from app.api.agents import router as agents_router
 from app.api.policies import router as policies_router
@@ -45,12 +46,11 @@ app = FastAPI(
     description="AI Agent Security Control Plane",
     version="0.1.0"
 )
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,6 +71,7 @@ app.include_router(control_mappings_router)
 app.include_router(sentinelx_controls_router)
 app.include_router(compliance_router)
 app.include_router(security_tests_router)
+
 
 @app.get("/")
 def root():

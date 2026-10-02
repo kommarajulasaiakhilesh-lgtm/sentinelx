@@ -1,7 +1,7 @@
 import importlib
 
 
-def test_config_loads_with_valid_environment(monkeypatch):
+def set_valid_environment(monkeypatch):
     monkeypatch.setenv(
         "SECRET_KEY",
         "a" * 32
@@ -14,6 +14,14 @@ def test_config_loads_with_valid_environment(monkeypatch):
         "ACCESS_TOKEN_EXPIRE_MINUTES",
         "30"
     )
+    monkeypatch.setenv(
+        "CORS_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000"
+    )
+
+
+def test_config_loads_with_valid_environment(monkeypatch):
+    set_valid_environment(monkeypatch)
 
     import app.core.config as config
 
@@ -22,20 +30,36 @@ def test_config_loads_with_valid_environment(monkeypatch):
     assert config.SECRET_KEY == "a" * 32
     assert config.ALGORITHM == "HS256"
     assert config.ACCESS_TOKEN_EXPIRE_MINUTES == 30
+    assert config.CORS_ORIGINS == [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ]
+
+
+def test_config_loads_custom_cors_origins(monkeypatch):
+    set_valid_environment(monkeypatch)
+
+    monkeypatch.setenv(
+        "CORS_ORIGINS",
+        "https://sentinelx.example.com, https://admin.example.com"
+    )
+
+    import app.core.config as config
+
+    importlib.reload(config)
+
+    assert config.CORS_ORIGINS == [
+        "https://sentinelx.example.com",
+        "https://admin.example.com"
+    ]
 
 
 def test_config_rejects_short_secret_key(monkeypatch):
+    set_valid_environment(monkeypatch)
+
     monkeypatch.setenv(
         "SECRET_KEY",
         "short"
-    )
-    monkeypatch.setenv(
-        "ALGORITHM",
-        "HS256"
-    )
-    monkeypatch.setenv(
-        "ACCESS_TOKEN_EXPIRE_MINUTES",
-        "30"
     )
 
     import app.core.config as config
@@ -53,17 +77,11 @@ def test_config_rejects_short_secret_key(monkeypatch):
 
 
 def test_config_rejects_invalid_algorithm(monkeypatch):
-    monkeypatch.setenv(
-        "SECRET_KEY",
-        "a" * 32
-    )
+    set_valid_environment(monkeypatch)
+
     monkeypatch.setenv(
         "ALGORITHM",
         "none"
-    )
-    monkeypatch.setenv(
-        "ACCESS_TOKEN_EXPIRE_MINUTES",
-        "30"
     )
 
     import app.core.config as config
@@ -79,14 +97,8 @@ def test_config_rejects_invalid_algorithm(monkeypatch):
 
 
 def test_config_rejects_invalid_expiration(monkeypatch):
-    monkeypatch.setenv(
-        "SECRET_KEY",
-        "a" * 32
-    )
-    monkeypatch.setenv(
-        "ALGORITHM",
-        "HS256"
-    )
+    set_valid_environment(monkeypatch)
+
     monkeypatch.setenv(
         "ACCESS_TOKEN_EXPIRE_MINUTES",
         "0"
