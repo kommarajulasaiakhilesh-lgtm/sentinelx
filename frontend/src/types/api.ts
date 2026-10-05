@@ -31,6 +31,13 @@ export interface Tool {
   created_at?: string;
   updated_at?: string;
 }
+export interface AgentAPIKey {
+  id: number;
+  agent_id: number;
+  created_at: string;
+  expires_at?: string | null;
+  is_active: boolean;
+}
 
 export interface Policy {
   id: number;
@@ -106,4 +113,58 @@ export interface SecurityTestRun {
   result: string;
   details?: string | null;
   executed_at: string;
+}
+export type IncidentSeverity =
+  | "LOW"
+  | "MEDIUM"
+  | "HIGH"
+  | "CRITICAL"
+  | string;
+
+export type IncidentStatus =
+  | "OPEN"
+  | "INVESTIGATING"
+  | "CONTAINED"
+  | "RESOLVED"
+  | string;
+
+export interface Incident {
+  id: number;
+  agent_id: number;
+  title: string;
+  description?: string | null;
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IncidentTimelineEntry {
+  id: number;
+  incident_id: number;
+  entry_type: string;
+  description: string;
+  created_by_user_id?: number | null;
+  created_at: string;
+}
+
+export interface IncidentResponseAction {
+  id: number;
+  incident_id: number;
+  action_type: string;
+  agent_id: number;
+  tool_id?: number | null;
+  api_key_id?: number | null;
+  authorized_by_user_id: number;
+  reason: string;
+  result: string;
+  details?: string | null;
+  created_at: string;
+}
+
+export interface IncidentAlert {
+  id: number;
+  incident_id: number;
+  alert_id: number;
+  created_at: string;
 }

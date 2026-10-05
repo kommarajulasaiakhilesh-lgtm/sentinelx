@@ -6,22 +6,22 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 
 
-class Agent(Base):
-    __tablename__ = "agents"
+class Incident(Base):
+    __tablename__ = "incidents"
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
         index=True
     )
 
-    owner_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
+    agent_id: Mapped[int] = mapped_column(
+        ForeignKey("agents.id"),
         nullable=False,
         index=True
     )
 
-    name: Mapped[str] = mapped_column(
-        String(100),
+    title: Mapped[str] = mapped_column(
+        String(200),
         nullable=False
     )
 
@@ -30,10 +30,17 @@ class Agent(Base):
         nullable=True
     )
 
+    severity: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        index=True
+    )
+
     status: Mapped[str] = mapped_column(
         String(20),
         nullable=False,
-        default="ACTIVE"
+        default="OPEN",
+        index=True
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -49,48 +56,25 @@ class Agent(Base):
         nullable=False
     )
 
-    api_keys = relationship(
-        "AgentAPIKey",
-        back_populates="agent",
+    agent = relationship(
+        "Agent",
+        back_populates="incidents"
+    )
+
+    incident_alerts = relationship(
+        "IncidentAlert",
+        back_populates="incident",
         cascade="all, delete-orphan"
     )
 
-    policies = relationship(
-        "Policy",
-        back_populates="agent",
+    timeline_entries = relationship(
+        "IncidentTimelineEntry",
+        back_populates="incident",
         cascade="all, delete-orphan"
     )
 
-    security_events = relationship(
-        "SecurityEvent",
-        back_populates="agent",
+    response_actions = relationship(
+        "IncidentResponseAction",
+        back_populates="incident",
         cascade="all, delete-orphan"
-    )
-
-    security_analytics = relationship(
-        "SecurityAnalytics",
-        back_populates="agent",
-        cascade="all, delete-orphan"
-    )
-
-    tools = relationship(
-        "Tool",
-        back_populates="agent",
-        cascade="all, delete-orphan"
-    )
-
-    security_alerts = relationship(
-        "SecurityAlert",
-        back_populates="agent",
-        cascade="all, delete-orphan"
-    )
-    incidents = relationship(
-    "Incident",
-    back_populates="agent",
-    cascade="all, delete-orphan"
-)
-
-    owner = relationship(
-        "User",
-        back_populates="agents"
     )

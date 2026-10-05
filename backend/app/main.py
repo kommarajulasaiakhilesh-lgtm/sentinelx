@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.webhooks import router as webhooks_router
 from app.models.sentinelx_control import SentinelXControl
 from app.models.control_mapping import ControlMapping
 from app.models.evidence import Evidence
@@ -19,6 +19,12 @@ from app.models.policy import Policy
 from app.models.security_event import SecurityEvent
 from app.models.security_analytics import SecurityAnalytics
 from app.models.security_alert import SecurityAlert
+from app.models.incident import Incident
+from app.models.incident_alert import IncidentAlert
+from app.models.incident_timeline import IncidentTimelineEntry
+from app.models.incident_response import IncidentResponseAction
+from app.models.webhook_endpoint import WebhookEndpoint
+from app.models.webhook_delivery import WebhookDelivery
 from app.api.frameworks import router as frameworks_router
 from app.db.database import Base, engine
 from app.core.config import CORS_ORIGINS
@@ -30,15 +36,13 @@ from app.api.enforcement import router as enforcement_router
 from app.api.control_mappings import router as control_mappings_router
 from app.api.sentinelx_controls import router as sentinelx_controls_router
 from app.api.compliance import router as compliance_router
+from app.api.incidents import router as incidents_router
 from app.api.dependencies import (
     get_current_user,
     require_role
 )
 
 
-Base.metadata.create_all(
-    bind=engine
-)
 
 
 app = FastAPI(
@@ -71,6 +75,8 @@ app.include_router(control_mappings_router)
 app.include_router(sentinelx_controls_router)
 app.include_router(compliance_router)
 app.include_router(security_tests_router)
+app.include_router(incidents_router)
+app.include_router(webhooks_router)
 
 
 @app.get("/")

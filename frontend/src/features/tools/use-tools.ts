@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyAgents } from "@/features/agents/use-agents";
@@ -41,4 +41,14 @@ export function useTools() {
     isLoading,
     isError,
   };
+}
+
+export function useAgentTools(agentId: number | null) {
+  const { token } = useAuth();
+
+  return useQuery({
+    queryKey: ["tools", agentId],
+    queryFn: () => getAgentTools(token as string, agentId as number),
+    enabled: Boolean(token) && agentId !== null,
+  });
 }

@@ -8,3 +8,4 @@ pydantic==2.13.5
 pytest
 httpx
 argon2-cffi==25.1.0
+alembic==1.18.4

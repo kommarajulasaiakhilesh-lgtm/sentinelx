@@ -13,9 +13,12 @@ import {
   UserRound,
 } from "lucide-react";
 
+
 import { useMyAgents } from "@/features/agents/use-agents";
+import { useSecurityEventStream } from "@/features/security-events/use-security-event-stream";
 
 export default function CommandCenterPage() {
+    const { status: streamStatus } = useSecurityEventStream();
   const {
     data: agents = [],
     isLoading,
@@ -62,9 +65,21 @@ export default function CommandCenterPage() {
                 <span className="relative inline-flex size-1.5 rounded-full bg-emerald-400" />
               </span>
 
-              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-emerald-300">
-                Control plane operational
-              </span>
+              <span
+  className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
+    streamStatus === "CONNECTED"
+      ? "text-emerald-300"
+      : streamStatus === "CONNECTING"
+        ? "text-amber-300"
+        : "text-rose-300"
+  }`}
+>
+  {streamStatus === "CONNECTED"
+    ? "Control link connected"
+    : streamStatus === "CONNECTING"
+      ? "Control link connecting"
+      : "Control link disconnected"}
+</span>
             </div>
           </div>
 

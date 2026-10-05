@@ -1,5 +1,6 @@
-from fastapi.testclient import TestClient
 
+from fastapi.testclient import TestClient
+from app.models.incident_alert import IncidentAlert
 from app.main import app
 
 from app.db.database import SessionLocal
@@ -867,12 +868,8 @@ def test_tool_action_api_blocks_repeated_blocked_actions():
 
         app.dependency_overrides.clear()
 
-        # IMPORTANT:
-        # SecurityAlert references SecurityEvent through
-        # security_event_id.
-        #
-        # Therefore alerts must be deleted FIRST,
-        # before deleting the SecurityEvent rows.
+        # IncidentAlert references SecurityAlert,
+        # so incident links must be deleted first.
 
         test_event_ids = db.query(
             SecurityEvent.id
@@ -891,25 +888,36 @@ def test_tool_action_api_blocks_repeated_blocked_actions():
 
         if event_ids:
 
-            db.query(SecurityAlert).filter(
-                SecurityAlert.security_event_id.in_(event_ids)
+            alert_ids = [
+                alert_id
+                for (alert_id,) in db.query(
+                    SecurityAlert.id
+                ).filter(
+                    SecurityAlert.security_event_id.in_(event_ids)
+                ).all()
+            ]
+
+            if alert_ids:
+
+                db.query(IncidentAlert).filter(
+                    IncidentAlert.alert_id.in_(alert_ids)
+                ).delete(
+                    synchronize_session=False
+                )
+
+                db.query(SecurityAlert).filter(
+                    SecurityAlert.id.in_(alert_ids)
+                ).delete(
+                    synchronize_session=False
+                )
+
+        if event_ids:
+
+            db.query(SecurityEvent).filter(
+                SecurityEvent.id.in_(event_ids)
             ).delete(
                 synchronize_session=False
             )
-
-        db.query(SecurityEvent).filter(
-            SecurityEvent.agent_id == 1,
-            SecurityEvent.reason == "Test repeated blocked API action"
-        ).delete(
-            synchronize_session=False
-        )
-
-        db.query(SecurityEvent).filter(
-            SecurityEvent.agent_id == 1,
-            SecurityEvent.reason == "Repeated blocked tool actions detected"
-        ).delete(
-            synchronize_session=False
-        )
 
         db.query(Tool).filter(
             Tool.agent_id == 1,

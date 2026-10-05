@@ -5,10 +5,4 @@ export interface LoginRequest {
 
 export interface TokenResponse {
   access_token: string;
-  token_type: string;
-}
-
-export interface AuthUser {
-  username: string;
-  role: string;
 }

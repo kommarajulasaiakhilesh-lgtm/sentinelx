@@ -1,8 +1,11 @@
-
 from sqlalchemy.orm import Session
 
 from app.models.security_alert import SecurityAlert
 from app.models.security_event import SecurityEvent
+from app.services.event_stream_service import (
+    security_event_stream,
+    serialize_security_alert,
+)
 
 
 def create_security_alert(
@@ -39,6 +42,20 @@ def create_security_alert(
     db.add(alert)
     db.commit()
     db.refresh(alert)
+
+    agent_owner_id = (
+        db.query(SecurityEvent)
+        .join(SecurityEvent.agent)
+        .filter(SecurityEvent.id == security_event.id)
+        .first()
+        .agent.owner_id
+    )
+
+    security_event_stream.publish(
+        user_id=agent_owner_id,
+        event_type="ALERT_CREATED",
+        data=serialize_security_alert(alert)
+    )
 
     return alert
 

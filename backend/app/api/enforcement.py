@@ -148,41 +148,7 @@ def evaluate_tool_action(
     )
 
     # --------------------------------------------------------
-    # 6. Apply runtime tool-action rate-limit guardrail
-    # --------------------------------------------------------
-
-    rate_limited = is_tool_action_rate_limited(
-        db=db,
-        agent_id=current_agent.id
-    )
-
-    if rate_limited:
-
-        create_security_event(
-            event_data=SecurityEventCreate(
-                agent_id=current_agent.id,
-                policy_id=None,
-                event_type="TOOL_ACTION",
-                action=request.action,
-                decision="BLOCK",
-                reason="Runtime tool action rate limit exceeded",
-                event_metadata=(
-                    "max_actions=10;"
-                    "time_window_seconds=60"
-                )
-            ),
-            db=db
-        )
-
-        return {
-            "agent_id": current_agent.id,
-            "decision": "BLOCK",
-            "reason": "Runtime tool action rate limit exceeded",
-            "policy_type": None
-        }
-
-    # --------------------------------------------------------
-    # 7. Detect repeated blocked tool actions
+    # 6. Detect repeated blocked tool actions
     # --------------------------------------------------------
 
     repeated_blocked_actions = has_repeated_blocked_actions(
@@ -212,6 +178,40 @@ def evaluate_tool_action(
             "agent_id": current_agent.id,
             "decision": "BLOCK",
             "reason": "Repeated blocked tool actions detected",
+            "policy_type": None
+        }
+
+    # --------------------------------------------------------
+    # 7. Apply runtime tool-action rate-limit guardrail
+    # --------------------------------------------------------
+
+    rate_limited = is_tool_action_rate_limited(
+        db=db,
+        agent_id=current_agent.id
+    )
+
+    if rate_limited:
+
+        create_security_event(
+            event_data=SecurityEventCreate(
+                agent_id=current_agent.id,
+                policy_id=None,
+                event_type="TOOL_ACTION",
+                action=request.action,
+                decision="BLOCK",
+                reason="Runtime tool action rate limit exceeded",
+                event_metadata=(
+                    "max_actions=10;"
+                    "time_window_seconds=60"
+                )
+            ),
+            db=db
+        )
+
+        return {
+            "agent_id": current_agent.id,
+            "decision": "BLOCK",
+            "reason": "Runtime tool action rate limit exceeded",
             "policy_type": None
         }
 

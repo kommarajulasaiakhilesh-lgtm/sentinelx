@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Terminal,
   Wrench,
+  Siren,
 } from "lucide-react";
 
 const primaryNavigation = [
@@ -62,6 +63,11 @@ const securityNavigation = [
     href: "/alerts",
     icon: AlertTriangle,
   },
+    {
+    label: "Incident Response",
+    href: "/incidents",
+    icon: Siren,
+  },
   {
     label: "Analytics",
     href: "/analytics",
@@ -72,6 +78,7 @@ const securityNavigation = [
     href: "/compliance",
     icon: FileCheck2,
   },
+  
 ];
 
 export function Sidebar() {
