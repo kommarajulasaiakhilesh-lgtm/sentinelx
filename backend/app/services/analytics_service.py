@@ -1,7 +1,9 @@
+
 from datetime import datetime
 
 from sqlalchemy.orm import Session
 
+from app.models.agent import Agent
 from app.models.security_event import SecurityEvent
 from app.models.security_analytics import SecurityAnalytics
 from app.services.risk_scoring_service import calculate_risk_score
@@ -45,10 +47,25 @@ def generate_agent_analytics(
         if event.decision == "BLOCK"
     )
 
+    # Resolve the owner from the agent itself, not from its events.
+    # This also works when the agent has no security events.
+    agent_owner_id = (
+        db.query(Agent.owner_id)
+        .filter(Agent.id == agent_id)
+        .scalar()
+    )
+
+    if agent_owner_id is None:
+        raise ValueError(
+            f"Cannot generate analytics: agent {agent_id} was not found."
+        )
+
     risk_score, risk_level = calculate_risk_score(
-        blocked_events,
-        suspicious_events,
-        policy_violations
+        db=db,
+        owner_id=agent_owner_id,
+        blocked_events=blocked_events,
+        suspicious_events=suspicious_events,
+        policy_violations=policy_violations
     )
 
     analytics = (

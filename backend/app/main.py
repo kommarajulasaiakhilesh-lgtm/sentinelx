@@ -37,6 +37,7 @@ from app.api.control_mappings import router as control_mappings_router
 from app.api.sentinelx_controls import router as sentinelx_controls_router
 from app.api.compliance import router as compliance_router
 from app.api.incidents import router as incidents_router
+from app.api.detection_rules import router as detection_rules_router
 from app.api.dependencies import (
     get_current_user,
     require_role
@@ -77,6 +78,7 @@ app.include_router(compliance_router)
 app.include_router(security_tests_router)
 app.include_router(incidents_router)
 app.include_router(webhooks_router)
+app.include_router(detection_rules_router)
 
 
 @app.get("/")

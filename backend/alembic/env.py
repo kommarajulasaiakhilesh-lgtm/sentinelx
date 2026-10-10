@@ -26,7 +26,11 @@ from app.models.incident_timeline import IncidentTimelineEntry
 from app.models.incident_response import IncidentResponseAction
 from app.models.webhook_endpoint import WebhookEndpoint
 from app.models.webhook_delivery import WebhookDelivery
-
+from app.models.detection_rule import DetectionRule
+from app.models.risk_scoring_configuration import RiskScoringConfiguration
+from app.models.behavioral_baseline_configuration import (
+    BehavioralBaselineConfiguration
+)
 
 config = context.config
 
