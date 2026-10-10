@@ -118,8 +118,8 @@ def test_event_ingestion_continues_when_baseline_configuration_is_missing():
             with (
                 patch(
                     "app.services.security_event_service."
-                    "detect_security_alert",
-                    return_value=None,
+                    "detect_security_alerts",
+                    return_value=[],
                 ),
                 patch(
                     "app.services.security_event_service."
@@ -200,7 +200,9 @@ def test_behavioral_anomaly_alert_is_created_and_correlated():
                     "observed_rate": 0.01,
                     "deviation_percent": 900.0,
                     "threshold_percent": 50,
-                    "reason": "Observed activity exceeded the configured baseline",
+                    "reason": (
+                        "Observed activity exceeded the configured baseline"
+                    ),
                 }
             ],
         }
@@ -208,8 +210,8 @@ def test_behavioral_anomaly_alert_is_created_and_correlated():
         with (
             patch(
                 "app.services.security_event_service."
-                "detect_security_alert",
-                return_value=None,
+                "detect_security_alerts",
+                return_value=[],
             ),
             patch(
                 "app.services.security_alert_service."
@@ -258,9 +260,7 @@ def test_behavioral_anomaly_alert_is_created_and_correlated():
 
         assert links, "Expected the behavioral alert to be correlated"
 
-        incident_ids.extend(
-            link.incident_id for link in links
-        )
+        incident_ids.extend(link.incident_id for link in links)
 
         incidents = (
             db.query(Incident)

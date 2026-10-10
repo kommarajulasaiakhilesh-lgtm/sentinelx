@@ -24,6 +24,9 @@ const pageLabels: Record<string, string> = {
   "/alerts": "Alerts & Incidents",
   "/analytics": "Analytics",
   "/compliance": "Compliance",
+  "/detection-rules": "Detection Rules",
+  "/incidents": "Incident Response",
+
 };
 
 const navigationItems = [
@@ -37,6 +40,10 @@ const navigationItems = [
   { label: "Alerts & Incidents", href: "/alerts" },
   { label: "Analytics", href: "/analytics" },
   { label: "Compliance", href: "/compliance" },
+
+  { label: "Detection Rules", href: "/detection-rules" },
+  { label: "Incident Response", href: "/incidents" },
+
 ];
 
 export function Topbar() {

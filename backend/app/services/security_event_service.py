@@ -12,7 +12,7 @@ from app.services.incident_correlation_service import (
 )
 from app.services.security_alert_service import (
     detect_behavioral_anomaly_alert,
-    detect_security_alert,
+    detect_security_alerts,
 )
 
 
@@ -34,13 +34,13 @@ def create_security_event(
     db.commit()
     db.refresh(event)
 
-    # 1. Run existing deterministic detection rules.
-    rule_alert = detect_security_alert(
+    # 1. Run all matching deterministic detection rules.
+    rule_alerts = detect_security_alerts(
         db=db,
         security_event=event,
     )
 
-    if rule_alert is not None:
+    for rule_alert in rule_alerts:
         correlate_security_alert(
             db=db,
             alert=rule_alert,

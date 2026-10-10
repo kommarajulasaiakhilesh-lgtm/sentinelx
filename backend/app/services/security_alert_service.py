@@ -1,6 +1,6 @@
 
 from datetime import datetime, timezone
-
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.security_alert import SecurityAlert
@@ -17,25 +17,25 @@ from app.services.event_stream_service import (
 )
 
 
+
 def create_security_alert(
     db: Session,
     security_event: SecurityEvent,
     alert_type: str,
     severity: str,
     title: str,
-    description: str | None = None
+    description: str | None = None,
 ) -> SecurityAlert:
-
     existing_alert = (
         db.query(SecurityAlert)
         .filter(
             SecurityAlert.security_event_id == security_event.id,
-            SecurityAlert.alert_type == alert_type
+            SecurityAlert.alert_type == alert_type,
         )
         .first()
     )
 
-    if existing_alert:
+    if existing_alert is not None:
         return existing_alert
 
     alert = SecurityAlert(
@@ -45,58 +45,101 @@ def create_security_alert(
         severity=severity,
         title=title,
         description=description,
-        status="OPEN"
+        status="OPEN",
     )
 
     db.add(alert)
-    db.commit()
-    db.refresh(alert)
 
-    agent_owner_id = (
+    try:
+        db.commit()
+        db.refresh(alert)
+    except IntegrityError:
+        db.rollback()
+
+        # Another request may have inserted the same event/type pair.
+        existing_alert = (
+            db.query(SecurityAlert)
+            .filter(
+                SecurityAlert.security_event_id == security_event.id,
+                SecurityAlert.alert_type == alert_type,
+            )
+            .first()
+        )
+
+        if existing_alert is not None:
+            return existing_alert
+
+        # The integrity error was unrelated to duplicate alert creation.
+        raise
+
+    event_record = (
         db.query(SecurityEvent)
         .join(SecurityEvent.agent)
         .filter(SecurityEvent.id == security_event.id)
         .first()
-        .agent.owner_id
     )
 
-    security_event_stream.publish(
-        user_id=agent_owner_id,
-        event_type="ALERT_CREATED",
-        data=serialize_security_alert(alert)
-    )
+    if event_record is not None:
+        security_event_stream.publish(
+            user_id=event_record.agent.owner_id,
+            event_type="ALERT_CREATED",
+            data=serialize_security_alert(alert),
+        )
 
     return alert
 
 
-def detect_security_alert(
+
+def detect_security_alerts(
     db: Session,
-    security_event: SecurityEvent
-) -> SecurityAlert | None:
+    security_event: SecurityEvent,
+) -> list[SecurityAlert]:
+    """Create alerts for every distinct matching alert type."""
 
     matching_rules = get_matching_detection_rules(
         db=db,
-        security_event=security_event
+        security_event=security_event,
     )
 
-    if not matching_rules:
-        return None
+    alerts_by_type: dict[str, SecurityAlert] = {}
 
-    rule = matching_rules[0]
+    for rule in matching_rules:
+        # Alert deduplication is based on event ID and alert type.
+        # Process each alert type once, even if several rules match.
+        if rule.alert_type in alerts_by_type:
+            continue
 
-    return create_security_alert(
+        alert = create_security_alert(
+            db=db,
+            security_event=security_event,
+            alert_type=rule.alert_type,
+            severity=rule.severity,
+            title=rule.title,
+            description=rule.description,
+        )
+
+        alerts_by_type[rule.alert_type] = alert
+
+    return list(alerts_by_type.values())
+
+
+def detect_security_alert(
+    db: Session,
+    security_event: SecurityEvent,
+) -> SecurityAlert | None:
+    """Compatibility wrapper returning the first matching alert."""
+
+    alerts = detect_security_alerts(
         db=db,
         security_event=security_event,
-        alert_type=rule.alert_type,
-        severity=rule.severity,
-        title=rule.title,
-        description=rule.description
     )
+
+    return alerts[0] if alerts else None
 
 
 def detect_behavioral_anomaly_alert(
     db: Session,
-    security_event: SecurityEvent
+    security_event: SecurityEvent,
 ) -> SecurityAlert | None:
     """
     Detect behavioral anomalies and create one active alert per agent.
@@ -105,17 +148,17 @@ def detect_behavioral_anomaly_alert(
     behavioral baseline configuration.
     """
 
-    agent_owner_id = (
+    event_record = (
         db.query(SecurityEvent)
         .join(SecurityEvent.agent)
         .filter(SecurityEvent.id == security_event.id)
         .first()
     )
 
-    if agent_owner_id is None:
+    if event_record is None:
         return None
 
-    owner_id = agent_owner_id.agent.owner_id
+    owner_id = event_record.agent.owner_id
 
     try:
         result = detect_behavioral_anomalies(

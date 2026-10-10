@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -167,7 +168,7 @@ function handleSecurityEvent(
     case "ALERT_CREATED":
     case "ALERT_UPDATED":
       queryClient.invalidateQueries({
-        queryKey: ["alerts"],
+        queryKey: ["security-alerts"],
       });
 
       queryClient.invalidateQueries({
@@ -183,7 +184,7 @@ function handleSecurityEvent(
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["alerts"],
+        queryKey: ["security-alerts"],
       });
 
       break;
