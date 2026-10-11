@@ -1,4 +1,4 @@
-
+﻿
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,6 +15,10 @@ export type SecurityStreamStatus =
   | "CONNECTING"
   | "CONNECTED"
   | "DISCONNECTED";
+
+const INITIAL_RETRY_DELAY_MS = 1_000;
+const MAX_RETRY_DELAY_MS = 30_000;
+const STABLE_CONNECTION_MS = 30_000;
 
 function parseSseBlock(block: string): SecurityStreamEvent | null {
   const lines = block.split("\n");
@@ -49,6 +53,28 @@ function parseSseBlock(block: string): SecurityStreamEvent | null {
   }
 }
 
+function waitForRetry(
+  delayMs: number,
+  signal: AbortSignal,
+): Promise<void> {
+  return new Promise((resolve) => {
+    if (signal.aborted) {
+      resolve();
+      return;
+    }
+
+    const finish = () => {
+      clearTimeout(timeoutId);
+      signal.removeEventListener("abort", finish);
+      resolve();
+    };
+
+    const timeoutId = setTimeout(finish, delayMs);
+
+    signal.addEventListener("abort", finish, { once: true });
+  });
+}
+
 export function useSecurityEventStream() {
   const { token } = useAuth();
   const queryClient = useQueryClient();
@@ -58,94 +84,131 @@ export function useSecurityEventStream() {
 
   useEffect(() => {
     if (!token) {
+
       return;
     }
 
     const controller = new AbortController();
+    const { signal } = controller;
 
-    async function connect() {
-      setStatus("CONNECTING");
+    let retryDelay = INITIAL_RETRY_DELAY_MS;
 
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/security-events/stream`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "text/event-stream",
-              Authorization: `Bearer ${token}`,
-              "Cache-Control": "no-cache",
+    async function connectWithRetry() {
+      while (!signal.aborted) {
+        let connectedAt: number | null = null;
+
+        setStatus("CONNECTING");
+
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/api/security-events/stream`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "text/event-stream",
+                Authorization: `Bearer ${token}`,
+                "Cache-Control": "no-cache",
+              },
+              signal,
             },
-            signal: controller.signal,
-          },
-        );
-
-        if (!response.ok || !response.body) {
-          throw new Error(
-            `Security event stream failed with status ${response.status}`,
           );
-        }
 
-        setStatus("CONNECTED");
+          if (!response.ok || !response.body) {
+            throw new Error(
+              `Security event stream failed with status ${response.status}`,
+            );
+          }
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
+          connectedAt = Date.now();
+          setStatus("CONNECTED");
 
-        let buffer = "";
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
 
-        while (!controller.signal.aborted) {
-          const { done, value } = await reader.read();
+          try {
+            while (!signal.aborted) {
+              const { done, value } = await reader.read();
 
-          if (done) {
+              if (done) {
+                break;
+              }
+
+              buffer += decoder.decode(value, {
+                stream: true,
+              });
+
+              const blocks = buffer.split("\n\n");
+              buffer = blocks.pop() ?? "";
+
+              for (const block of blocks) {
+                const streamEvent = parseSseBlock(block);
+
+                if (!streamEvent?.event) {
+                  continue;
+                }
+
+                handleSecurityEvent(
+                  streamEvent.event,
+                  queryClient,
+                );
+              }
+            }
+          } finally {
+            reader.releaseLock();
+          }
+
+          if (!signal.aborted) {
+            throw new Error("Security event stream ended");
+          }
+        } catch (error) {
+          if (signal.aborted) {
             break;
           }
 
-          buffer += decoder.decode(value, {
-            stream: true,
-          });
-
-          const blocks = buffer.split("\n\n");
-          buffer = blocks.pop() ?? "";
-
-          for (const block of blocks) {
-            const streamEvent = parseSseBlock(block);
-
-            if (!streamEvent?.event) {
-              continue;
-            }
-
-            handleSecurityEvent(
-              streamEvent.event,
-              queryClient,
-            );
-          }
-        }
-
-        if (!controller.signal.aborted) {
-          setStatus("DISCONNECTED");
-        }
-      } catch (error) {
-        if (!controller.signal.aborted) {
-          console.error(
-            "SentinelX security event stream disconnected:",
+          console.warn(
+            "SentinelX security event stream disconnected; retrying:",
             error,
           );
-
-          setStatus("DISCONNECTED");
         }
+
+        if (signal.aborted) {
+          break;
+        }
+
+        // Reset backoff after a connection remained healthy for 30 seconds.
+        if (
+          connectedAt !== null &&
+          Date.now() - connectedAt >= STABLE_CONNECTION_MS
+        ) {
+          retryDelay = INITIAL_RETRY_DELAY_MS;
+        }
+
+        setStatus("DISCONNECTED");
+
+        await waitForRetry(retryDelay, signal);
+
+        retryDelay = Math.min(
+          retryDelay * 2,
+          MAX_RETRY_DELAY_MS,
+        );
       }
     }
 
-    void connect();
+    void connectWithRetry();
 
     return () => {
       controller.abort();
     };
   }, [token, queryClient]);
 
+   const effectiveStatus: SecurityStreamStatus = token
+    ? status
+    : "DISCONNECTED";
+
   return {
-    status,
-    connected: status === "CONNECTED",
+    status: effectiveStatus,
+    connected: effectiveStatus === "CONNECTED",
   };
 }
 

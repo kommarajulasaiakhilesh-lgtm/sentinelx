@@ -1,10 +1,14 @@
-from sqlalchemy.orm import Session
+﻿from sqlalchemy.orm import Session
 
 from app.models.agent import Agent
 from app.models.security_event import SecurityEvent
 from app.models.security_test import (
     SecurityTestRun,
     SecurityTestScenario,
+)
+from app.schemas.security_test import (
+    SUPPORTED_CATEGORIES,
+    VALID_DECISIONS,
 )
 from app.models.tool import Tool
 from app.services.policy_engine import evaluate_policy
@@ -15,11 +19,11 @@ from app.services.runtime_guardrail_service import (
 from app.services.security_test_service import get_security_test_scenario
 
 
+
 def simulate_security_test(
     db: Session,
     scenario_id: int,
 ) -> SecurityTestRun:
-
     scenario = get_security_test_scenario(
         db,
         scenario_id,
@@ -31,28 +35,55 @@ def simulate_security_test(
     if not scenario.enabled:
         raise ValueError("Security test scenario is disabled")
 
+    # Validate all scenario configuration before simulation side effects.
+    normalized_category = scenario.category.strip().upper()
+    normalized_expected = scenario.expected_decision.strip().upper()
+
+    if normalized_category not in SUPPORTED_CATEGORIES:
+        raise ValueError("Unsupported security test category")
+
+    if normalized_expected not in VALID_DECISIONS:
+        raise ValueError("Invalid expected security test decision")
+
+    if scenario.agent_id is None:
+        raise ValueError("Security test scenario requires an agent_id")
+
+    agent = (
+        db.query(Agent)
+        .filter(Agent.id == scenario.agent_id)
+        .first()
+    )
+
+    if agent is None:
+        raise ValueError("Security test scenario agent not found")
+
+    if agent.owner_id != scenario.owner_id:
+        raise ValueError(
+            "Security test scenario owner does not match its agent owner"
+        )
+
     actual_decision = _simulate_attack(
-        db=db,
+    db=db,
         scenario=scenario,
     )
 
     result = (
         "PASSED"
-        if actual_decision == scenario.expected_decision
+        if actual_decision == normalized_expected
         else "FAILED"
     )
 
     details = (
         f"Scenario: {scenario.name}; "
-        f"Category: {scenario.category}; "
-        f"Expected: {scenario.expected_decision}; "
+        f"Category: {normalized_category}; "
+        f"Expected: {normalized_expected}; "
         f"Actual: {actual_decision}"
     )
 
     test_run = SecurityTestRun(
         scenario_id=scenario.id,
         actual_decision=actual_decision,
-        expected_decision=scenario.expected_decision,
+        expected_decision=normalized_expected,
         result=result,
         details=details,
     )
@@ -63,13 +94,12 @@ def simulate_security_test(
 
     return test_run
 
-
 def _simulate_attack(
     db: Session,
     scenario: SecurityTestScenario,
 ) -> str:
 
-    normalized_category = scenario.category.upper()
+    normalized_category = scenario.category.strip().upper()
 
     if scenario.agent_id is None:
         raise ValueError(
@@ -129,7 +159,7 @@ def _simulate_attack(
             scenario=scenario,
         )
 
-    return "ALLOW"
+    raise ValueError("Unsupported security test category")
 
 
 def _build_tool_action(

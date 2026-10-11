@@ -1,3 +1,4 @@
+
 from sqlalchemy.orm import Session
 
 from app.models.security_test import SecurityTestScenario
@@ -7,8 +8,10 @@ from app.schemas.security_test import SecurityTestScenarioCreate
 def create_security_test_scenario(
     db: Session,
     scenario_data: SecurityTestScenarioCreate,
+    owner_id: int,
 ) -> SecurityTestScenario:
     scenario = SecurityTestScenario(
+        owner_id=owner_id,
         name=scenario_data.name,
         category=scenario_data.category,
         description=scenario_data.description,
@@ -24,7 +27,6 @@ def create_security_test_scenario(
     db.add(scenario)
     db.commit()
     db.refresh(scenario)
-
     return scenario
 
 
@@ -42,10 +44,18 @@ def get_security_test_scenario(
 def get_security_test_scenarios(
     db: Session,
     enabled_only: bool = False,
+    owner_id: int | None = None,
 ) -> list[SecurityTestScenario]:
     query = db.query(SecurityTestScenario)
 
+    if owner_id is not None:
+        query = query.filter(
+            SecurityTestScenario.owner_id == owner_id
+        )
+
     if enabled_only:
-        query = query.filter(SecurityTestScenario.enabled.is_(True))
+        query = query.filter(
+            SecurityTestScenario.enabled.is_(True)
+        )
 
     return query.order_by(SecurityTestScenario.id.asc()).all()

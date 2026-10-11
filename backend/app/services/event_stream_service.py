@@ -1,6 +1,9 @@
 import asyncio
 import json
 from collections import defaultdict
+# Subscribers are stored in process-local memory. With multiple backend
+# workers, events published by one worker are not delivered to subscribers
+# connected to another worker. Use shared pub/sub for multi-worker delivery.
 
 
 class SecurityEventStream:

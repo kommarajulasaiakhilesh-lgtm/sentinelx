@@ -1,7 +1,11 @@
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.api.dependencies import get_current_user
 from app.db.database import get_db
+from app.models.agent import Agent
+from app.models.user import User
 from app.schemas.security_test import (
     SecurityTestScenarioCreate,
     SecurityTestScenarioResponse,
@@ -21,6 +25,34 @@ router = APIRouter(
 )
 
 
+def _can_access_scenario(
+    scenario,
+    current_user: User,
+) -> bool:
+    return (
+        current_user.role == "ADMIN"
+        or scenario.owner_id == current_user.id
+    )
+
+
+def _get_accessible_scenario(
+    db: Session,
+    scenario_id: int,
+    current_user: User,
+):
+    scenario = get_security_test_scenario(db, scenario_id)
+
+    if scenario is None or not _can_access_scenario(
+        scenario, current_user
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Security test scenario not found",
+        )
+
+    return scenario
+
+
 @router.post(
     "/scenarios",
     response_model=SecurityTestScenarioResponse,
@@ -29,10 +61,26 @@ router = APIRouter(
 def create_scenario(
     scenario_data: SecurityTestScenarioCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    agent = (
+        db.query(Agent)
+        .filter(Agent.id == scenario_data.agent_id)
+        .first()
+    )
+
+    # Scenario creation always requires an agent owned by the creator,
+    # including when the creator has the ADMIN role.
+    if agent is None or agent.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Agent not found",
+        )
+
     return create_security_test_scenario(
         db=db,
         scenario_data=scenario_data,
+        owner_id=current_user.id,
     )
 
 
@@ -43,10 +91,17 @@ def create_scenario(
 def list_scenarios(
     enabled_only: bool = False,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    owner_id = (
+        None if current_user.role == "ADMIN"
+        else current_user.id
+    )
+
     return get_security_test_scenarios(
         db=db,
         enabled_only=enabled_only,
+        owner_id=owner_id,
     )
 
 
@@ -57,19 +112,11 @@ def list_scenarios(
 def get_scenario(
     scenario_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    scenario = get_security_test_scenario(
-        db=db,
-        scenario_id=scenario_id,
+    return _get_accessible_scenario(
+        db, scenario_id, current_user
     )
-
-    if scenario is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Security test scenario not found",
-        )
-
-    return scenario
 
 
 @router.post(
@@ -79,13 +126,17 @@ def get_scenario(
 def run_scenario(
     scenario_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    scenario = _get_accessible_scenario(
+        db, scenario_id, current_user
+    )
+
     try:
         return simulate_security_test(
             db=db,
-            scenario_id=scenario_id,
+            scenario_id=scenario.id,
         )
-
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

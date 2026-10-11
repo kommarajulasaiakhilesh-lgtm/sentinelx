@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.database import Base
@@ -8,6 +9,13 @@ class SecurityTestScenario(Base):
     __tablename__ = "security_test_scenarios"
 
     id = Column(Integer, primary_key=True, index=True)
+
+    owner_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False,
+        index=True,
+    )
 
     name = Column(
         String(150),
@@ -29,10 +37,7 @@ class SecurityTestScenario(Base):
         nullable=True,
     )
 
-    agent_id = Column(
-        Integer,
-        nullable=True,
-    )
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
 
     tool_name = Column(
         String(100),
@@ -71,6 +76,8 @@ class SecurityTestScenario(Base):
         onupdate=func.now(),
     )
 
+    owner = relationship("User")
+
 
 class SecurityTestRun(Base):
     __tablename__ = "security_test_runs"
@@ -78,9 +85,10 @@ class SecurityTestRun(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     scenario_id = Column(
-        Integer,
-        nullable=False,
-    )
+    Integer,
+    ForeignKey("security_test_scenarios.id"),
+    nullable=False,
+)
 
     actual_decision = Column(
         String(50),

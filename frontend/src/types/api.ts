@@ -89,13 +89,15 @@ export interface SecurityMetrics {
   block_rate: number;
   violation_rate: number;
 }
+
 export interface SecurityTestScenario {
   id: number;
+  owner_id: number;
   name: string;
   category: string;
   description?: string | null;
   attack_input?: string | null;
-  agent_id?: number | null;
+  agent_id: number;
   tool_name?: string | null;
   action?: string | null;
   resource?: string | null;
@@ -104,6 +106,7 @@ export interface SecurityTestScenario {
   created_at: string;
   updated_at: string;
 }
+
 
 export interface SecurityTestRun {
   id: number;
