@@ -88,7 +88,7 @@ class SecurityTestRun(Base):
     Integer,
     ForeignKey("security_test_scenarios.id"),
     nullable=False,
-)
+            )
 
     actual_decision = Column(
         String(50),

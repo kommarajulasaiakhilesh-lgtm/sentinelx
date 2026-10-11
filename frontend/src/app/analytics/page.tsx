@@ -9,13 +9,17 @@ import {
   Bot,
   CircleAlert,
   Gauge,
+  RefreshCw,
   ShieldAlert,
   ShieldCheck,
   Target,
   TrendingUp,
 } from "lucide-react";
 
-import { useAnalytics } from "@/features/analytics/use-analytics";
+import {
+  useAnalytics,
+  useRefreshAgentAnalytics,
+} from "@/features/analytics/use-analytics";
 
 function formatDate(value?: string) {
   if (!value) return "—";
@@ -57,6 +61,7 @@ function getRiskBarClass(level: string) {
 
 export default function AnalyticsPage() {
   const { agents, metrics, isLoading, isError } = useAnalytics();
+  const refreshMutation = useRefreshAgentAnalytics();
 
   const totalEvents = metrics.reduce(
     (sum, metric) => sum + metric.total_events,
@@ -243,6 +248,18 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
+          {refreshMutation.isError && (
+            <div
+              role="alert"
+              className="mt-4 rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-xs text-red-300"
+            >
+              Analytics refresh failed:{" "}
+              {refreshMutation.error instanceof Error
+                ? refreshMutation.error.message
+                : "An unexpected error occurred."}
+            </div>
+          )}
+
           {isLoading ? (
             <AnalyticsLoading />
           ) : isError ? (
@@ -264,6 +281,17 @@ export default function AnalyticsPage() {
                   riskScore={metric.risk_score}
                   riskLevel={metric.risk_level}
                   blockRate={metric.block_rate}
+                  onRefresh={(periodStart, periodEnd) =>
+                    refreshMutation.mutate({
+                      agentId: metric.agent_id,
+                      periodStart,
+                      periodEnd,
+                    })
+                  }
+                  isRefreshing={
+                    refreshMutation.isPending &&
+                    refreshMutation.variables?.agentId === metric.agent_id
+                  }
                 />
               ))}
             </div>
@@ -535,6 +563,8 @@ function AgentMetricRow({
   riskScore,
   riskLevel,
   blockRate,
+  onRefresh,
+  isRefreshing,
 }: {
   agentId: number;
   periodStart?: string;
@@ -546,7 +576,11 @@ function AgentMetricRow({
   riskScore: number;
   riskLevel: string;
   blockRate: number;
+  onRefresh: (periodStart: string, periodEnd: string) => void;
+  isRefreshing: boolean;
 }) {
+  const canRefresh = Boolean(periodStart && periodEnd);
+
   return (
     <div className="group rounded-xl border border-slate-800/80 bg-[#080c12] p-4 transition-all duration-200 hover:border-cyan-400/10 hover:bg-[#0a1018]">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -566,13 +600,32 @@ function AgentMetricRow({
           </div>
         </div>
 
-        <span
-          className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${getRiskClass(
-            riskLevel,
-          )}`}
-        >
-          {riskLevel}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span
+            className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${getRiskClass(
+              riskLevel,
+            )}`}
+          >
+            {riskLevel}
+          </span>
+
+          <button
+            type="button"
+            disabled={!canRefresh || isRefreshing}
+            onClick={() => {
+              if (periodStart && periodEnd) {
+                onRefresh(periodStart, periodEnd);
+              }
+            }}
+            className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs font-medium text-cyan-200 transition-colors hover:bg-cyan-400/10 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={`Refresh analytics for agent ${agentId}`}
+          >
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            {isRefreshing ? "Refreshing…" : "Refresh"}
+          </button>
+        </div>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">

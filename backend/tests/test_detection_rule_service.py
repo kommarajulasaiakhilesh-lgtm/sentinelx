@@ -9,6 +9,7 @@ from app.services.detection_rule_service import (
     get_matching_detection_rules,
     rule_matches_event,
 )
+from datetime import datetime, timedelta, timezone
 
 
 def create_event(
@@ -405,4 +406,146 @@ def test_empty_conditions_never_match():
     finally:
         db.close()
         cleanup_event(event_id)
+        cleanup_rule(rule_id)
+
+def test_window_includes_event_exactly_at_start_boundary():
+    reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    first_event_id = create_event()
+    second_event_id = create_event()
+
+    rule_id = create_rule(
+        conditions={
+            "event_type": "TOOL_ACTION",
+            "reason": "TEST_REASON",
+        },
+        threshold=2,
+        window_seconds=60,
+    )
+
+    db = SessionLocal()
+
+    try:
+        first_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == first_event_id)
+            .first()
+        )
+        second_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == second_event_id)
+            .first()
+        )
+        rule = (
+            db.query(DetectionRule)
+            .filter(DetectionRule.id == rule_id)
+            .first()
+        )
+
+        first_event.created_at = reference_time
+        second_event.created_at = reference_time + timedelta(seconds=60)
+        db.commit()
+        db.refresh(first_event)
+        db.refresh(second_event)
+
+        assert rule_matches_event(db, second_event, rule) is True
+
+    finally:
+        db.close()
+        cleanup_event(first_event_id)
+        cleanup_event(second_event_id)
+        cleanup_rule(rule_id)
+
+
+def test_window_excludes_event_just_before_start_boundary():
+    reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    first_event_id = create_event()
+    second_event_id = create_event()
+
+    rule_id = create_rule(
+        conditions={
+            "event_type": "TOOL_ACTION",
+            "reason": "TEST_REASON",
+        },
+        threshold=2,
+        window_seconds=60,
+    )
+
+    db = SessionLocal()
+
+    try:
+        first_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == first_event_id)
+            .first()
+        )
+        second_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == second_event_id)
+            .first()
+        )
+        rule = (
+            db.query(DetectionRule)
+            .filter(DetectionRule.id == rule_id)
+            .first()
+        )
+
+        first_event.created_at = reference_time - timedelta(microseconds=1)
+        second_event.created_at = reference_time + timedelta(seconds=60)
+        db.commit()
+        db.refresh(first_event)
+        db.refresh(second_event)
+
+        assert rule_matches_event(db, second_event, rule) is False
+
+    finally:
+        db.close()
+        cleanup_event(first_event_id)
+        cleanup_event(second_event_id)
+        cleanup_rule(rule_id)
+
+
+def test_zero_window_counts_matching_history_before_current_event():
+    reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    first_event_id = create_event()
+    second_event_id = create_event()
+
+    rule_id = create_rule(
+        conditions={
+            "event_type": "TOOL_ACTION",
+            "reason": "TEST_REASON",
+        },
+        threshold=2,
+        window_seconds=0,
+    )
+
+    db = SessionLocal()
+
+    try:
+        first_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == first_event_id)
+            .first()
+        )
+        second_event = (
+            db.query(SecurityEvent)
+            .filter(SecurityEvent.id == second_event_id)
+            .first()
+        )
+        rule = (
+            db.query(DetectionRule)
+            .filter(DetectionRule.id == rule_id)
+            .first()
+        )
+
+        first_event.created_at = reference_time - timedelta(days=30)
+        second_event.created_at = reference_time
+        db.commit()
+        db.refresh(second_event)
+
+        assert rule_matches_event(db, second_event, rule) is True
+
+    finally:
+        db.close()
+        cleanup_event(first_event_id)
+        cleanup_event(second_event_id)
         cleanup_rule(rule_id)

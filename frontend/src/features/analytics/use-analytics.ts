@@ -1,10 +1,18 @@
+
 "use client";
 
-import { useQueries } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyAgents } from "@/features/agents/use-agents";
-import { getAgentAnalytics } from "./analytics-api";
+import {
+  getAgentAnalytics,
+  refreshAgentAnalytics,
+} from "./analytics-api";
 import type { SecurityMetrics } from "@/types/api";
 
 export function useAnalytics() {
@@ -44,4 +52,36 @@ export function useAnalytics() {
     isLoading,
     isError,
   };
+}
+
+export function useRefreshAgentAnalytics() {
+  const { token } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      agentId,
+      periodStart,
+      periodEnd,
+    }: {
+      agentId: number;
+      periodStart: string;
+      periodEnd: string;
+    }) => {
+      if (!token) {
+        throw new Error("Authentication is required to refresh analytics.");
+      }
+
+      return refreshAgentAnalytics(
+        token,
+        agentId,
+        periodStart,
+        periodEnd,
+      );
+    },
+    onSuccess: (_data, variables) =>
+      queryClient.invalidateQueries({
+        queryKey: ["analytics", variables.agentId],
+      }),
+  });
 }

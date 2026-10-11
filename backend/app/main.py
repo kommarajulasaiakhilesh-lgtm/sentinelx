@@ -42,6 +42,9 @@ from app.api.dependencies import (
     get_current_user,
     require_role
 )
+from app.api.risk_scoring_configurations import (
+    router as risk_scoring_configurations_router,
+)
 
 
 
@@ -79,6 +82,7 @@ app.include_router(security_tests_router)
 app.include_router(incidents_router)
 app.include_router(webhooks_router)
 app.include_router(detection_rules_router)
+app.include_router(risk_scoring_configurations_router)
 
 
 @app.get("/")

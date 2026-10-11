@@ -12,6 +12,7 @@ import {
   FlaskConical,
   Gauge,
   LayoutDashboard,
+    SlidersHorizontal,
   Shield,
   ShieldCheck,
   Terminal,
@@ -86,6 +87,11 @@ const securityNavigation = [
     label: "Compliance",
     href: "/compliance",
     icon: FileCheck2,
+  },
+    {
+    label: "Risk Configurations",
+    href: "/risk-configurations",
+    icon: SlidersHorizontal,
   },
 
 ];
