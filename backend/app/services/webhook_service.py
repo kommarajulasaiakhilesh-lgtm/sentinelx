@@ -1,3 +1,4 @@
+
 import hashlib
 import hmac
 import json
@@ -20,13 +21,13 @@ SUPPORTED_WEBHOOK_EVENTS = {
 def get_owned_endpoint(
     db: Session,
     endpoint_id: int,
-    owner_id: int
+    owner_id: int,
 ) -> WebhookEndpoint | None:
     return (
         db.query(WebhookEndpoint)
         .filter(
             WebhookEndpoint.id == endpoint_id,
-            WebhookEndpoint.owner_id == owner_id
+            WebhookEndpoint.owner_id == owner_id,
         )
         .first()
     )
@@ -34,13 +35,11 @@ def get_owned_endpoint(
 
 def list_owned_endpoints(
     db: Session,
-    owner_id: int
+    owner_id: int,
 ) -> list[WebhookEndpoint]:
     return (
         db.query(WebhookEndpoint)
-        .filter(
-            WebhookEndpoint.owner_id == owner_id
-        )
+        .filter(WebhookEndpoint.owner_id == owner_id)
         .order_by(WebhookEndpoint.created_at.desc())
         .all()
     )
@@ -51,15 +50,14 @@ def create_webhook_endpoint(
     owner_id: int,
     name: str,
     url: str,
-    secret: str | None
+    secret: str | None,
 ) -> WebhookEndpoint:
-
     endpoint = WebhookEndpoint(
         owner_id=owner_id,
         name=name,
         url=url,
         secret=secret,
-        enabled=True
+        enabled=True,
     )
 
     db.add(endpoint)
@@ -75,9 +73,8 @@ def update_webhook_endpoint(
     name: str | None = None,
     url: str | None = None,
     secret: str | None = None,
-    enabled: bool | None = None
+    enabled: bool | None = None,
 ) -> WebhookEndpoint:
-
     if name is not None:
         endpoint.name = name
 
@@ -98,9 +95,8 @@ def update_webhook_endpoint(
 
 def delete_webhook_endpoint(
     db: Session,
-    endpoint: WebhookEndpoint
+    endpoint: WebhookEndpoint,
 ) -> None:
-
     db.delete(endpoint)
     db.commit()
 
@@ -109,9 +105,8 @@ def create_webhook_delivery(
     db: Session,
     endpoint: WebhookEndpoint,
     event_type: str,
-    payload: dict
+    payload: dict,
 ) -> WebhookDelivery:
-
     if event_type not in SUPPORTED_WEBHOOK_EVENTS:
         raise ValueError(
             f"Unsupported webhook event type: {event_type}"
@@ -121,7 +116,8 @@ def create_webhook_delivery(
         endpoint_id=endpoint.id,
         event_type=event_type,
         status="PENDING",
-        attempt_count=0
+        payload=payload,
+        attempt_count=0,
     )
 
     db.add(delivery)
@@ -129,15 +125,18 @@ def create_webhook_delivery(
     db.refresh(delivery)
 
     return delivery
+
+
 def queue_webhook_event(
     db: Session,
     owner_id: int,
     event_type: str,
     payload: dict,
 ) -> list[WebhookDelivery]:
-
     if event_type not in SUPPORTED_WEBHOOK_EVENTS:
-        raise ValueError(f"Unsupported webhook event type: {event_type}")
+        raise ValueError(
+            f"Unsupported webhook event type: {event_type}"
+        )
 
     endpoints = (
         db.query(WebhookEndpoint)
@@ -155,11 +154,14 @@ def queue_webhook_event(
             endpoint_id=endpoint.id,
             event_type=event_type,
             status="PENDING",
+            payload=payload,
             attempt_count=0,
         )
         db.add(delivery)
         deliveries.append(delivery)
 
+    # Preserve the caller's transaction boundary. Incident creation
+    # commits the incident and queued deliveries together.
     db.flush()
 
     return deliveries
@@ -167,19 +169,18 @@ def queue_webhook_event(
 
 def build_webhook_signature(
     secret: str,
-    payload: dict
+    payload: dict,
 ) -> str:
-
     body = json.dumps(
         payload,
         separators=(",", ":"),
-        sort_keys=True
+        sort_keys=True,
     ).encode("utf-8")
 
     return hmac.new(
         secret.encode("utf-8"),
         body,
-        hashlib.sha256
+        hashlib.sha256,
     ).hexdigest()
 
 
@@ -187,9 +188,8 @@ def mark_delivery_success(
     db: Session,
     delivery: WebhookDelivery,
     response_status: int,
-    response_body: str | None
+    response_body: str | None,
 ) -> WebhookDelivery:
-
     delivery.status = "DELIVERED"
     delivery.attempt_count += 1
     delivery.response_status = response_status
@@ -206,9 +206,8 @@ def mark_delivery_failure(
     db: Session,
     delivery: WebhookDelivery,
     response_status: int | None,
-    response_body: str | None
+    response_body: str | None,
 ) -> WebhookDelivery:
-
     delivery.status = "FAILED"
     delivery.attempt_count += 1
     delivery.response_status = response_status

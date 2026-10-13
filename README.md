@@ -160,6 +160,19 @@ The API should be available at:
 
 Keep this terminal open while developing.
 
+### Run the webhook delivery worker
+
+Start a separate terminal from the repository root after configuring the same
+database environment variables:
+
+```powershell
+$env:PYTHONPATH = "$PWD\backend"
+python -m app.webhook_worker
+```
+
+The worker sends due deliveries, applies persisted retry delays, and can also
+process one batch with `python -m app.webhook_worker --once`.
+
 ## Frontend setup
 
 Open a second PowerShell terminal from the repository root.
@@ -249,6 +262,11 @@ Review migration status before deploying changes.
 - Use unique secrets and credentials for each environment.
 - Keep dependencies updated through a deliberate, tested dependency-management process.
 - Use HTTPS and appropriately restricted CORS origins in production.
+- The webhook worker rejects local and non-public destinations, disables
+  redirects, and checks DNS results before sending. DNS rebinding remains a
+  residual risk because the HTTP client resolves the hostname again when it
+  connects. Restrict worker egress at the network layer to approved public
+  destinations and block private, loopback, link-local, and metadata ranges.
 - Treat browser `localStorage` tokens as accessible to JavaScript; cross-site scripting can expose them.
 - Do not treat compliance-control mappings as proof of certification or regulatory compliance.
 - Review configuration, access controls, migrations, and test results before deployment.

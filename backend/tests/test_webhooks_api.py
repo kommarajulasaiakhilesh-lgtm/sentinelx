@@ -4,8 +4,8 @@ from app.api.dependencies import get_current_user
 from app.db.database import SessionLocal
 from app.main import app
 from app.models.user import User
+from app.models.webhook_delivery import WebhookDelivery
 from app.models.webhook_endpoint import WebhookEndpoint
-
 
 client = TestClient(app)
 
@@ -33,20 +33,38 @@ def teardown_user_override():
     app.dependency_overrides.clear()
 
 
+
 def cleanup_webhooks():
     db = SessionLocal()
 
     try:
-        db.query(WebhookEndpoint).filter(
-            WebhookEndpoint.owner_id == 4
-        ).delete(
-            synchronize_session=False
-        )
+        endpoint_ids = [
+            endpoint_id
+            for (endpoint_id,) in (
+                db.query(WebhookEndpoint.id)
+                .filter(WebhookEndpoint.owner_id == 4)
+                .all()
+            )
+        ]
+
+        if endpoint_ids:
+            db.query(WebhookDelivery).filter(
+                WebhookDelivery.endpoint_id.in_(endpoint_ids)
+            ).delete(synchronize_session=False)
+
+            db.query(WebhookEndpoint).filter(
+                WebhookEndpoint.id.in_(endpoint_ids)
+            ).delete(synchronize_session=False)
 
         db.commit()
 
+    except Exception:
+        db.rollback()
+        raise
+
     finally:
         db.close()
+
 
 
 def test_create_webhook():
