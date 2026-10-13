@@ -27,6 +27,7 @@ from app.models.agent_api_key import AgentAPIKey
 security = HTTPBearer()
 
 
+
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
@@ -41,17 +42,25 @@ def get_current_user(
             detail="Invalid or expired token"
         )
 
+    subject = payload.get("sub")
     username = payload.get("username")
 
-    if username is None:
+    # Require a valid database ID and username claim.
+    if (
+        not isinstance(subject, str)
+        or not subject.isdecimal()
+        or not isinstance(username, str)
+        or not username
+    ):
         raise HTTPException(
             status_code=401,
             detail="Invalid token"
         )
 
+    # Resolve identity using the database user ID.
     user = (
         db.query(User)
-        .filter(User.username == username)
+        .filter(User.id == int(subject))
         .first()
     )
 
@@ -61,6 +70,14 @@ def get_current_user(
             detail="User not found"
         )
 
+    # Reject inconsistent identity claims.
+    if user.username != username:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
+
+    # The database remains authoritative for account status.
     if not user.is_active:
         raise HTTPException(
             status_code=403,
@@ -68,6 +85,7 @@ def get_current_user(
         )
 
     return user
+
 
 
 # ============================================================
