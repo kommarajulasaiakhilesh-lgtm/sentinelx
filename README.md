@@ -256,6 +256,88 @@ python -m alembic -c backend\alembic.ini heads
 
 Review migration status before deploying changes.
 
+## Production operations
+
+### Application startup
+
+Run SentinelX as a managed application process in production. Do not use the development server's `--reload` option. Configure the deployment platform or reverse proxy to terminate HTTPS and forward requests to the ASGI application.
+
+Example command from the repository root:
+
+```powershell
+$env:PYTHONPATH = "$PWD\backend"
+python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
+```
+
+Use the deployment platform's process manager, restart policy, resource limits, and secret-management facilities. Do not commit production environment files or credentials.
+
+### Production configuration
+
+Before deployment, verify that:
+
+- `DATABASE_URL` points to the intended production database and is available to the application process.
+- `SECRET_KEY` is a strong, unique secret of at least 32 characters and is supplied through the deployment's secret store.
+- `ALGORITHM` is set to `HS256`.
+- `ACCESS_TOKEN_EXPIRE_MINUTES` is a positive value appropriate for the deployment.
+- `CORS_ORIGINS` contains only the exact frontend origins that need access.
+- `SQL_ECHO` is `false` in production.
+- HTTPS is enforced at the public entry point, and database access is restricted to trusted services.
+
+Keep application and worker configuration consistent where they share database and security settings. Never print secrets into deployment logs.
+
+### Database migrations
+
+Apply database migrations as a controlled deployment step before routing traffic to a new application version. From the repository root, run:
+
+```powershell
+$env:PYTHONPATH = "$PWD\backend"
+python -m alembic -c backend\alembic.ini upgrade head
+python -m alembic -c backend\alembic.ini current
+python -m alembic -c backend\alembic.ini heads
+```
+
+Confirm the database is at the expected migration head. Review migration changes before applying them to production, and take appropriate backups according to your database recovery plan. Changes that do not alter the schema do not require a new migration.
+
+### Liveness and readiness probes
+
+- **`GET /health` — liveness:** confirms that the application responds. It does not verify database connectivity.
+- **`GET /ready` — readiness:** checks database connectivity with a lightweight query. It returns HTTP `200` when ready and HTTP `503` when the database check fails.
+
+Configure the deployment platform to use `/health` for liveness and `/ready` for readiness when it supports separate probes. A readiness failure should prevent the instance from receiving traffic until it recovers.
+
+### Request IDs and request logs
+
+SentinelX accepts a valid `X-Request-ID` request header or generates an ID when the supplied value is missing or invalid. Accepted IDs contain 1–128 ASCII letters, digits, periods, underscores, or hyphens. The response includes the resulting `X-Request-ID` header.
+
+The `sentinelx.request` logger records request metadata, including the request ID, HTTP method, route template, status code, and duration. It is designed to avoid logging query strings, request bodies, cookies, and authorization headers.
+
+Use the request ID to correlate an HTTP request with its application log entry. Treat client-supplied request IDs as untrusted correlation values, not as authentication or authorization evidence. Configure log retention and access according to your operational and privacy requirements.
+
+### Webhook delivery worker
+
+Run the webhook delivery worker as a separate managed process, rather than relying on the API process to keep it running. From the repository root, start it in a separate terminal or service:
+
+```powershell
+$env:PYTHONPATH = "$PWD\backend"
+python -m app.webhook_worker
+```
+
+For a controlled one-time processing run, use:
+
+```powershell
+python -m app.webhook_worker --once
+```
+
+Provide the worker with the required environment configuration and database access. Configure process supervision and restart behavior, monitor worker logs and delivery outcomes, and restrict outbound network access to the destinations the worker needs. Keep the worker's network controls in place even when destination validation is enabled.
+
+### Operational troubleshooting checklist
+
+1. **Application not responding:** check process health, startup logs, deployment configuration, and the `/health` endpoint.
+2. **Instance not ready:** check `/ready`, database availability, credentials, network access, and migration status. Do not expose database credentials or internal exception details in diagnostic output.
+3. **Investigating a request:** capture its `X-Request-ID` and search the application logs for the same ID.
+4. **Webhook deliveries delayed or failing:** inspect worker logs, delivery status, database connectivity, destination reachability, and outbound network restrictions.
+5. **Deployment or migration problems:** inspect the deployed application version and Alembic current/head status, then follow the deployment's rollback and database recovery procedures.
+
 ## Security notes
 
 - Never commit `.env`, `.env.local`, passwords, access tokens, database credentials, or production secrets.

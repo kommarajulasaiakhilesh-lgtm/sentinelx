@@ -1,4 +1,11 @@
-from fastapi import FastAPI, Depends
+import logging
+from time import perf_counter
+
+from fastapi import Depends, FastAPI, HTTPException, Request
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.core.observability import get_request_id
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.webhooks import router as webhooks_router
 from app.models.sentinelx_control import SentinelXControl
@@ -47,8 +54,6 @@ from app.api.risk_scoring_configurations import (
 )
 
 
-
-
 app = FastAPI(
     title="SentinelX",
     description="AI Agent Security Control Plane",
@@ -63,6 +68,53 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+request_logger = logging.getLogger("sentinelx.request")
+
+
+@app.middleware("http")
+async def request_observability(request: Request, call_next):
+    request_id = get_request_id(
+        request.headers.get("X-Request-ID")
+    )
+    request.state.request_id = request_id
+    started_at = perf_counter()
+
+    try:
+        response = await call_next(request)
+    except Exception:
+        duration_ms = (perf_counter() - started_at) * 1000
+        route = request.scope.get("route")
+        route_template = getattr(route, "path", "<unmatched>")
+
+        request_logger.error(
+            "http_request_failed request_id=%s method=%s "
+            "route=%s status_code=500 duration_ms=%.2f",
+            request_id,
+            request.method,
+            route_template,
+            duration_ms,
+        )
+        raise
+
+    duration_ms = (perf_counter() - started_at) * 1000
+    route = request.scope.get("route")
+    route_template = getattr(route, "path", "<unmatched>")
+
+    response.headers["X-Request-ID"] = request_id
+
+    request_logger.info(
+        "http_request request_id=%s method=%s "
+        "route=%s status_code=%d duration_ms=%.2f",
+        request_id,
+        request.method,
+        route_template,
+        response.status_code,
+        duration_ms,
+    )
+
+    return response
+
 
 
 app.include_router(auth_router)
@@ -98,6 +150,23 @@ def health():
     return {
         "status": "healthy"
     }
+
+@app.get("/ready")
+def readiness():
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        raise HTTPException(
+            status_code=503,
+            detail="Database is not ready",
+        ) from None
+
+    return {
+        "status": "ready",
+        "database": "ready",
+    }
+
 
 
 @app.get("/api/protected")

@@ -62,7 +62,8 @@ class Base(DeclarativeBase):
 
 engine = create_engine(
     DATABASE_URL,
-    echo=SQL_ECHO
+    echo=SQL_ECHO,
+    pool_pre_ping=True,
 )
 
 
