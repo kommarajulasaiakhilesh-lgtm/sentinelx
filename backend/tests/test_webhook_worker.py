@@ -334,7 +334,6 @@ class _SessionContext:
     def __exit__(self, *args):
         return False
 
-
 def test_disabled_endpoint_is_not_sent(
     monkeypatch, delivery_setup
 ):
@@ -350,6 +349,7 @@ def test_disabled_endpoint_is_not_sent(
     assert delivery.status == "FAILED"
     assert delivery.attempt_count == 1
     assert delivery.locked_until is None
+
 
 def test_finish_delivery_does_not_commit_when_lease_is_no_longer_valid(
     monkeypatch,
@@ -444,3 +444,95 @@ def test_empty_dns_resolution_is_rejected(monkeypatch):
 def test_special_ip_addresses_and_invalid_ports_are_rejected(url):
     with pytest.raises(ValueError):
         worker.validate_destination(url)
+
+
+def test_claim_batch_propagates_database_commit_failure(monkeypatch):
+    session = SimpleNamespace(
+        scalars=MagicMock(
+            return_value=SimpleNamespace(all=lambda: [])
+        ),
+        commit=MagicMock(side_effect=RuntimeError("database unavailable")),
+        rollback=MagicMock(),
+    )
+    monkeypatch.setattr(
+        worker,
+        "SessionLocal",
+        lambda: _SessionContext(session),
+    )
+
+    with pytest.raises(RuntimeError, match="database unavailable"):
+        worker.claim_batch(1)
+
+
+def test_lease_renewal_database_failure_is_reported_as_lease_loss(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        worker,
+        "renew_lease",
+        MagicMock(side_effect=RuntimeError("database unavailable")),
+    )
+    monkeypatch.setattr(worker, "LEASE_RENEW_INTERVAL_SECONDS", 0.01)
+
+    renewer = worker.LeaseRenewer(101, "claim-1")
+    renewer.__enter__()
+
+    try:
+        assert renewer.lost_event.wait(timeout=1)
+    finally:
+        renewer.__exit__(None, None, None)
+
+
+def test_attempt_commit_failure_prevents_http_request(
+    monkeypatch, delivery_setup
+):
+    delivery, endpoint, finish = delivery_setup
+    session = FakeSession(delivery, endpoint)
+    session.commit = MagicMock(
+        side_effect=RuntimeError("database unavailable")
+    )
+    monkeypatch.setattr(worker, "SessionLocal", lambda: session)
+
+    client_factory = MagicMock()
+    monkeypatch.setattr(worker.httpx, "Client", client_factory)
+
+    with pytest.raises(RuntimeError, match="database unavailable"):
+        worker.process_delivery(delivery.id, "claim-1")
+
+    client_factory.assert_not_called()
+    finish.assert_not_called()
+
+
+def test_finish_delivery_commit_failure_propagates_without_false_success(
+    monkeypatch,
+):
+    session = SimpleNamespace(
+        get=MagicMock(
+            return_value=SimpleNamespace(
+                id=101,
+                attempt_count=1,
+                claim_token="claim-1",
+            )
+        ),
+        execute=MagicMock(return_value=SimpleNamespace(rowcount=1)),
+        commit=MagicMock(
+            side_effect=RuntimeError("database unavailable")
+        ),
+        rollback=MagicMock(),
+    )
+    monkeypatch.setattr(
+        worker,
+        "SessionLocal",
+        lambda: _SessionContext(session),
+    )
+
+    with pytest.raises(RuntimeError, match="database unavailable"):
+        worker.finish_delivery(
+            101,
+            "claim-1",
+            success=True,
+            response_status=204,
+        )
+
+    session.execute.assert_called_once()
+    session.commit.assert_called_once()
