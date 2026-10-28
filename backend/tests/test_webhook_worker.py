@@ -379,3 +379,68 @@ def test_finish_delivery_does_not_commit_when_lease_is_no_longer_valid(
     assert "claim_token" in conditions
     session.rollback.assert_called_once()
     session.commit.assert_not_called()
+
+
+def test_dns_resolution_rejects_mixed_public_and_private_addresses(monkeypatch):
+    import socket
+
+    public_result = (
+        socket.AF_INET,
+        socket.SOCK_STREAM,
+        6,
+        "",
+        ("8.8.8.8", 443),
+    )
+    private_result = (
+        socket.AF_INET,
+        socket.SOCK_STREAM,
+        6,
+        "",
+        ("10.0.0.5", 443),
+    )
+
+    monkeypatch.setattr(
+        worker.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [public_result, private_result],
+    )
+
+    with pytest.raises(ValueError, match="non-public"):
+        worker.validate_destination("https://hooks.example.com/events")
+
+
+def test_dns_resolution_failure_is_rejected(monkeypatch):
+    import socket
+
+    def fail_resolution(*args, **kwargs):
+        raise socket.gaierror("simulated DNS failure")
+
+    monkeypatch.setattr(worker.socket, "getaddrinfo", fail_resolution)
+
+    with pytest.raises(ValueError, match="could not be safely resolved"):
+        worker.validate_destination("https://hooks.example.com/events")
+
+
+def test_empty_dns_resolution_is_rejected(monkeypatch):
+    monkeypatch.setattr(
+        worker.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [],
+    )
+
+    with pytest.raises(ValueError, match="did not resolve"):
+        worker.validate_destination("https://hooks.example.com/events")
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://[::1]/callback",
+        "http://[fc00::1]/callback",
+        "http://169.254.169.254/latest/meta-data/",
+        "http://hooks.example.com:invalid/callback",
+    ],
+)
+def test_special_ip_addresses_and_invalid_ports_are_rejected(url):
+    with pytest.raises(ValueError):
+        worker.validate_destination(url)

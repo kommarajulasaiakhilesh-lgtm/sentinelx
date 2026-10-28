@@ -154,24 +154,22 @@ python -m uvicorn app.main:app --app-dir backend --reload
 
 The API should be available at:
 
-- API base: http://127.0.0.1:8000
-- Interactive API documentation: http://127.0.0.1:8000/docs
-- Health endpoint: http://127.0.0.1:8000/health
+- API base: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- Interactive API documentation: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- Health endpoint: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
 Keep this terminal open while developing.
 
 ### Run the webhook delivery worker
 
-Start a separate terminal from the repository root after configuring the same
-database environment variables:
+Start a separate terminal from the repository root after configuring the same database environment variables:
 
 ```powershell
 $env:PYTHONPATH = "$PWD\backend"
 python -m app.webhook_worker
 ```
 
-The worker sends due deliveries, applies persisted retry delays, and can also
-process one batch with `python -m app.webhook_worker --once`.
+The worker sends due deliveries, applies persisted retry delays, and can also process one batch with `python -m app.webhook_worker --once`.
 
 ## Frontend setup
 
@@ -195,7 +193,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Authentication
 
@@ -344,11 +342,7 @@ Provide the worker with the required environment configuration and database acce
 - Use unique secrets and credentials for each environment.
 - Keep dependencies updated through a deliberate, tested dependency-management process.
 - Use HTTPS and appropriately restricted CORS origins in production.
-- The webhook worker rejects local and non-public destinations, disables
-  redirects, and checks DNS results before sending. DNS rebinding remains a
-  residual risk because the HTTP client resolves the hostname again when it
-  connects. Restrict worker egress at the network layer to approved public
-  destinations and block private, loopback, link-local, and metadata ranges.
+- Webhook destination validation is defense in depth, not a complete SSRF boundary. The worker rejects local and non-public destinations, disables redirects and environment-derived proxies, and checks DNS results before sending. DNS rebinding remains possible because the HTTP client performs its own hostname resolution when connecting. Before production use, isolate the worker from internal networks and enforce outbound network rules that block loopback, private, link-local, and cloud metadata destinations, including IPv4 and IPv6. Verify those controls in the actual hosting environment; application validation and documentation alone do not enforce network isolation.
 - Treat browser `localStorage` tokens as accessible to JavaScript; cross-site scripting can expose them.
 - Do not treat compliance-control mappings as proof of certification or regulatory compliance.
 - Review configuration, access controls, migrations, and test results before deployment.
