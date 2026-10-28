@@ -1,10 +1,10 @@
 import logging
 from time import perf_counter
-
 from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-
 from app.core.observability import get_request_id
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.webhooks import router as webhooks_router
@@ -59,6 +59,27 @@ app = FastAPI(
     description="AI Agent Security Control Plane",
     version="0.1.0"
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_error_handler(
+    request: Request,
+    exc: RequestValidationError,
+):
+    # Pydantic's default errors include the rejected input value, which can
+    # echo passwords, API keys, and other request secrets back to clients.
+    safe_errors = [
+        {
+            "loc": error.get("loc"),
+            "msg": error.get("msg"),
+            "type": error.get("type"),
+        }
+        for error in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=422,
+        content={"detail": safe_errors},
+    )
 
 
 app.add_middleware(

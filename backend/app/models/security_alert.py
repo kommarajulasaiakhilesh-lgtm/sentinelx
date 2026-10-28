@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
@@ -8,6 +8,13 @@ from app.db.database import Base
 
 class SecurityAlert(Base):
     __tablename__ = "security_alerts"
+    __table_args__ = (
+        UniqueConstraint(
+            "security_event_id",
+            "alert_type",
+            name="uq_security_alerts_event_alert_type",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(
         primary_key=True,

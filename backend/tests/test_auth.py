@@ -149,6 +149,54 @@ def test_register_rejects_duplicate_email(auth_client):
     assert response.json()["detail"] == "Email already exists"
 
 
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {
+            "username": "u" * 51,
+            "email": "new@example.com",
+            "password": "StrongTestPassword123!",
+        },
+        {
+            "username": "newuser",
+            "email": "e" * 256,
+            "password": "StrongTestPassword123!",
+        },
+        {
+            "username": "newuser",
+            "email": "new@example.com",
+            "password": "p" * 1025,
+        },
+    ],
+)
+def test_register_rejects_oversized_auth_fields(auth_client, payload):
+    client, _ = auth_client
+
+    response = client.post("/api/auth/register", json=payload)
+
+    assert response.status_code == 422
+
+
+def test_login_rejects_oversized_password_before_hash_verification(
+    auth_client, monkeypatch
+):
+    client, db = auth_client
+    db.users.append(make_user())
+    monkeypatch.setattr(
+        "app.api.auth.verify_password",
+        lambda *_: pytest.fail("Oversized password must fail validation"),
+    )
+
+    oversized_password = "p" * 1025
+    response = client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": oversized_password},
+    )
+
+    assert response.status_code == 422
+    assert oversized_password not in response.text
+
+
 def test_login_returns_bearer_token(auth_client, monkeypatch):
     client, db = auth_client
     db.users.append(make_user())

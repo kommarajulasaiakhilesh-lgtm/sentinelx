@@ -5,6 +5,11 @@ from fastapi.testclient import TestClient
 from app.api.dependencies import get_current_user
 from app.main import app
 from app.services.event_stream_service import security_event_stream
+from app.services.event_stream_service import (
+    MAX_QUEUED_EVENTS_PER_SUBSCRIBER,
+    MAX_SUBSCRIBERS_PER_USER,
+    SubscriberLimitExceeded,
+)
 
 
 client = TestClient(app)
@@ -129,6 +134,55 @@ def test_security_event_stream_unsubscribe():
         assert queue.empty()
 
     asyncio.run(test_unsubscribe())
+
+
+def test_security_event_stream_drops_oldest_when_queue_is_full():
+    async def test_bounded_queue():
+        user_id = 987654321
+        queue = await security_event_stream.subscribe(user_id)
+
+        try:
+            for event_id in range(MAX_QUEUED_EVENTS_PER_SUBSCRIBER + 5):
+                security_event_stream.publish(
+                    user_id=user_id,
+                    event_type="SECURITY_EVENT",
+                    data={"id": event_id},
+                )
+
+            await asyncio.sleep(0)
+
+            assert queue.maxsize == MAX_QUEUED_EVENTS_PER_SUBSCRIBER
+            reset = queue.get_nowait()
+            assert reset == {"event": "STREAM_RESET", "data": {}}
+            assert queue.get_nowait()["data"]["id"] == (
+                MAX_QUEUED_EVENTS_PER_SUBSCRIBER + 1
+            )
+
+        finally:
+            security_event_stream.unsubscribe(user_id, queue)
+
+    asyncio.run(test_bounded_queue())
+
+
+def test_security_event_stream_limits_connections_per_user():
+    async def test_subscription_limit():
+        user_id = 987654322
+        queues = [
+            await security_event_stream.subscribe(user_id)
+            for _ in range(MAX_SUBSCRIBERS_PER_USER)
+        ]
+
+        try:
+            try:
+                await security_event_stream.subscribe(user_id)
+                assert False, "Expected the per-user subscription limit"
+            except SubscriberLimitExceeded:
+                pass
+        finally:
+            for queue in queues:
+                security_event_stream.unsubscribe(user_id, queue)
+
+    asyncio.run(test_subscription_limit())
 
 
 def test_security_event_stream_endpoint_requires_authentication():

@@ -19,19 +19,19 @@ jobs:
       postgres:
         image: postgres:18
         env:
-          POSTGRES_DB: sentinelx_db
+          POSTGRES_DB: sentinelx_test_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d sentinelx_db"
+          --health-cmd "pg_isready -U postgres -d sentinelx_test_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
 
     env:
-      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/sentinelx_db
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/sentinelx_test_db
       SECRET_KEY: ci-only-secret-key-at-least-32-characters-long
       SQL_ECHO: "false"
       PYTHONPATH: backend
@@ -81,6 +81,10 @@ jobs:
       - name: Run ESLint
         working-directory: frontend
         run: npm run lint
+
+      - name: Run frontend regression tests
+        working-directory: frontend
+        run: npm test
 
       - name: Check TypeScript
         working-directory: frontend

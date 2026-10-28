@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { API_BASE_URL } from "@/lib/api-config";
+import { expireAccessToken } from "@/features/auth/auth-storage";
 
 type SecurityStreamEvent = {
   event?: string;
@@ -114,6 +115,11 @@ export function useSecurityEventStream() {
           );
 
           if (!response.ok || !response.body) {
+            if (response.status === 401 || response.status === 403) {
+              expireAccessToken();
+              break;
+            }
+
             throw new Error(
               `Security event stream failed with status ${response.status}`,
             );
@@ -217,6 +223,20 @@ function handleSecurityEvent(
   queryClient: ReturnType<typeof useQueryClient>,
 ) {
   switch (event) {
+    case "STREAM_RESET":
+      for (const queryKey of [
+        ["agents"],
+        ["agent-api-keys"],
+        ["analytics"],
+        ["security-events"],
+        ["security-alerts"],
+        ["incidents"],
+        ["tools"],
+      ]) {
+        queryClient.invalidateQueries({ queryKey });
+      }
+      break;
+
     case "SECURITY_EVENT":
       queryClient.invalidateQueries({
         queryKey: ["security-events"],

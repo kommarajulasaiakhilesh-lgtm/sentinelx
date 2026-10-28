@@ -27,7 +27,7 @@ def test_database_connection():
         result = connection.execute(text("SELECT current_database()"))
         database_name = result.scalar()
 
-    assert database_name == "sentinelx_db"
+    assert database_name == engine.url.database
 
 def test_readiness_when_database_is_available():
     response = client.get("/ready")

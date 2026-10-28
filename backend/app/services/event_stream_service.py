@@ -6,6 +6,14 @@ from collections import defaultdict
 # connected to another worker. Use shared pub/sub for multi-worker delivery.
 
 
+MAX_SUBSCRIBERS_PER_USER = 5
+MAX_QUEUED_EVENTS_PER_SUBSCRIBER = 100
+
+
+class SubscriberLimitExceeded(Exception):
+    pass
+
+
 class SecurityEventStream:
     def __init__(self):
         self._subscribers: dict[
@@ -14,10 +22,16 @@ class SecurityEventStream:
         ] = defaultdict(set)
 
     async def subscribe(self, user_id: int) -> asyncio.Queue:
-        queue: asyncio.Queue = asyncio.Queue()
+        subscribers = self._subscribers[user_id]
+        if len(subscribers) >= MAX_SUBSCRIBERS_PER_USER:
+            raise SubscriberLimitExceeded
+
+        queue: asyncio.Queue = asyncio.Queue(
+            maxsize=MAX_QUEUED_EVENTS_PER_SUBSCRIBER
+        )
         loop = asyncio.get_running_loop()
 
-        self._subscribers[user_id].add((loop, queue))
+        subscribers.add((loop, queue))
 
         return queue
 
@@ -60,9 +74,29 @@ class SecurityEventStream:
 
         for loop, queue in list(subscribers):
             loop.call_soon_threadsafe(
-                queue.put_nowait,
+                self._enqueue_latest,
+                queue,
                 payload
             )
+
+    @staticmethod
+    def _enqueue_latest(queue: asyncio.Queue, payload: dict) -> None:
+        if queue.full():
+            try:
+                while True:
+                    queue.get_nowait()
+            except asyncio.QueueEmpty:
+                pass
+
+            # The client consumes stream events as cache invalidations. Tell
+            # it to refresh all relevant views after dropping queued events.
+            payload = {"event": "STREAM_RESET", "data": {}}
+
+        try:
+            queue.put_nowait(payload)
+        except asyncio.QueueFull:
+            # Another queued callback may have filled the queue first.
+            pass
 
 
 security_event_stream = SecurityEventStream()

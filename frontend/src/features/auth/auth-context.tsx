@@ -3,6 +3,7 @@
 import {
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -12,6 +13,7 @@ import {
   clearAccessToken,
   getAccessToken,
   setAccessToken,
+  AUTH_SESSION_EXPIRED_EVENT,
 } from "./auth-storage";
 
 interface AuthContextValue {
@@ -27,6 +29,17 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => getAccessToken());
   const [isLoading] = useState(false);
+
+  useEffect(() => {
+    const handleSessionExpired = () => setToken(null);
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired);
+    return () => {
+      window.removeEventListener(
+        AUTH_SESSION_EXPIRED_EVENT,
+        handleSessionExpired,
+      );
+    };
+  }, []);
 
   const login = useCallback(
     async (username: string, password: string) => {

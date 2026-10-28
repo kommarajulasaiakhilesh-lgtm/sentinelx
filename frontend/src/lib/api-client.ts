@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "./api-config";
+import { expireAccessToken } from "@/features/auth/auth-storage";
 
 type ApiRequestOptions = RequestInit & {
   token?: string;
@@ -25,6 +26,10 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      expireAccessToken();
+    }
+
     let message = `API request failed with status ${response.status}`;
 
     try {

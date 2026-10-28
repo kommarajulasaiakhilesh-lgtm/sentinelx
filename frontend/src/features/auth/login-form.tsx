@@ -29,11 +29,13 @@ const loginSchema = z.object({
   username: z
     .string()
     .min(1, "Operator identity is required")
-    .min(3, "Identity must contain at least 3 characters"),
+    .min(3, "Identity must contain at least 3 characters")
+    .max(50, "Identity must contain at most 50 characters"),
   password: z
     .string()
     .min(1, "Access credential is required")
-    .min(6, "Credential must contain at least 6 characters"),
+    .min(6, "Credential must contain at least 6 characters")
+    .max(1024, "Credential is too long"),
 });
 
 const registerSchema = z
@@ -41,15 +43,18 @@ const registerSchema = z
     username: z
       .string()
       .min(1, "Operator identity is required")
-      .min(3, "Identity must contain at least 3 characters"),
+      .min(3, "Identity must contain at least 3 characters")
+      .max(50, "Identity must contain at most 50 characters"),
     email: z
       .string()
       .min(1, "Operator email is required")
-      .email("Enter a valid email address"),
+      .email("Enter a valid email address")
+      .max(255, "Email must contain at most 255 characters"),
     password: z
       .string()
       .min(1, "Access credential is required")
-      .min(6, "Credential must contain at least 6 characters"),
+      .min(6, "Credential must contain at least 6 characters")
+      .max(1024, "Credential is too long"),
     confirmPassword: z.string().min(1, "Confirm your access credential"),
   })
   .refine((values) => values.password === values.confirmPassword, {

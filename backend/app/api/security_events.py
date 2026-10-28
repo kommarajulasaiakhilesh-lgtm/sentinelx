@@ -1,6 +1,6 @@
 import asyncio
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.models.security_event import SecurityEvent
 from app.models.user import User
 from app.schemas.security_event import SecurityEventListResponse
 from app.services.event_stream_service import (
+    SubscriberLimitExceeded,
     format_sse_message,
     security_event_stream,
 )
@@ -103,9 +104,13 @@ def get_security_events(
 async def security_event_stream_endpoint(
     current_user: User = Depends(get_current_user)
 ):
-    queue = await security_event_stream.subscribe(
-        current_user.id
-    )
+    try:
+        queue = await security_event_stream.subscribe(current_user.id)
+    except SubscriberLimitExceeded:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many active security event streams",
+        ) from None
 
     async def event_generator():
         try:

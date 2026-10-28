@@ -14,7 +14,7 @@ from app.models.user import User
 client = TestClient(app)
 
 TEST_USER_ID = 4
-TEST_ADMIN_ID = 2
+TEST_ADMIN_ID = 1
 TEST_CONFIGURATION_NAME = "Phase 19 API Test Configuration"
 OTHER_USER_CONFIGURATION_NAME = "Phase 19 Other User Isolation Test"
 

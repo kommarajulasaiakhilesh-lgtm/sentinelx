@@ -91,6 +91,10 @@ def create_test_events(db, reference_time, offsets):
 
 def cleanup_test_data(db, event_ids, configuration_id):
     try:
+        # A failed insert leaves the SQLAlchemy transaction inactive; reset
+        # it before deleting the configuration created by this test.
+        db.rollback()
+
         if event_ids:
             db.query(SecurityEvent).filter(
                 SecurityEvent.id.in_(event_ids)

@@ -122,6 +122,12 @@ def test_suspend_agent_response_action():
     setup_user_override()
 
     incident_id = None
+    db = SessionLocal()
+    try:
+        seeded_agent = db.query(Agent).filter(Agent.id == 1).first()
+        original_agent_status = seeded_agent.status if seeded_agent else None
+    finally:
+        db.close()
 
     try:
         incident_id = create_incident(agent_id=1)
@@ -184,6 +190,18 @@ def test_suspend_agent_response_action():
     finally:
         if incident_id is not None:
             cleanup_incident(incident_id)
+
+        # Suspending is the behavior under test; restore the shared agent
+        # fixture so this test cannot affect subsequent tests.
+        if original_agent_status is not None:
+            db = SessionLocal()
+            try:
+                agent = db.query(Agent).filter(Agent.id == 1).first()
+                if agent is not None:
+                    agent.status = original_agent_status
+                    db.commit()
+            finally:
+                db.close()
 
         teardown_user_override()
 
@@ -643,6 +661,12 @@ def test_response_actions_are_recorded():
     setup_user_override()
 
     incident_id = None
+    db = SessionLocal()
+    try:
+        seeded_agent = db.query(Agent).filter(Agent.id == 1).first()
+        original_agent_status = seeded_agent.status if seeded_agent else None
+    finally:
+        db.close()
 
     try:
         incident_id = create_incident(agent_id=1)
@@ -683,6 +707,16 @@ def test_response_actions_are_recorded():
     finally:
         if incident_id is not None:
             cleanup_incident(incident_id)
+
+        if original_agent_status is not None:
+            db = SessionLocal()
+            try:
+                agent = db.query(Agent).filter(Agent.id == 1).first()
+                if agent is not None:
+                    agent.status = original_agent_status
+                    db.commit()
+            finally:
+                db.close()
 
         teardown_user_override()
 
@@ -777,6 +811,12 @@ def test_get_incident_response_actions():
     setup_user_override()
 
     incident_id = None
+    db = SessionLocal()
+    try:
+        seeded_agent = db.query(Agent).filter(Agent.id == 1).first()
+        original_agent_status = seeded_agent.status if seeded_agent else None
+    finally:
+        db.close()
 
     try:
         incident_id = create_incident(agent_id=1)
@@ -807,5 +847,15 @@ def test_get_incident_response_actions():
     finally:
         if incident_id is not None:
             cleanup_incident(incident_id)
+
+        if original_agent_status is not None:
+            db = SessionLocal()
+            try:
+                agent = db.query(Agent).filter(Agent.id == 1).first()
+                if agent is not None:
+                    agent.status = original_agent_status
+                    db.commit()
+            finally:
+                db.close()
 
         teardown_user_override()
