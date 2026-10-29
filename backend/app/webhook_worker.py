@@ -360,6 +360,22 @@ def process_delivery(delivery_id: int, claim_token: str) -> None:
         )
         return
 
+    # DNS validation can take long enough for the claim to expire.
+    # Renew the lease synchronously before starting the outbound request.
+    try:
+        if not renew_lease(delivery_id, claim_token):
+            logger.warning(
+                "Webhook delivery %s lost its lease before HTTP request",
+                delivery_id,
+            )
+            return
+    except Exception:
+        logger.exception(
+            "Could not confirm webhook delivery %s lease before HTTP request",
+            delivery_id,
+        )
+        raise
+
     body = canonical_payload(payload)
     headers = {
         "Content-Type": "application/json",

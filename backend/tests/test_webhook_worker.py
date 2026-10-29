@@ -94,6 +94,9 @@ def delivery_setup(monkeypatch):
 
     finish = MagicMock()
     monkeypatch.setattr(worker, "finish_delivery", finish)
+    monkeypatch.setattr(
+        worker, "renew_lease", lambda delivery_id, claim_token: True
+    )
 
     return delivery, endpoint, finish
 
@@ -245,6 +248,55 @@ def test_unsafe_destination_never_sends_http(
     )
 
 
+def test_lost_lease_after_destination_validation_prevents_http(
+    monkeypatch, delivery_setup
+):
+    delivery, endpoint, finish = delivery_setup
+
+    client_factory = MagicMock()
+    monkeypatch.setattr(worker.httpx, "Client", client_factory)
+
+    # Validation succeeds, but the worker no longer owns the lease.
+    monkeypatch.setattr(
+        worker, "validate_destination", lambda url: None
+    )
+    renew = MagicMock(return_value=False)
+    monkeypatch.setattr(worker, "renew_lease", renew)
+
+    worker.process_delivery(delivery.id, "claim-1")
+
+    renew.assert_called_once_with(delivery.id, "claim-1")
+    client_factory.assert_not_called()
+    finish.assert_not_called()
+
+
+def test_lease_confirmation_database_error_prevents_http(
+    monkeypatch, delivery_setup
+):
+    delivery, endpoint, finish = delivery_setup
+
+    client_factory = MagicMock()
+    monkeypatch.setattr(worker.httpx, "Client", client_factory)
+    monkeypatch.setattr(
+        worker,
+        "validate_destination",
+        lambda url: None,
+    )
+
+    def fail_lease_confirmation(delivery_id, claim_token):
+        raise RuntimeError("simulated database failure")
+
+    monkeypatch.setattr(
+        worker, "renew_lease", fail_lease_confirmation
+    )
+
+    with pytest.raises(RuntimeError, match="simulated database failure"):
+        worker.process_delivery(delivery.id, "claim-1")
+
+    client_factory.assert_not_called()
+    finish.assert_not_called()
+
+
 def test_stale_worker_does_not_start_attempt_or_send(monkeypatch, delivery_setup):
     delivery, endpoint, _ = delivery_setup
     delivery.attempt_count = 2
@@ -333,6 +385,7 @@ class _SessionContext:
 
     def __exit__(self, *args):
         return False
+
 
 def test_disabled_endpoint_is_not_sent(
     monkeypatch, delivery_setup
