@@ -14,7 +14,6 @@ from app.models.user import User
 client = TestClient(app)
 
 TEST_USER_ID = 4
-TEST_ADMIN_ID = 1
 TEST_CONFIGURATION_NAME = "Phase 19 API Test Configuration"
 OTHER_USER_CONFIGURATION_NAME = "Phase 19 Other User Isolation Test"
 
@@ -45,6 +44,28 @@ def set_user_override(user_id: int) -> None:
             raise RuntimeError(f"Test user {user_id} is inactive")
 
         app.dependency_overrides[get_current_user] = lambda: user
+
+    finally:
+        db.close()
+
+        
+def get_active_admin_id() -> int:
+    db = SessionLocal()
+
+    try:
+        admin = (
+            db.query(User)
+            .filter(
+                User.role == "ADMIN",
+                User.is_active.is_(True),
+            )
+            .first()
+        )
+
+        if admin is None:
+            raise RuntimeError("An active ADMIN is required")
+
+        return admin.id
 
     finally:
         db.close()
@@ -164,7 +185,7 @@ def test_regular_user_cannot_update_global_configuration():
 
 
 def test_admin_can_read_global_configuration():
-    set_user_override(TEST_ADMIN_ID)
+    set_user_override(get_active_admin_id())
 
     try:
         response = client.get(
@@ -184,7 +205,7 @@ def test_admin_can_read_global_configuration():
 
 
 def test_admin_can_update_global_configuration():
-    set_user_override(TEST_ADMIN_ID)
+    set_user_override(get_active_admin_id())
 
     try:
         read_response = client.get(

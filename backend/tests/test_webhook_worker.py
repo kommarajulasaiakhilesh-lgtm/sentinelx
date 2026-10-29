@@ -1,4 +1,4 @@
-
+﻿
 import hashlib
 import hmac
 from types import SimpleNamespace
@@ -536,3 +536,20 @@ def test_finish_delivery_commit_failure_propagates_without_false_success(
 
     session.execute.assert_called_once()
     session.commit.assert_called_once()
+
+
+def test_run_worker_once_continues_after_unexpected_delivery_error(monkeypatch):
+    claimed = [(101, "claim-1"), (102, "claim-2"), (103, "claim-3")]
+    processed = []
+
+    monkeypatch.setattr(worker, "claim_batch", lambda batch_size: claimed)
+
+    def fake_process_delivery(delivery_id, claim_token):
+        processed.append(delivery_id)
+        if delivery_id == 101:
+            raise RuntimeError("simulated unexpected failure")
+
+    monkeypatch.setattr(worker, "process_delivery", fake_process_delivery)
+
+    assert worker.run_worker_once(batch_size=3) == 3
+    assert processed == [101, 102, 103]
