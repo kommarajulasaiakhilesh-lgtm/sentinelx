@@ -1,4 +1,4 @@
-"""Add Phase 15 incident and webhook schema
+﻿"""Add Phase 15 incident and webhook schema
 
 Revision ID: 07f5ee1f8924
 Revises: 56e95f19bd7b
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '07f5ee1f8924'
-down_revision: Union[str, Sequence[str], None] = '56e95f19bd7b'
+down_revision: Union[str, Sequence[str], None] = 'e5a7c9d2b4f6'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

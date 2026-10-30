@@ -1,4 +1,4 @@
-"""Baseline existing SentinelX schema
+﻿"""Baseline existing SentinelX schema
 
 Revision ID: 56e95f19bd7b
 Revises: 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '56e95f19bd7b'
-down_revision: Union[str, Sequence[str], None] = None
+down_revision: Union[str, Sequence[str], None] = 'd4f8a1b2c3d4'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
