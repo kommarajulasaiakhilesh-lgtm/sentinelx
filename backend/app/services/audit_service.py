@@ -1,8 +1,9 @@
 """Audit logging helper.
 
-``record_audit`` appends a single governance event. It flushes within the
-caller's transaction so the audit entry commits atomically with the action it
-describes — if the action rolls back, so does its audit record.
+``record_audit`` appends a single governance event within the caller's
+transaction, so the audit entry commits atomically with the action it
+describes — if the action rolls back, so does its audit record. The caller is
+responsible for committing.
 """
 
 from sqlalchemy.orm import Session
@@ -32,5 +33,4 @@ def record_audit(
         summary=summary,
     )
     db.add(entry)
-    db.flush()
     return entry
