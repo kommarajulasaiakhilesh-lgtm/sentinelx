@@ -248,8 +248,8 @@ export default function IncidentsPage() {
             </span>
 
             <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
-              <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
-              Incident control online
+              <span className="size-1.5 rounded-full bg-emerald-400" />
+              Incident records
             </span>
           </div>
 

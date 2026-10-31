@@ -1,3 +1,4 @@
+
 from fastapi.testclient import TestClient
 
 from app.api.dependencies import get_current_user
@@ -33,28 +34,22 @@ def teardown_user_override():
     app.dependency_overrides.clear()
 
 
+def cleanup_webhooks(endpoint_id: int | None):
+    """Delete only the webhook endpoint created by the current test."""
+    if endpoint_id is None:
+        return
 
-def cleanup_webhooks():
     db = SessionLocal()
 
     try:
-        endpoint_ids = [
-            endpoint_id
-            for (endpoint_id,) in (
-                db.query(WebhookEndpoint.id)
-                .filter(WebhookEndpoint.owner_id == 4)
-                .all()
-            )
-        ]
+        db.query(WebhookDelivery).filter(
+            WebhookDelivery.endpoint_id == endpoint_id
+        ).delete(synchronize_session=False)
 
-        if endpoint_ids:
-            db.query(WebhookDelivery).filter(
-                WebhookDelivery.endpoint_id.in_(endpoint_ids)
-            ).delete(synchronize_session=False)
-
-            db.query(WebhookEndpoint).filter(
-                WebhookEndpoint.id.in_(endpoint_ids)
-            ).delete(synchronize_session=False)
+        db.query(WebhookEndpoint).filter(
+            WebhookEndpoint.id == endpoint_id,
+            WebhookEndpoint.owner_id == 4,
+        ).delete(synchronize_session=False)
 
         db.commit()
 
@@ -66,9 +61,9 @@ def cleanup_webhooks():
         db.close()
 
 
-
 def test_create_webhook():
     setup_user_override()
+    endpoint_id = None
 
     try:
         response = client.post(
@@ -83,6 +78,7 @@ def test_create_webhook():
         assert response.status_code == 201
 
         data = response.json()
+        endpoint_id = data["id"]
 
         assert data["owner_id"] == 4
         assert data["name"] == "Test Security Webhook"
@@ -91,11 +87,12 @@ def test_create_webhook():
 
     finally:
         teardown_user_override()
-        cleanup_webhooks()
+        cleanup_webhooks(endpoint_id)
 
 
 def test_list_webhooks():
     setup_user_override()
+    endpoint_id = None
 
     try:
         create_response = client.post(
@@ -107,10 +104,9 @@ def test_list_webhooks():
         )
 
         assert create_response.status_code == 201
+        endpoint_id = create_response.json()["id"]
 
-        response = client.get(
-            "/api/webhooks"
-        )
+        response = client.get("/api/webhooks")
 
         assert response.status_code == 200
 
@@ -124,11 +120,12 @@ def test_list_webhooks():
 
     finally:
         teardown_user_override()
-        cleanup_webhooks()
+        cleanup_webhooks(endpoint_id)
 
 
 def test_get_webhook():
     setup_user_override()
+    endpoint_id = None
 
     try:
         create_response = client.post(
@@ -140,7 +137,6 @@ def test_get_webhook():
         )
 
         assert create_response.status_code == 201
-
         endpoint_id = create_response.json()["id"]
 
         response = client.get(
@@ -152,16 +148,14 @@ def test_get_webhook():
 
     finally:
         teardown_user_override()
-        cleanup_webhooks()
+        cleanup_webhooks(endpoint_id)
 
 
 def test_get_missing_webhook_returns_404():
     setup_user_override()
 
     try:
-        response = client.get(
-            "/api/webhooks/999999999"
-        )
+        response = client.get("/api/webhooks/999999999")
 
         assert response.status_code == 404
         assert response.json()["detail"] == (
@@ -174,6 +168,7 @@ def test_get_missing_webhook_returns_404():
 
 def test_update_webhook():
     setup_user_override()
+    endpoint_id = None
 
     try:
         create_response = client.post(
@@ -185,7 +180,6 @@ def test_update_webhook():
         )
 
         assert create_response.status_code == 201
-
         endpoint_id = create_response.json()["id"]
 
         response = client.patch(
@@ -207,11 +201,12 @@ def test_update_webhook():
 
     finally:
         teardown_user_override()
-        cleanup_webhooks()
+        cleanup_webhooks(endpoint_id)
 
 
 def test_delete_webhook():
     setup_user_override()
+    endpoint_id = None
 
     try:
         create_response = client.post(
@@ -223,7 +218,6 @@ def test_delete_webhook():
         )
 
         assert create_response.status_code == 201
-
         endpoint_id = create_response.json()["id"]
 
         response = client.delete(
@@ -240,14 +234,12 @@ def test_delete_webhook():
 
     finally:
         teardown_user_override()
-        cleanup_webhooks()
+        cleanup_webhooks(endpoint_id)
 
 
 def test_webhook_requires_authentication():
     app.dependency_overrides.clear()
 
-    response = client.get(
-        "/api/webhooks"
-    )
+    response = client.get("/api/webhooks")
 
     assert response.status_code == 401

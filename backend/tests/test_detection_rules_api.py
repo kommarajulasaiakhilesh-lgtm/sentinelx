@@ -36,7 +36,7 @@ def setup_user_override():
 
 
 def teardown_user_override():
-    app.dependency_overrides.clear()
+    app.dependency_overrides.pop(get_current_user, None)
 
 
 def cleanup_rule(rule_id):
@@ -373,9 +373,9 @@ def test_detection_rule_cannot_be_accessed_by_another_owner():
             .first()
         )
 
-        if other_user is None:
-            db.close()
-            return
+        assert other_user is not None, (
+            "A second test user is required for the ownership test"
+        )
 
         rule = DetectionRule(
             owner_id=other_user.id,

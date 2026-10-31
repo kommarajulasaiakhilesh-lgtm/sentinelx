@@ -61,16 +61,19 @@ export default function GuardrailsPage() {
   const {
     data: agents = [],
     isLoading: agentsLoading,
+    isError: agentsError,
   } = useMyAgents();
 
   const {
     data: eventsData,
     isLoading: eventsLoading,
+    isError: eventsError,
   } = useSecurityEvents(1, 6);
 
   const {
     data: blockedData,
     isLoading: blockedLoading,
+    isError: blockedError,
   } = useBlockedSecurityEvents();
 
   const events = eventsData?.items ?? [];
@@ -82,6 +85,7 @@ export default function GuardrailsPage() {
 
   const isLoading =
     agentsLoading || eventsLoading || blockedLoading;
+  const isError = agentsError || eventsError || blockedError;
 
   return (
     <div className="space-y-8">
@@ -94,12 +98,12 @@ export default function GuardrailsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-300">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Runtime Protection
+              Policy Evaluation
             </div>
 
             <div className="flex items-center gap-2 text-xs text-emerald-400">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              Guardrails online
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Evaluation API
             </div>
           </div>
 
@@ -108,9 +112,8 @@ export default function GuardrailsPage() {
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            Observe the security boundary between AI-agent intent and
-            runtime execution. SentinelX evaluates actions before they
-            reach protected resources.
+            Review policy decisions for requests submitted to SentinelX. Callers
+            must enforce decisions before accessing external resources.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-slate-500">
@@ -139,29 +142,29 @@ export default function GuardrailsPage() {
       {/* METRICS */}
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
-          label="Protected Agents"
-          value={isLoading ? "—" : agents.length}
-          detail="Agents under control"
+          label="Registered Agents"
+          value={isLoading ? "—" : isError ? "!" : agents.length}
+          detail="Agents in this account's inventory"
           icon={ShieldCheck}
         />
 
         <MetricCard
-          label="Active Enforcement"
-          value={isLoading ? "—" : activeAgents}
-          detail="Currently active agents"
+          label="Active Agents"
+          value={isLoading ? "—" : isError ? "!" : activeAgents}
+          detail="Stored status is ACTIVE"
           icon={Gauge}
         />
 
         <MetricCard
           label="Actions Blocked"
-          value={isLoading ? "—" : blocked}
+          value={isLoading ? "—" : isError ? "!" : blocked}
           detail="Blocked security events"
           icon={Ban}
         />
 
         <MetricCard
           label="Runtime Events"
-          value={isLoading ? "—" : eventsData?.total ?? 0}
+          value={isLoading ? "—" : isError ? "!" : eventsData?.total ?? 0}
           detail="Recorded control decisions"
           icon={Activity}
         />
@@ -177,13 +180,13 @@ export default function GuardrailsPage() {
               </h2>
 
               <p className="mt-1 text-xs text-slate-500">
-                Runtime action security flow
+                Policy evaluation request flow
               </p>
             </div>
 
             <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              LIVE
+              Flow
             </div>
           </div>
 
@@ -266,7 +269,7 @@ export default function GuardrailsPage() {
             {[
               ["Policy evaluation", true],
               ["Agent authentication", true],
-              ["Action enforcement", true],
+              ["Decision response", true],
               ["Security event audit", true],
             ].map(([label, healthy]) => (
               <div
@@ -286,7 +289,7 @@ export default function GuardrailsPage() {
                 </div>
 
                 <span className="text-[9px] font-semibold tracking-[0.15em] text-emerald-300">
-                  OPERATIONAL
+                  Implemented
                 </span>
               </div>
             ))}
@@ -299,16 +302,16 @@ export default function GuardrailsPage() {
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
             <h2 className="font-semibold text-white">
-              Recent Runtime Decisions
+              Recent Policy Decisions
             </h2>
 
             <p className="mt-1 text-xs text-slate-500">
-              Latest actions evaluated by the security control plane
+              Latest decisions recorded from enforcement requests
             </p>
           </div>
 
           <div className="rounded-lg border border-white/10 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-500">
-            LIVE FEED
+            Latest records
           </div>
         </div>
 
@@ -318,6 +321,10 @@ export default function GuardrailsPage() {
               <LoaderCircle className="h-4 w-4 animate-spin" />
               Loading runtime activity...
             </div>
+          </div>
+        ) : isError ? (
+          <div className="flex min-h-56 items-center justify-center px-6 text-center text-sm text-amber-300">
+            Security records are unavailable. Check the agent and event APIs.
           </div>
         ) : events.length === 0 ? (
           <div className="flex min-h-56 items-center justify-center px-6 text-center">
@@ -408,8 +415,9 @@ export default function GuardrailsPage() {
           </p>
 
           <p className="mt-1 text-xs leading-5 text-slate-500">
-            SentinelX evaluates agent actions before execution and
-            records security decisions for audit and analytics.
+            SentinelX returns policy decisions for requests submitted to its
+            API and records them for audit. Callers must enforce those decisions
+            before executing external actions.
           </p>
         </div>
       </div>

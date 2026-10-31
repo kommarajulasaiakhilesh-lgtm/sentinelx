@@ -106,10 +106,10 @@ export default function AnalyticsPage() {
       : 0;
 
   const analyticsState = isLoading
-    ? "Synchronizing"
+    ? "Loading"
     : isError
-      ? "Degraded"
-      : "Operational";
+      ? "Unavailable"
+      : "Available";
 
   return (
     <div className="space-y-6">
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
                       className={`absolute inline-flex h-full w-full rounded-full ${
                         isError
                           ? "bg-amber-400/60"
-                          : "animate-ping bg-emerald-400/60"
+                          : "bg-emerald-400/60"
                       }`}
                     />
                     <span
@@ -174,7 +174,7 @@ export default function AnalyticsPage() {
               </p>
 
               <p className="mt-1 text-xs font-medium text-slate-300">
-                Live metrics
+                Latest stored metrics
               </p>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function AnalyticsPage() {
         <MetricCard
           label="Events"
           value={totalEvents}
-          detail={`${agents.length} monitored agents`}
+          detail={`${agents.length} registered agents`}
           icon={<Activity className="h-4 w-4" />}
           accent="cyan"
         />
@@ -194,7 +194,7 @@ export default function AnalyticsPage() {
         <MetricCard
           label="Blocked"
           value={blockedEvents}
-          detail="Runtime enforcement"
+          detail="Blocked decisions in stored metrics"
           icon={<ShieldAlert className="h-4 w-4" />}
           accent="red"
         />
@@ -351,8 +351,8 @@ export default function AnalyticsPage() {
 
             <SignalLine
               label="Average block rate"
-              value={`${(averageBlockRate * 100).toFixed(1)}%`}
-              percentage={Math.min(averageBlockRate * 100, 100)}
+              value={`${averageBlockRate.toFixed(1)}%`}
+              percentage={Math.min(averageBlockRate, 100)}
             />
           </div>
 
@@ -502,7 +502,7 @@ export default function AnalyticsPage() {
 
         <OperationalSignal
           label="Risk engine"
-          value="Active"
+          value={isLoading ? "Loading" : isError ? "Unavailable" : "Stored"}
           tone="emerald"
         />
       </section>
@@ -643,7 +643,7 @@ function AgentMetricRow({
           </span>
 
           <span className="font-medium text-slate-400">
-            {(blockRate * 100).toFixed(1)}%
+            {blockRate.toFixed(1)}%
           </span>
         </div>
 
@@ -653,7 +653,7 @@ function AgentMetricRow({
               riskLevel,
             )} transition-all duration-500`}
             style={{
-              width: `${Math.min(blockRate * 100, 100)}%`,
+              width: `${Math.min(blockRate, 100)}%`,
             }}
           />
         </div>

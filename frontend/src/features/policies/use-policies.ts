@@ -7,7 +7,11 @@ import { getAgentPolicies } from "./policies-api";
 
 export function usePolicies() {
   const { token } = useAuth();
-  const { data: agents = [], isLoading: agentsLoading } = useMyAgents();
+  const {
+    data: agents = [],
+    isLoading: agentsLoading,
+    isError: agentsError,
+  } = useMyAgents();
 
   const policyQueries = useQueries({
     queries: agents.map((agent) => ({
@@ -22,7 +26,7 @@ export function usePolicies() {
   const isLoading =
     agentsLoading || policyQueries.some((query) => query.isLoading);
 
-  const isError = policyQueries.some((query) => query.isError);
+  const isError = agentsError || policyQueries.some((query) => query.isError);
 
   return {
     policies,

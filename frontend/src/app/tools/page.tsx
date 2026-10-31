@@ -35,7 +35,7 @@ export default function ToolsPage() {
     (tool) => getRisk(tool) === "MEDIUM",
   );
 
-  const protectedAgents = new Set(
+  const agentsWithTools = new Set(
     tools.map((tool) => tool.agent_id),
   ).size;
 
@@ -45,10 +45,10 @@ export default function ToolsPage() {
       : Math.round((enabledTools.length / tools.length) * 100);
 
   const capabilityState = isLoading
-    ? "Synchronizing"
+    ? "Loading"
     : isError
-      ? "Degraded"
-      : "Operational";
+      ? "Unavailable"
+      : "Available";
 
   return (
     <div className="space-y-6">
@@ -72,8 +72,8 @@ export default function ToolsPage() {
               </h1>
 
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                Monitor the tools and capabilities exposed to SentinelX
-                agents, including their activation state and runtime risk.
+                Review tools registered to SentinelX agents, including stored
+                enabled state and configured risk.
               </p>
             </div>
 
@@ -82,7 +82,7 @@ export default function ToolsPage() {
                 className={`size-1.5 rounded-full ${
                   isError
                     ? "bg-amber-400"
-                    : "animate-pulse bg-emerald-400"
+                    : "bg-emerald-400"
                 }`}
               />
 
@@ -111,7 +111,7 @@ export default function ToolsPage() {
         <MetricCard
           label="Enabled"
           value={isLoading ? "—" : isError ? "!" : enabledTools.length}
-          detail="Currently executable"
+          detail="Enabled in registry"
           icon={<CheckCircle2 className="size-4" />}
           tone="emerald"
         />
@@ -125,15 +125,15 @@ export default function ToolsPage() {
         />
 
         <MetricCard
-          label="Protected Agents"
+          label="Agents with Tools"
           value={
             isLoading
               ? "—"
               : isError
                 ? "!"
-                : protectedAgents
+                : agentsWithTools
           }
-          detail={`${agents.length} agents available`}
+          detail={`${agents.length} registered agents`}
           icon={<ShieldCheck className="size-4" />}
           tone="violet"
         />
@@ -155,8 +155,7 @@ export default function ToolsPage() {
                 </h2>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Runtime capabilities currently exposed through the
-                  SentinelX control plane.
+                  Tool records registered through the SentinelX control plane.
                 </p>
               </div>
 
@@ -195,7 +194,7 @@ export default function ToolsPage() {
               </h2>
 
               <p className="mt-1 text-xs leading-5 text-slate-500">
-                Current exposure across registered runtime tools.
+                Stored enabled state across registered tools.
               </p>
             </div>
 
@@ -259,9 +258,9 @@ export default function ToolsPage() {
                 </p>
 
                 <p className="mt-1 text-[11px] leading-5 text-slate-500">
-                  Tool capabilities represent potential agent actions.
-                  Runtime policy and guardrail controls remain the
-                  enforcement boundary for execution decisions.
+                  Enabled tools describe configured capabilities; SentinelX
+                  does not execute external tools. Callers must enforce policy
+                  decisions before taking an action.
                 </p>
               </div>
             </div>
@@ -273,19 +272,19 @@ export default function ToolsPage() {
       <section className="grid gap-3 sm:grid-cols-3">
         <OperationalSignal
           label="Capability telemetry"
-          value={isError ? "Degraded" : "Available"}
+          value={isError ? "Unavailable" : "Available"}
           tone={isError ? "amber" : "emerald"}
         />
 
         <OperationalSignal
           label="Policy boundary"
-          value="Enforced"
+          value="API available"
           tone="cyan"
         />
 
         <OperationalSignal
-          label="Runtime protection"
-          value="Active"
+          label="External execution"
+          value="Caller enforced"
           tone="emerald"
         />
       </section>

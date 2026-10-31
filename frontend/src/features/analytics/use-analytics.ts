@@ -21,6 +21,7 @@ export function useAnalytics() {
   const {
     data: agents = [],
     isLoading: agentsLoading,
+    isError: agentsError,
   } = useMyAgents();
 
   const analyticsQueries = useQueries({
@@ -42,9 +43,7 @@ export function useAnalytics() {
     agentsLoading ||
     analyticsQueries.some((query) => query.isLoading);
 
-  const isError = analyticsQueries.some(
-    (query) => query.isError,
-  );
+  const isError = agentsError || analyticsQueries.some((query) => query.isError);
 
   return {
     agents,

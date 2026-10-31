@@ -13,6 +13,7 @@ export function useTools() {
   const {
     data: agents = [],
     isLoading: agentsLoading,
+    isError: agentsError,
   } = useMyAgents();
 
   const toolQueries = useQueries({
@@ -31,9 +32,7 @@ export function useTools() {
     agentsLoading ||
     toolQueries.some((query) => query.isLoading);
 
-  const isError = toolQueries.some(
-    (query) => query.isError,
-  );
+  const isError = agentsError || toolQueries.some((query) => query.isError);
 
   return {
     tools,

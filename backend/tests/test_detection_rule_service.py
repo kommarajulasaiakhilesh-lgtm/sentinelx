@@ -1,7 +1,8 @@
-from app.main import app  # noqa: F401
-
+from uuid import uuid4
 import json
+from datetime import datetime, timedelta, timezone
 
+from app.main import app  # noqa: F401
 from app.db.database import SessionLocal
 from app.models.detection_rule import DetectionRule
 from app.models.security_event import SecurityEvent
@@ -9,7 +10,6 @@ from app.services.detection_rule_service import (
     get_matching_detection_rules,
     rule_matches_event,
 )
-from datetime import datetime, timedelta, timezone
 
 
 def create_event(
@@ -218,13 +218,15 @@ def test_disabled_rule_does_not_match():
 
 
 def test_threshold_requires_multiple_matching_events():
-    first_event_id = create_event()
-    second_event_id = create_event()
+    test_reason = f"THRESHOLD_TEST_{uuid4().hex}"
+
+    first_event_id = create_event(reason=test_reason)
+    second_event_id = create_event(reason=test_reason)
 
     rule_id = create_rule(
         conditions={
             "event_type": "TOOL_ACTION",
-            "reason": "TEST_REASON",
+            "reason": test_reason,
         },
         threshold=2,
     )
@@ -254,12 +256,14 @@ def test_threshold_requires_multiple_matching_events():
 
 
 def test_threshold_not_reached_does_not_match():
-    event_id = create_event()
+    test_reason = f"THRESHOLD_TEST_{uuid4().hex}"
+
+    event_id = create_event(reason=test_reason)
 
     rule_id = create_rule(
         conditions={
             "event_type": "TOOL_ACTION",
-            "reason": "TEST_REASON",
+            "reason": test_reason,
         },
         threshold=2,
     )
@@ -349,8 +353,11 @@ def test_matching_rules_include_global_enabled_rule():
         db.close()
         cleanup_event(event_id)
         cleanup_rule(rule_id)
+
+
 def test_malformed_conditions_never_match():
     event_id = create_event()
+
     rule_id = create_rule(
         conditions={"event_type": "TOOL_ACTION"}
     )
@@ -384,6 +391,7 @@ def test_malformed_conditions_never_match():
 
 def test_empty_conditions_never_match():
     event_id = create_event()
+
     rule_id = create_rule(conditions={})
 
     db = SessionLocal()
@@ -408,15 +416,18 @@ def test_empty_conditions_never_match():
         cleanup_event(event_id)
         cleanup_rule(rule_id)
 
+
 def test_window_includes_event_exactly_at_start_boundary():
+    test_reason = f"THRESHOLD_TEST_{uuid4().hex}"
     reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    first_event_id = create_event()
-    second_event_id = create_event()
+
+    first_event_id = create_event(reason=test_reason)
+    second_event_id = create_event(reason=test_reason)
 
     rule_id = create_rule(
         conditions={
             "event_type": "TOOL_ACTION",
-            "reason": "TEST_REASON",
+            "reason": test_reason,
         },
         threshold=2,
         window_seconds=60,
@@ -430,11 +441,13 @@ def test_window_includes_event_exactly_at_start_boundary():
             .filter(SecurityEvent.id == first_event_id)
             .first()
         )
+
         second_event = (
             db.query(SecurityEvent)
             .filter(SecurityEvent.id == second_event_id)
             .first()
         )
+
         rule = (
             db.query(DetectionRule)
             .filter(DetectionRule.id == rule_id)
@@ -443,11 +456,16 @@ def test_window_includes_event_exactly_at_start_boundary():
 
         first_event.created_at = reference_time
         second_event.created_at = reference_time + timedelta(seconds=60)
+
         db.commit()
         db.refresh(first_event)
         db.refresh(second_event)
 
-        assert rule_matches_event(db, second_event, rule) is True
+        assert rule_matches_event(
+            db,
+            second_event,
+            rule,
+        ) is True
 
     finally:
         db.close()
@@ -457,14 +475,16 @@ def test_window_includes_event_exactly_at_start_boundary():
 
 
 def test_window_excludes_event_just_before_start_boundary():
+    test_reason = f"THRESHOLD_TEST_{uuid4().hex}"
     reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    first_event_id = create_event()
-    second_event_id = create_event()
+
+    first_event_id = create_event(reason=test_reason)
+    second_event_id = create_event(reason=test_reason)
 
     rule_id = create_rule(
         conditions={
             "event_type": "TOOL_ACTION",
-            "reason": "TEST_REASON",
+            "reason": test_reason,
         },
         threshold=2,
         window_seconds=60,
@@ -478,24 +498,36 @@ def test_window_excludes_event_just_before_start_boundary():
             .filter(SecurityEvent.id == first_event_id)
             .first()
         )
+
         second_event = (
             db.query(SecurityEvent)
             .filter(SecurityEvent.id == second_event_id)
             .first()
         )
+
         rule = (
             db.query(DetectionRule)
             .filter(DetectionRule.id == rule_id)
             .first()
         )
 
-        first_event.created_at = reference_time - timedelta(microseconds=1)
-        second_event.created_at = reference_time + timedelta(seconds=60)
+        first_event.created_at = (
+            reference_time - timedelta(microseconds=1)
+        )
+
+        second_event.created_at = (
+            reference_time + timedelta(seconds=60)
+        )
+
         db.commit()
         db.refresh(first_event)
         db.refresh(second_event)
 
-        assert rule_matches_event(db, second_event, rule) is False
+        assert rule_matches_event(
+            db,
+            second_event,
+            rule,
+        ) is False
 
     finally:
         db.close()
@@ -505,14 +537,16 @@ def test_window_excludes_event_just_before_start_boundary():
 
 
 def test_zero_window_counts_matching_history_before_current_event():
+    test_reason = f"THRESHOLD_TEST_{uuid4().hex}"
     reference_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    first_event_id = create_event()
-    second_event_id = create_event()
+
+    first_event_id = create_event(reason=test_reason)
+    second_event_id = create_event(reason=test_reason)
 
     rule_id = create_rule(
         conditions={
             "event_type": "TOOL_ACTION",
-            "reason": "TEST_REASON",
+            "reason": test_reason,
         },
         threshold=2,
         window_seconds=0,
@@ -526,23 +560,33 @@ def test_zero_window_counts_matching_history_before_current_event():
             .filter(SecurityEvent.id == first_event_id)
             .first()
         )
+
         second_event = (
             db.query(SecurityEvent)
             .filter(SecurityEvent.id == second_event_id)
             .first()
         )
+
         rule = (
             db.query(DetectionRule)
             .filter(DetectionRule.id == rule_id)
             .first()
         )
 
-        first_event.created_at = reference_time - timedelta(days=30)
+        first_event.created_at = (
+            reference_time - timedelta(days=30)
+        )
+
         second_event.created_at = reference_time
+
         db.commit()
         db.refresh(second_event)
 
-        assert rule_matches_event(db, second_event, rule) is True
+        assert rule_matches_event(
+            db,
+            second_event,
+            rule,
+        ) is True
 
     finally:
         db.close()

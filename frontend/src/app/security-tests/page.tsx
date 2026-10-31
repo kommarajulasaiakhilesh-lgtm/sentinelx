@@ -325,8 +325,8 @@ export default function SecurityTestsPage() {
             </span>
 
             <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
-              <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
-              Simulation engine online
+              <span className="size-1.5 rounded-full bg-emerald-400" />
+              Controlled simulation
             </span>
           </div>
 
@@ -337,8 +337,8 @@ export default function SecurityTestsPage() {
               </h1>
 
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
-                Execute controlled attack scenarios against SentinelX defenses
-                and verify that runtime security controls respond as expected.
+                Run controlled scenario simulations against SentinelX policy
+                logic and compare returned decisions with expected results.
               </p>
             </div>
 
@@ -366,12 +366,12 @@ export default function SecurityTestsPage() {
             <PipelineStage
               number="02"
               label="Simulation"
-              detail="Execute attack pattern"
+              detail="Evaluate controlled test input"
             />
             <PipelineStage
               number="03"
               label="Enforcement"
-              detail="Observe security controls"
+              detail="Apply policy and guardrail logic"
             />
             <PipelineStage
               number="04"
@@ -395,7 +395,7 @@ export default function SecurityTestsPage() {
           value={
             isLoading ? "—" : isError ? "!" : enabledScenarios.length
           }
-          detail="Ready for execution"
+          detail="Enabled in the scenario registry"
           icon={<CheckCircle2 className="size-5" />}
           tone="emerald"
         />
@@ -456,7 +456,7 @@ export default function SecurityTestsPage() {
                   <DecisionBadge
                     label={
                       passedLastRun
-                        ? "Defense behaved as expected"
+                        ? "Simulation matched expected decision"
                         : "Review required"
                     }
                     tone={passedLastRun ? "passed" : "failed"}

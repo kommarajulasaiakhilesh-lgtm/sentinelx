@@ -74,16 +74,14 @@ export default function EventsPage() {
   ).length;
 
   const allowedCount = events.filter(
-    (event) =>
-      !event.decision.toUpperCase().includes("BLOCK") &&
-      !event.decision.toUpperCase().includes("WARN"),
+    (event) => event.decision.toUpperCase() === "ALLOW",
   ).length;
 
-  const streamState = isLoading
-    ? "Synchronizing"
+  const queryState = isLoading
+    ? "Loading"
     : isError
-      ? "Degraded"
-      : "Operational";
+      ? "Unavailable"
+      : "Available";
 
   return (
     <div className="space-y-5">
@@ -117,7 +115,7 @@ export default function EventsPage() {
               </p>
             </div>
 
-            <StreamIndicator state={streamState} isError={isError} />
+            <StreamIndicator state={queryState} isError={isError} />
           </div>
         </div>
       </section>
@@ -135,7 +133,7 @@ export default function EventsPage() {
         <MetricCard
           label="Blocked"
           value={isLoading ? "—" : isError ? "!" : blockedCount.toString()}
-          detail="Actions prevented"
+          detail="Blocked decisions on this page"
           icon={Ban}
           tone="red"
         />
@@ -143,7 +141,7 @@ export default function EventsPage() {
         <MetricCard
           label="Warnings"
           value={isLoading ? "—" : isError ? "!" : warningCount.toString()}
-          detail="Actions requiring attention"
+          detail="Warnings on this page"
           icon={AlertTriangle}
           tone="amber"
         />
@@ -151,7 +149,7 @@ export default function EventsPage() {
         <MetricCard
           label="Allowed"
           value={isLoading ? "—" : isError ? "!" : allowedCount.toString()}
-          detail="Actions permitted"
+          detail="ALLOW decisions on this page"
           icon={ShieldCheck}
           tone="emerald"
         />
@@ -167,12 +165,12 @@ export default function EventsPage() {
               </div>
 
               <h2 className="text-sm font-semibold text-slate-200">
-                Event Stream
+                Event Log
               </h2>
             </div>
 
             <p className="mt-1 text-[10px] text-slate-600">
-              Latest security events from the control plane
+              Most recent security event records
             </p>
           </div>
 
@@ -185,14 +183,10 @@ export default function EventsPage() {
               01 / {data?.pages ?? "—"}
             </span>
 
-            <button
-              type="button"
-              aria-label="Filter security events"
-              className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.025] px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 transition-colors hover:border-cyan-400/15 hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/40"
-            >
+            <span className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.025] px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
               <Filter className="size-3" />
-              Filter
-            </button>
+              Latest records
+            </span>
           </div>
         </div>
 
@@ -215,21 +209,21 @@ export default function EventsPage() {
         )}
       </section>
 
-      {/* Operational footer */}
+      {/* Event record summary */}
       <section className="grid gap-3 md:grid-cols-3">
         <OperationalSignal
           icon={Activity}
-          label="Telemetry stream"
-          value={isError ? "Degraded" : "Operational"}
-          detail="Security events available"
+          label="Event query"
+          value={isLoading ? "Loading" : isError ? "Unavailable" : "Available"}
+          detail="Security event records retrieved"
           tone={isError ? "red" : "cyan"}
         />
 
         <OperationalSignal
           icon={ShieldCheck}
-          label="Decision engine"
-          value="Active"
-          detail="Runtime decisions recorded"
+          label="Policy decisions"
+          value="Recorded"
+          detail="Outcomes included in this event log"
           tone="emerald"
         />
 
@@ -254,7 +248,7 @@ function StreamIndicator({
 }) {
   const tone = isError
     ? "red"
-    : state === "Synchronizing"
+    : state === "Loading"
       ? "amber"
       : "emerald";
 
@@ -275,14 +269,10 @@ function StreamIndicator({
     <div
       className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 ${classes}`}
     >
-      <span
-        className={`size-1.5 rounded-full ${dot} ${
-          state === "Operational" ? "animate-pulse" : ""
-        }`}
-      />
+      <span className={`size-1.5 rounded-full ${dot}`} />
 
       <span className="text-[9px] font-semibold uppercase tracking-[0.16em]">
-        Stream {state}
+        Event query {state}
       </span>
     </div>
   );

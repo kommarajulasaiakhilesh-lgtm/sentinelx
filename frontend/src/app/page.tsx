@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -13,12 +14,12 @@ import {
   UserRound,
 } from "lucide-react";
 
-
 import { useMyAgents } from "@/features/agents/use-agents";
 import { useSecurityEventStream } from "@/features/security-events/use-security-event-stream";
 
 export default function CommandCenterPage() {
-    const { status: streamStatus } = useSecurityEventStream();
+  const { status: streamStatus } = useSecurityEventStream();
+
   const {
     data: agents = [],
     isLoading,
@@ -54,8 +55,8 @@ export default function CommandCenterPage() {
               </h1>
 
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                Monitor the SentinelX security control plane, connected agents,
-                and runtime protection posture from a single operational view.
+                Manage the SentinelX security control plane, registered
+                agents, policies, and security activity from a single view.
               </p>
             </div>
 
@@ -66,39 +67,41 @@ export default function CommandCenterPage() {
               </span>
 
               <span
-  className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
-    streamStatus === "CONNECTED"
-      ? "text-emerald-300"
-      : streamStatus === "CONNECTING"
-        ? "text-amber-300"
-        : "text-rose-300"
-  }`}
->
-  {streamStatus === "CONNECTED"
-    ? "Control link connected"
-    : streamStatus === "CONNECTING"
-      ? "Control link connecting"
-      : "Control link disconnected"}
-</span>
+                className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
+                  streamStatus === "CONNECTED"
+                    ? "text-emerald-300"
+                    : streamStatus === "CONNECTING"
+                      ? "text-amber-300"
+                      : "text-rose-300"
+                }`}
+              >
+                {streamStatus === "CONNECTED"
+                  ? "Event stream connected"
+                  : streamStatus === "CONNECTING"
+                    ? "Event stream connecting"
+                    : "Event stream disconnected"}
+              </span>
             </div>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.05] pt-4">
             <SystemSignal
-              label="Runtime"
-              value="Protected"
+              label="Platform"
+              value="Control plane"
               status="healthy"
             />
 
             <SystemSignal
               label="Fleet"
-              value={isLoading ? "Syncing" : isError ? "Degraded" : "Monitored"}
+              value={
+                isLoading ? "Syncing" : isError ? "Unavailable" : "Registered"
+              }
               status={isError ? "warning" : "healthy"}
             />
 
             <SystemSignal
               label="Security mode"
-              value="Enforced"
+              value="Policy-based"
               status="healthy"
             />
           </div>
@@ -110,22 +113,22 @@ export default function CommandCenterPage() {
         <MetricCard
           label="Registered Agents"
           value={isLoading ? "—" : isError ? "!" : agents.length.toString()}
-          detail={isError ? "Unable to synchronize fleet" : "Connected to control plane"}
+          detail={isError ? "Unable to retrieve agent inventory" : "Registered to this account"}
           icon={Bot}
         />
 
         <MetricCard
           label="Active Agents"
           value={isLoading ? "—" : isError ? "!" : activeAgents.toString()}
-          detail={isError ? "Fleet data unavailable" : "Currently active"}
+          detail={isError ? "Fleet data unavailable" : "Agent status is active"}
           icon={Activity}
           accent="emerald"
         />
 
         <MetricCard
-          label="Monitored"
+          label="Not Suspended"
           value={isLoading ? "—" : isError ? "!" : monitoredAgents.toString()}
-          detail="Under runtime security monitoring"
+          detail="Registered agents not suspended"
           icon={ShieldCheck}
           accent="cyan"
         />
@@ -153,7 +156,7 @@ export default function CommandCenterPage() {
               </div>
 
               <p className="mt-1 text-[10px] text-slate-600">
-                Live agent inventory connected to the current security account
+                Agent inventory registered to the current security account
               </p>
             </div>
 
@@ -165,7 +168,7 @@ export default function CommandCenterPage() {
 
                 <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-300">
                   <span className="size-1.5 rounded-full bg-emerald-400" />
-                  Live
+                  Registered
                 </span>
               </div>
             )}
@@ -193,12 +196,12 @@ export default function CommandCenterPage() {
               <ShieldCheck className="size-4 text-emerald-300" />
 
               <h2 className="text-sm font-semibold text-slate-200">
-                Security Posture
+                Security Capabilities
               </h2>
             </div>
 
             <p className="mt-1 text-[10px] text-slate-600">
-              Current control-plane operating state
+              Available control-plane capabilities
             </p>
           </div>
 
@@ -209,50 +212,51 @@ export default function CommandCenterPage() {
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
-                    Operational
+                    Control plane
                   </span>
 
                   <ShieldCheck className="size-5 text-emerald-300/70" />
                 </div>
 
                 <p className="mt-4 text-xl font-semibold tracking-tight text-white">
-                  Security controls active
+                  Security controls available
                 </p>
 
                 <p className="mt-2 text-[11px] leading-5 text-slate-500">
-                  SentinelX is monitoring the connected agent fleet and
-                  enforcing the configured security control plane.
+                  SentinelX provides agent management, policy-based
+                  enforcement, security event detection, and incident
+                  response capabilities for registered agents.
                 </p>
               </div>
             </div>
 
             <div className="mt-4 space-y-1">
               <PostureRow
-                label="Agent monitoring"
-                value={isError ? "Degraded" : "Active"}
+                label="Agent inventory"
+                value={isError ? "Unavailable" : isLoading ? "Loading" : "Available"}
                 warning={isError}
               />
 
               <PostureRow
                 label="Runtime protection"
-                value="Enabled"
+                value="Policy-based"
               />
 
               <PostureRow
                 label="Policy enforcement"
-                value="Ready"
+                value="Available"
               />
 
               <PostureRow
                 label="Security telemetry"
-                value="Available"
+                value="Event-driven"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Operations Timeline */}
+      {/* Operations Overview */}
       <section className="security-surface overflow-hidden">
         <div className="flex items-center justify-between border-b border-white/[0.05] px-5 py-4">
           <div>
@@ -265,35 +269,35 @@ export default function CommandCenterPage() {
             </div>
 
             <p className="mt-1 text-[10px] text-slate-600">
-              Command-center signals prepared for live security telemetry
+              Explore recorded security activity and platform intelligence
             </p>
           </div>
 
           <span className="hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-600 sm:flex">
             <span className="size-1.5 rounded-full bg-slate-600" />
-            Awaiting events
+            Security console
           </span>
         </div>
 
         <div className="grid gap-px bg-white/[0.04] sm:grid-cols-3">
           <OverviewTile
             label="Security Events"
-            value="Ready"
-            detail="Event stream available"
+            value="View"
+            detail="Inspect recorded security events"
             href="/events"
           />
 
           <OverviewTile
             label="Alerts & Incidents"
-            value="Ready"
-            detail="Incident response console"
+            value="View"
+            detail="Review detected alerts and incidents"
             href="/alerts"
           />
 
           <OverviewTile
             label="Analytics"
-            value="Ready"
-            detail="Security intelligence"
+            value="View"
+            detail="Review agent risk metrics"
             href="/analytics"
           />
         </div>
@@ -573,7 +577,7 @@ function FleetLoadingState() {
       <LoaderCircle className="size-5 animate-spin text-cyan-400" />
 
       <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-600">
-        Synchronizing agent fleet
+        Loading registered agents
       </p>
     </div>
   );
@@ -587,12 +591,12 @@ function FleetErrorState() {
       </div>
 
       <p className="mt-3 text-sm font-medium text-slate-300">
-        Fleet synchronization unavailable
+        Agent inventory unavailable
       </p>
 
       <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-600">
-        SentinelX could not retrieve the registered agent fleet. Check the
-        security session and backend connection.
+        SentinelX could not retrieve the registered agent inventory. Check
+        the security session and backend connection.
       </p>
     </div>
   );

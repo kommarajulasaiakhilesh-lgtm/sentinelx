@@ -35,16 +35,16 @@ export default function PoliciesPage() {
     (policy) => policy.action === "ALLOW",
   );
 
-  const protectionRate =
+  const enabledPolicyShare =
     policies.length === 0
       ? 0
       : Math.round((enabledPolicies.length / policies.length) * 100);
 
-  const enforcementState = isLoading
-    ? "Synchronizing"
+  const policyDataState = isLoading
+    ? "Loading"
     : isError
-      ? "Degraded"
-      : "Operational";
+      ? "Unavailable"
+      : "Available";
 
   return (
     <div className="space-y-5">
@@ -80,15 +80,15 @@ export default function PoliciesPage() {
 
             <div className="flex flex-wrap items-center gap-2">
               <HeaderSignal
-                label="Protected Agents"
+                label="Registered Agents"
                 value={isLoading ? "—" : agents.length.toString()}
                 icon={ShieldCheck}
                 tone="emerald"
               />
 
               <HeaderSignal
-                label="Enforcement"
-                value={enforcementState}
+                label="Policy data"
+                value={policyDataState}
                 icon={SlidersHorizontal}
                 tone={
                   isError
@@ -97,7 +97,7 @@ export default function PoliciesPage() {
                       ? "amber"
                       : "cyan"
                 }
-                pulse={!isError && !isLoading}
+                pulse={false}
               />
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function PoliciesPage() {
                 ? "!"
                 : enabledPolicies.length.toString()
           }
-          detail="Currently enforcing"
+          detail="Enabled for runtime evaluation"
           icon={ShieldCheck}
           tone="emerald"
         />
@@ -143,9 +143,9 @@ export default function PoliciesPage() {
         />
 
         <PostureCard
-          label="Protection"
-          value={isLoading || isError ? "—" : `${protectionRate}%`}
-          detail="Policy activation coverage"
+          label="Enabled Policy Share"
+          value={isLoading || isError ? "—" : `${enabledPolicyShare}%`}
+          detail="Enabled policies / registered policies"
           icon={Gauge}
           tone="cyan"
         />
@@ -165,7 +165,7 @@ export default function PoliciesPage() {
               </div>
 
               <p className="mt-1 text-[10px] text-slate-600">
-                Distribution of runtime policy decisions
+                  Distribution of configured policy actions
               </p>
             </div>
 
@@ -210,12 +210,12 @@ export default function PoliciesPage() {
               <ShieldCheck className="size-4 text-cyan-300" />
 
               <h2 className="text-sm font-semibold text-slate-200">
-                Policy Health
+                Policy Activation
               </h2>
             </div>
 
             <p className="mt-1 text-[10px] text-slate-600">
-              Active coverage across the current control plane
+              Share of registered policy records enabled
             </p>
 
             <div className="mt-6 flex justify-center">
@@ -223,17 +223,17 @@ export default function PoliciesPage() {
                 className="relative flex size-36 items-center justify-center rounded-full"
                 style={{
                   background: `conic-gradient(rgba(34,211,238,0.8) ${
-                    protectionRate * 3.6
+                    enabledPolicyShare * 3.6
                   }deg, rgba(255,255,255,0.04) 0deg)`,
                 }}
               >
                 <div className="flex size-28 flex-col items-center justify-center rounded-full bg-[#080b10]">
                   <span className="font-mono text-2xl font-semibold text-white">
-                    {isLoading || isError ? "—" : `${protectionRate}%`}
+                    {isLoading || isError ? "—" : `${enabledPolicyShare}%`}
                   </span>
 
                   <span className="mt-1 text-[8px] uppercase tracking-[0.16em] text-slate-600">
-                    Active
+                    Enabled
                   </span>
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function PoliciesPage() {
 
             <div className="mt-5 text-center">
               <p className="text-[10px] leading-5 text-slate-500">
-                Enabled policy coverage across the current fleet
+                Enabled policies divided by all registered policies
               </p>
             </div>
           </div>
@@ -291,17 +291,17 @@ export default function PoliciesPage() {
       <section className="grid gap-3 md:grid-cols-3">
         <OperationalSignal
           icon={SlidersHorizontal}
-          label="Policy engine"
-          value={isError ? "Degraded" : "Operational"}
-          detail="Runtime rules available"
+          label="Policy registry"
+          value={isLoading ? "Loading" : isError ? "Unavailable" : "Available"}
+          detail="Policy configuration retrieval"
           tone={isError ? "red" : "cyan"}
         />
 
         <OperationalSignal
           icon={ShieldCheck}
-          label="Active coverage"
-          value={isLoading || isError ? "—" : `${protectionRate}%`}
-          detail="Policies currently enabled"
+          label="Enabled policy share"
+          value={isLoading || isError ? "—" : `${enabledPolicyShare}%`}
+          detail="Enabled policies / registered policies"
           tone="emerald"
         />
 
@@ -555,7 +555,7 @@ function PolicyRow({ policy }: { policy: Policy }) {
 
           <PolicyMetadata
             label="State"
-            value={policy.enabled ? "ENFORCING" : "INACTIVE"}
+            value={policy.enabled ? "ENABLED" : "DISABLED"}
             accent={policy.enabled ? "emerald" : "slate"}
           />
         </div>

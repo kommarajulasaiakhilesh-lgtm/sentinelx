@@ -22,7 +22,7 @@ export function getSecurityEvents(
 
 export function getBlockedSecurityEvents(token: string) {
   return get<SecurityEventListResponse>(
-    `/api/security-events?decision=BLOCKED&page=1&page_size=1`,
+    `/api/security-events?decision=BLOCK&page=1&page_size=1`,
     token,
   );
 }

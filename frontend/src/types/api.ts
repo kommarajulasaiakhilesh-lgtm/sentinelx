@@ -6,11 +6,7 @@ export type AgentStatus =
 
 export type PolicyAction = "ALLOW" | "BLOCK" | "WARN";
 
-export type SecurityDecision =
-  | "ALLOWED"
-  | "BLOCKED"
-  | "WARN"
-  | string;
+export type SecurityDecision = "ALLOW" | "BLOCK" | "WARN";
 
 export interface Agent {
   id: number;

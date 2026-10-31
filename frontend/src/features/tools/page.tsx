@@ -170,8 +170,8 @@ export default function ToolsPage() {
             </div>
 
             <div className="flex items-center gap-2 text-xs text-emerald-400">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              Enforcement online
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Policy evaluation flow
             </div>
           </div>
 
@@ -180,9 +180,8 @@ export default function ToolsPage() {
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            Monitor the capabilities exposed to SentinelX agents
-            and understand which tools are available for runtime
-            execution.
+            Review tool registrations and their enabled state. SentinelX
+            evaluates submitted actions but does not execute external tools.
           </p>
 
           <div className="mt-6 flex items-center gap-3 text-xs text-slate-500">
@@ -204,7 +203,7 @@ export default function ToolsPage() {
         <StatCard
           label="Enabled Tools"
           value={isLoading ? "—" : isError ? "!" : enabledTools.length}
-          detail="Currently executable"
+          detail="Enabled in the control plane"
           icon={CheckCircle2}
         />
 
@@ -405,7 +404,7 @@ export default function ToolsPage() {
             <div>
               <div className="flex items-end justify-between">
                 <span className="text-xs uppercase tracking-[0.16em] text-slate-500">
-                  Enabled coverage
+                  Enabled tool share
                 </span>
 
                 <span className="text-2xl font-semibold text-white">
@@ -464,8 +463,8 @@ export default function ToolsPage() {
                   </p>
 
                   <p className="mt-1 text-xs leading-5 text-slate-500">
-                    Tool actions flow through SentinelX policy
-                    enforcement before execution.
+                    Callers can submit tool actions to SentinelX for policy
+                    evaluation before they execute an external action.
                   </p>
                 </div>
               </div>
@@ -473,7 +472,7 @@ export default function ToolsPage() {
 
             <div className="flex items-center gap-2 border-t border-white/5 pt-5 text-xs text-slate-600">
               <ShieldCheck className="h-4 w-4 text-cyan-400/70" />
-              Protected by policy evaluation
+              Policy evaluation is available through the enforcement API
             </div>
           </div>
         </div>

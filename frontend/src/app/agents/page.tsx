@@ -29,15 +29,15 @@ export default function AgentsPage() {
     (agent) => agent.status === "SUSPENDED",
   ).length;
 
-  const monitoredAgents = agents.filter(
+  const notSuspendedAgents = agents.filter(
     (agent) => agent.status !== "SUSPENDED",
   ).length;
 
   const fleetState = isLoading
-    ? "Synchronizing"
+    ? "Loading"
     : isError
-      ? "Degraded"
-      : "Operational";
+      ? "Unavailable"
+      : "Available";
 
   return (
     <div className="space-y-5">
@@ -66,8 +66,7 @@ export default function AgentsPage() {
               </h1>
 
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                Observe the AI agents connected to SentinelX and their current
-                runtime security state.
+                Review agents registered to SentinelX and their stored status.
               </p>
             </div>
 
@@ -89,15 +88,15 @@ export default function AgentsPage() {
         <MetricCard
           label="Active"
           value={isLoading ? "—" : isError ? "!" : activeAgents.toString()}
-          detail="Currently operational"
+          detail="Stored agent status is ACTIVE"
           icon={Activity}
           accent="emerald"
         />
 
         <MetricCard
-          label="Monitored"
-          value={isLoading ? "—" : isError ? "!" : monitoredAgents.toString()}
-          detail="Runtime security coverage"
+          label="Not Suspended"
+          value={isLoading ? "—" : isError ? "!" : notSuspendedAgents.toString()}
+          detail="Registered agents not suspended"
           icon={ShieldCheck}
           accent="cyan"
         />
@@ -125,12 +124,12 @@ export default function AgentsPage() {
               </div>
 
               <h2 className="text-sm font-semibold text-slate-200">
-                Connected Fleet
+                Registered Agents
               </h2>
             </div>
 
             <p className="mt-1 text-[10px] text-slate-600">
-              Live inventory associated with the current security account
+              Inventory associated with the current security account
             </p>
           </div>
 
@@ -168,20 +167,20 @@ export default function AgentsPage() {
       <section className="grid gap-3 md:grid-cols-3">
         <OperationalSignal
           icon={ShieldCheck}
-          label="Runtime protection"
-          value="Enabled"
-          detail="Security controls active"
+          label="Runtime policy evaluation"
+          value="Available"
+          detail="Agent requests can use the enforcement API"
           tone="emerald"
         />
 
         <OperationalSignal
           icon={Clock3}
-          label="Fleet synchronization"
+          label="Agent inventory"
           value={isError ? "Unavailable" : "Available"}
           detail={
             isError
               ? "Check security session"
-              : "Control plane responding"
+              : "Inventory endpoint responded"
           }
           tone={isError ? "red" : "cyan"}
         />
@@ -189,8 +188,8 @@ export default function AgentsPage() {
         <OperationalSignal
           icon={CircleCheck}
           label="Policy enforcement"
-          value="Ready"
-          detail="Runtime decisions enabled"
+          value="Policy-based"
+          detail="Decisions are returned to authenticated callers"
           tone="emerald"
         />
       </section>
@@ -207,7 +206,7 @@ function FleetIndicator({
 }) {
   const tone = isError
     ? "red"
-    : state === "Synchronizing"
+    : state === "Loading"
       ? "amber"
       : "emerald";
 
@@ -227,12 +226,10 @@ function FleetIndicator({
     <div
       className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 ${classes}`}
     >
-      <span className={`size-1.5 rounded-full ${dot} ${
-        state === "Operational" ? "animate-pulse" : ""
-      }`} />
+      <span className={`size-1.5 rounded-full ${dot}`} />
 
       <span className="text-[9px] font-semibold uppercase tracking-[0.16em]">
-        Fleet {state}
+        Inventory {state}
       </span>
     </div>
   );
@@ -314,9 +311,6 @@ function AgentRow({
           <div className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.04]">
             <Bot className="size-5 text-cyan-300" />
 
-            <span className="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full border-2 border-[#080b10] bg-emerald-400">
-              <span className="size-1 rounded-full bg-[#06100b]" />
-            </span>
           </div>
 
           <div className="min-w-0">

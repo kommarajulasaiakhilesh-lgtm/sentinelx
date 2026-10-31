@@ -99,6 +99,8 @@ def list_incidents(
     user_id: int,
     page: int = 1,
     page_size: int = 10,
+    status: str | None = None,
+    severity: str | None = None,
 ) -> tuple[list[Incident], int]:
     query = (
         db.query(Incident)
@@ -106,10 +108,19 @@ def list_incidents(
         .filter(Agent.owner_id == user_id)
     )
 
+    if status is not None:
+        query = query.filter(Incident.status == status)
+
+    if severity is not None:
+        query = query.filter(Incident.severity == severity)
+
     total = query.count()
 
     incidents = (
-        query.order_by(Incident.created_at.desc())
+        query.order_by(
+            Incident.created_at.desc(),
+            Incident.id.desc(),
+        )
         .offset((page - 1) * page_size)
         .limit(page_size)
         .all()

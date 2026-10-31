@@ -1,3 +1,6 @@
+
+from typing import Literal
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -70,6 +73,18 @@ def create_incident_endpoint(
 def list_incidents_endpoint(
     page: int = 1,
     page_size: int = 10,
+    status: Literal[
+        "OPEN",
+        "INVESTIGATING",
+        "CONTAINED",
+        "RESOLVED",
+    ] | None = None,
+    severity: Literal[
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL",
+    ] | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -84,6 +99,8 @@ def list_incidents_endpoint(
         user_id=current_user.id,
         page=page,
         page_size=page_size,
+        status=status,
+        severity=severity,
     )
 
     pages = (total + page_size - 1) // page_size

@@ -379,7 +379,7 @@ function PageHeader() {
 
           <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
             <span className="size-1.5 rounded-full bg-emerald-400" />
-            Alignment telemetry online
+            Framework coverage records
           </span>
         </div>
 
@@ -404,7 +404,7 @@ function PageHeader() {
               </p>
 
               <p className="mt-0.5 text-xs text-slate-400">
-                Framework alignment active
+                Coverage available
               </p>
             </div>
           </div>

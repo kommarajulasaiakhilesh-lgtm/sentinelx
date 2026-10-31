@@ -1,4 +1,4 @@
-# SentinelX
+﻿# SentinelX
 
 ## AI Agent Security Control Plane
 
@@ -117,12 +117,12 @@ python -m pip install -r backend\requirements.txt
 
 ### 3. Configure environment variables
 
-Create a `.env` file in the **repository root**, next to this README. The backend configuration loads environment variables from this location when running the documented commands from the repository root.
+If `backend/.env` does not already exist, copy `backend/.env.example` to `backend/.env`. Never overwrite an existing `backend/.env`. Configure the local development values in `backend/.env`; the backend locates it from the database configuration module.
 
 Configure the following values for your local PostgreSQL instance:
 
 ```dotenv
-DATABASE_URL=postgresql://YOUR_DB_USER:YOUR_DB_PASSWORD@localhost:5432/sentinelx_db
+DATABASE_URL=postgresql+psycopg://YOUR_DB_USER:YOUR_DB_PASSWORD@localhost:5432/YOUR_APPROVED_ISOLATED_DATABASE
 SECRET_KEY=REPLACE_WITH_A_RANDOM_SECRET_OF_AT_LEAST_32_CHARACTERS
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
@@ -132,13 +132,30 @@ CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 
 Replace the example database credentials and secret with your own values. Generate a unique, strong secret for `SECRET_KEY`; never reuse a production secret in development.
 
-Create the PostgreSQL database `sentinelx_db` if it does not already exist.
+Use a separate, empty database created specifically for this local environment. Obtain explicit user approval before creating it; do not create or reuse `sentinelx_db` or `sentinelx_test_db` for local setup, migrations, or tests. Replace `YOUR_APPROVED_ISOLATED_DATABASE` only with the name of the database approved for this work. Do not run migrations or start the backend until that database exists and the configured connection has been verified.
 
-The committed `backend/.env.example` is a deployment-oriented template with placeholders. Do not use those placeholders as working credentials.
+After approval, the database creation command for the proposed Phase 27 verification database is:
+
+```powershell
+createdb sentinelx_phase27_test_db
+```
+
+Configure `DATABASE_URL` to use `sentinelx_phase27_test_db` only after that database has been explicitly approved and created. If a different isolated database is approved, use its name instead.
+
+The committed backend/.env.example is a template containing placeholders. For local development, copy it to backend/.env only when that file does not already exist, then replace every placeholder with valid local values. Never commit backend/.env or real credentials.
 
 ### 4. Apply database migrations
 
-From the repository root:
+Only after explicit approval to use a newly isolated database, verify that the application is configured for that database. The following read-only check prints only the database name, not credentials:
+
+```powershell
+$env:PYTHONPATH = "$PWD\backend"
+python -c "from sqlalchemy import text; from app.db.database import engine; connection = engine.connect(); name = connection.execute(text('SELECT current_database()')).scalar_one(); print(name); assert name == 'sentinelx_phase27_test_db'; connection.close()"
+```
+
+If another database name was approved, change the assertion to that exact name. Stop if the check reports a different database. Never use `sentinelx_db` or `sentinelx_test_db` for this setup.
+
+After the check succeeds, apply migrations to the approved isolated database from the repository root:
 
 ```powershell
 $env:PYTHONPATH = "$PWD\backend"
@@ -161,6 +178,8 @@ The API should be available at:
 Keep this terminal open while developing.
 
 ### Run the webhook delivery worker
+
+> **Safety warning:** Run this worker only against an isolated local/test database during development. Do not start it against the production database. Production activation remains blocked until connection-time SSRF protection and effective outbound network restrictions are independently implemented and verified in the actual hosting environment. Destination validation alone is not sufficient.
 
 Start a separate terminal from the repository root after configuring the same database environment variables:
 
@@ -216,7 +235,9 @@ Run these commands from the repository root unless a step explicitly changes dir
 
 ### Backend tests
 
-With the virtual environment activated:
+Backend tests use the database configured by `DATABASE_URL`. Run them only after explicit approval to create and use a new, isolated database, and after verifying the effective connection as described above. Never point tests at `sentinelx_db` or `sentinelx_test_db`.
+
+With the virtual environment activated and `DATABASE_URL` verified to point to the approved isolated database:
 
 ```powershell
 $env:PYTHONPATH = "$PWD\backend"
@@ -313,7 +334,11 @@ Use the request ID to correlate an HTTP request with its application log entry. 
 
 ### Webhook delivery worker
 
-Run the webhook delivery worker as a separate managed process, rather than relying on the API process to keep it running. From the repository root, start it in a separate terminal or service:
+**Production status: NOT APPROVED FOR ACTIVATION.** Do not configure or start a production webhook worker yet. DNS rebinding remains possible, and production outbound network restrictions have not been independently verified. Keep the worker inactive until connection-time destination enforcement and effective IPv4/IPv6 egress restrictions blocking loopback, private, link-local, and cloud metadata destinations are implemented and verified.
+
+The following commands are for isolated local/test environments only. Do not point them at the production database.
+
+Run the worker as a separate process in that isolated environment:
 
 ```powershell
 $env:PYTHONPATH = "$PWD\backend"
