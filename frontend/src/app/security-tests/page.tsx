@@ -32,10 +32,10 @@ function StatCard({
   tone?: "cyan" | "emerald" | "red" | "violet";
 }) {
   const toneClasses = {
-    cyan: "border-cyan-400/15 bg-cyan-400/10 text-cyan-300",
-    emerald: "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
-    red: "border-red-400/15 bg-red-400/10 text-red-300",
-    violet: "border-violet-400/15 bg-violet-400/10 text-violet-300",
+    cyan: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600",
+    emerald: "border-emerald-400/15 bg-emerald-400/10 text-emerald-600",
+    red: "border-red-400/15 bg-red-400/10 text-red-600",
+    violet: "border-violet-400/15 bg-violet-400/10 text-violet-600",
   };
 
   return (
@@ -48,7 +48,7 @@ function StatCard({
               ? "bg-violet-400/5"
               : tone === "emerald"
                 ? "bg-emerald-400/5"
-                : "bg-cyan-400/5"
+                : "bg-indigo-400/5"
         }`}
       />
 
@@ -58,7 +58,7 @@ function StatCard({
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-white">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
             {value}
           </p>
 
@@ -76,16 +76,16 @@ function StatCard({
 function getCategoryClass(category: string) {
   switch (category.toUpperCase()) {
     case "PROMPT_INJECTION":
-      return "border-red-400/20 bg-red-400/10 text-red-300";
+      return "border-red-400/20 bg-red-400/10 text-red-600";
 
     case "UNAUTHORIZED_TOOL":
       return "border-orange-400/20 bg-orange-400/10 text-orange-300";
 
     case "POLICY_BYPASS":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
 
     case "RATE_LIMIT":
-      return "border-violet-400/20 bg-violet-400/10 text-violet-300";
+      return "border-violet-400/20 bg-violet-400/10 text-violet-600";
 
     case "REPEATED_BLOCK":
       return "border-blue-400/20 bg-blue-400/10 text-blue-300";
@@ -94,7 +94,7 @@ function getCategoryClass(category: string) {
       return "border-yellow-400/20 bg-yellow-400/10 text-yellow-300";
 
     default:
-      return "border-slate-700 bg-slate-900/60 text-slate-300";
+      return "border-slate-700 bg-slate-100/60 text-slate-700";
   }
 }
 
@@ -122,10 +122,10 @@ function DecisionBadge({
   tone: "expected" | "actual" | "passed" | "failed";
 }) {
   const classes = {
-    expected: "border-slate-700 bg-slate-900 text-slate-300",
-    actual: "border-cyan-400/15 bg-cyan-400/10 text-cyan-300",
-    passed: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
-    failed: "border-red-400/20 bg-red-400/10 text-red-300",
+    expected: "border-slate-700 bg-slate-100 text-slate-700",
+    actual: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600",
+    passed: "border-emerald-400/20 bg-emerald-400/10 text-emerald-600",
+    failed: "border-red-400/20 bg-red-400/10 text-red-600",
   };
 
   return (
@@ -147,18 +147,18 @@ function PipelineStage({
   detail: string;
 }) {
   return (
-    <div className="relative flex-1 rounded-xl border border-slate-800/80 bg-slate-950/50 p-4">
+    <div className="relative flex-1 rounded-xl border border-slate-800/80 bg-slate-100/50 p-4">
       <div className="flex items-center gap-3">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-violet-400/15 bg-violet-400/10 font-mono text-[10px] font-semibold text-violet-300">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-violet-400/15 bg-violet-400/10 font-mono text-[10px] font-semibold text-violet-600">
           {number}
         </span>
 
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">
             {label}
           </p>
 
-          <p className="mt-1 text-[10px] leading-4 text-slate-600">
+          <p className="mt-1 text-[10px] leading-4 text-slate-500">
             {detail}
           </p>
         </div>
@@ -183,11 +183,11 @@ function ScenarioRow({
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex size-7 items-center justify-center rounded-lg border border-violet-400/15 bg-violet-400/10 text-violet-300">
+            <span className="flex size-7 items-center justify-center rounded-lg border border-violet-400/15 bg-violet-400/10 text-violet-600">
               <Target className="size-3.5" />
             </span>
 
-            <h3 className="font-medium text-white">{scenario.name}</h3>
+            <h3 className="font-medium text-slate-900">{scenario.name}</h3>
 
             <span
               className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${getCategoryClass(
@@ -200,48 +200,48 @@ function ScenarioRow({
             <span
               className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${
                 scenario.enabled
-                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                  : "border-slate-700 bg-slate-900 text-slate-500"
+                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600"
+                  : "border-slate-700 bg-slate-100 text-slate-500"
               }`}
             >
               {scenario.enabled ? "Enabled" : "Disabled"}
             </span>
           </div>
 
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
             {scenario.description || "No scenario description provided."}
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[10px] text-slate-600">
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[10px] text-slate-500">
             <span>
               Expected{" "}
-              <span className="text-slate-400">
+              <span className="text-slate-600">
                 {scenario.expected_decision}
               </span>
             </span>
 
             {scenario.tool_name && (
               <span>
-                Tool <span className="text-slate-400">{scenario.tool_name}</span>
+                Tool <span className="text-slate-600">{scenario.tool_name}</span>
               </span>
             )}
 
             {scenario.action && (
               <span>
-                Action <span className="text-slate-400">{scenario.action}</span>
+                Action <span className="text-slate-600">{scenario.action}</span>
               </span>
             )}
 
             {scenario.resource && (
               <span>
                 Resource{" "}
-                <span className="text-slate-400">{scenario.resource}</span>
+                <span className="text-slate-600">{scenario.resource}</span>
               </span>
             )}
 
             <span>
               Created{" "}
-              <span className="text-slate-400">
+              <span className="text-slate-600">
                 {formatDate(scenario.created_at)}
               </span>
             </span>
@@ -252,7 +252,7 @@ function ScenarioRow({
           type="button"
           disabled={!scenario.enabled || isRunning}
           onClick={() => onRun(scenario)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-400/10 px-4 py-2.5 text-xs font-semibold text-violet-300 transition-colors hover:bg-violet-400/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-400/10 px-4 py-2.5 text-xs font-semibold text-violet-600 transition-colors hover:bg-violet-400/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isSelected && isRunning ? (
             <>
@@ -319,12 +319,12 @@ export default function SecurityTestsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-600">
               <FlaskConical className="size-3.5" />
               Security Testing
             </span>
 
-            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Controlled simulation
             </span>
@@ -332,25 +332,25 @@ export default function SecurityTestsPage() {
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
                 Security Testing &amp; Attack Simulation
               </h1>
 
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
                 Run controlled scenario simulations against SentinelX policy
                 logic and compare returned decisions with expected results.
               </p>
             </div>
 
             <div className="flex shrink-0 items-center gap-3 rounded-xl border border-violet-400/10 bg-violet-400/[0.035] px-4 py-3">
-              <ShieldCheck className="size-4 text-violet-300" />
+              <ShieldCheck className="size-4 text-violet-600" />
 
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-violet-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-violet-600">
                   Test boundary
                 </p>
 
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-slate-600">
                   Controlled simulation only
                 </p>
               </div>
@@ -442,14 +442,14 @@ export default function SecurityTestsPage() {
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
               {passedLastRun ? (
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-400" />
+                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-600" />
               ) : (
-                <XCircle className="mt-0.5 size-5 shrink-0 text-red-400" />
+                <XCircle className="mt-0.5 size-5 shrink-0 text-red-600" />
               )}
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-slate-900">
                     Latest simulation: {lastRun.result}
                   </p>
 
@@ -479,14 +479,14 @@ export default function SecurityTestsPage() {
               </div>
             </div>
 
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               <Clock3 className="size-3" />
               Run #{lastRun.id}
             </span>
           </div>
 
           {lastRun.details && (
-            <p className="mt-5 border-t border-white/5 pt-4 text-xs leading-5 text-slate-500">
+            <p className="mt-5 border-t border-slate-200 pt-4 text-xs leading-5 text-slate-500">
               {lastRun.details}
             </p>
           )}
@@ -496,7 +496,7 @@ export default function SecurityTestsPage() {
       {runError && (
         <section className="rounded-2xl border border-red-400/15 bg-red-400/[0.035] p-5">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-400" />
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" />
 
             <div>
               <p className="font-medium text-red-200">
@@ -515,11 +515,11 @@ export default function SecurityTestsPage() {
         <div className="border-b border-slate-800/80 px-5 py-5 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-violet-400">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-violet-600">
                 Simulation registry
               </p>
 
-              <h2 className="mt-1 text-base font-semibold text-white">
+              <h2 className="mt-1 text-base font-semibold text-slate-900">
                 Attack Simulation Scenarios
               </h2>
 
@@ -528,7 +528,7 @@ export default function SecurityTestsPage() {
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               <span className="size-1.5 rounded-full bg-violet-400" />
               {scenarios.length} scenarios
             </div>
@@ -538,16 +538,16 @@ export default function SecurityTestsPage() {
         {isLoading ? (
           <div className="flex min-h-72 items-center justify-center">
             <div className="flex items-center gap-3 text-sm text-slate-500">
-              <LoaderCircle className="size-4 animate-spin text-violet-400" />
+              <LoaderCircle className="size-4 animate-spin text-violet-600" />
               Loading security scenarios...
             </div>
           </div>
         ) : isError ? (
           <div className="flex min-h-72 items-center justify-center px-6 text-center">
             <div>
-              <AlertTriangle className="mx-auto size-8 text-amber-400" />
+              <AlertTriangle className="mx-auto size-8 text-amber-600" />
 
-              <p className="mt-3 font-medium text-white">
+              <p className="mt-3 font-medium text-slate-900">
                 Security testing unavailable
               </p>
 
@@ -561,10 +561,10 @@ export default function SecurityTestsPage() {
           <div className="flex min-h-72 items-center justify-center px-6 text-center">
             <div className="max-w-md">
               <div className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-violet-400/15 bg-violet-400/10">
-                <FlaskConical className="size-6 text-violet-300" />
+                <FlaskConical className="size-6 text-violet-600" />
               </div>
 
-              <h3 className="mt-4 font-semibold text-white">
+              <h3 className="mt-4 font-semibold text-slate-900">
                 No security scenarios
               </h3>
 
@@ -591,7 +591,7 @@ export default function SecurityTestsPage() {
 
       <section className="rounded-2xl border border-violet-400/10 bg-violet-400/[0.02] p-5">
         <div className="flex items-start gap-3">
-          <ShieldAlert className="mt-0.5 size-4 shrink-0 text-violet-300" />
+          <ShieldAlert className="mt-0.5 size-4 shrink-0 text-violet-600" />
 
           <div>
             <p className="text-sm font-medium text-violet-200">

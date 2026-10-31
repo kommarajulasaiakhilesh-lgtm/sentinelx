@@ -60,10 +60,20 @@ class Base(DeclarativeBase):
 # DATABASE ENGINE
 # ============================================================
 
+# SQLite (used only for zero-install local development) needs
+# check_same_thread disabled so FastAPI's threadpool can share the
+# connection pool. PostgreSQL deployments are unaffected.
+_connect_args = {}
+
+if DATABASE_URL.startswith("sqlite"):
+    _connect_args = {"check_same_thread": False}
+
+
 engine = create_engine(
     DATABASE_URL,
     echo=SQL_ECHO,
     pool_pre_ping=True,
+    connect_args=_connect_args,
 )
 
 

@@ -50,20 +50,20 @@ type FrameworkCoverage = {
 function getStatusClass(status: string) {
   switch (status) {
     case "IMPLEMENTED":
-      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
+      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-600";
 
     case "PARTIALLY_IMPLEMENTED":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
 
     case "GAP_IDENTIFIED":
     case "NOT_IMPLEMENTED":
-      return "border-red-400/20 bg-red-400/10 text-red-300";
+      return "border-red-400/20 bg-red-400/10 text-red-600";
 
     case "NOT_APPLICABLE":
-      return "border-slate-400/20 bg-slate-400/10 text-slate-400";
+      return "border-slate-400/20 bg-slate-400/10 text-slate-600";
 
     default:
-      return "border-slate-400/20 bg-slate-400/10 text-slate-300";
+      return "border-slate-400/20 bg-slate-400/10 text-slate-700";
   }
 }
 
@@ -96,16 +96,16 @@ function CoverageBar({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="text-xs text-slate-400">{label}</span>
+        <span className="text-xs text-slate-600">{label}</span>
 
-        <span className="text-xs font-semibold text-slate-200">
+        <span className="text-xs font-semibold text-slate-800">
           {percentage.toFixed(2)}%
         </span>
       </div>
 
-      <div className="h-1.5 overflow-hidden rounded-full bg-slate-800">
+      <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
         <div
-          className="h-full rounded-full bg-cyan-400 transition-all duration-500"
+          className="h-full rounded-full bg-indigo-400 transition-all duration-500"
           style={{ width: `${safePercentage}%` }}
         />
       </div>
@@ -123,14 +123,14 @@ function Metric({
   icon: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-3">
+    <div className="rounded-xl border border-slate-800/70 bg-slate-100/40 p-3">
       <div className="flex items-center gap-2">
         <span className="text-slate-500">{icon}</span>
 
         <span className="text-[10px] text-slate-500">{label}</span>
       </div>
 
-      <p className="mt-1 text-lg font-semibold text-slate-200">{value}</p>
+      <p className="mt-1 text-lg font-semibold text-slate-800">{value}</p>
     </div>
   );
 }
@@ -163,15 +163,15 @@ function FrameworkCard({
 }) {
   return (
     <article className="security-surface security-surface-hover relative overflow-hidden p-5">
-      <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-cyan-400/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-indigo-400/5 blur-3xl" />
 
       <div className="relative flex items-start justify-between gap-3">
         <div>
-          <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-cyan-400">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
             Framework
           </p>
 
-          <h2 className="mt-2 text-base font-semibold text-white">
+          <h2 className="mt-2 text-base font-semibold text-slate-900">
             {framework.framework_name}
           </h2>
 
@@ -180,8 +180,8 @@ function FrameworkCard({
           </p>
         </div>
 
-        <div className="rounded-xl border border-cyan-400/15 bg-cyan-400/10 p-2.5">
-          <Shield className="size-5 text-cyan-300" />
+        <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-2.5">
+          <Shield className="size-5 text-indigo-600" />
         </div>
       </div>
 
@@ -231,16 +231,16 @@ function FrameworkDetails({
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-cyan-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
                   Control registry
                 </p>
 
-                <h2 className="mt-1 text-base font-semibold text-white">
+                <h2 className="mt-1 text-base font-semibold text-slate-900">
                   {framework.framework_name}
                 </h2>
               </div>
 
-              <span className="rounded-full border border-slate-800 bg-slate-950/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+              <span className="rounded-full border border-slate-800 bg-slate-100/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                 {framework.total_controls} controls
               </span>
             </div>
@@ -275,13 +275,13 @@ function FrameworkDetails({
       <div className="divide-y divide-slate-800/60">
         {framework.controls.length === 0 ? (
           <div className="px-6 py-12 text-center">
-            <Target className="mx-auto size-7 text-slate-600" />
+            <Target className="mx-auto size-7 text-slate-500" />
 
-            <p className="mt-3 text-sm font-medium text-slate-400">
+            <p className="mt-3 text-sm font-medium text-slate-600">
               No framework controls available
             </p>
 
-            <p className="mt-1 text-xs text-slate-600">
+            <p className="mt-1 text-xs text-slate-500">
               Control mappings have not been returned for this framework.
             </p>
           </div>
@@ -294,11 +294,11 @@ function FrameworkDetails({
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-md border border-cyan-400/10 bg-cyan-400/[0.04] px-2 py-1 font-mono text-[10px] text-cyan-300">
+                    <span className="rounded-md border border-indigo-400/10 bg-indigo-400/[0.04] px-2 py-1 font-mono text-[10px] text-indigo-600">
                       {control.control_id}
                     </span>
 
-                    <h3 className="text-sm font-medium text-slate-200">
+                    <h3 className="text-sm font-medium text-slate-800">
                       {control.title}
                     </h3>
                   </div>
@@ -337,8 +337,8 @@ function FrameworkDetails({
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.08em] ${
                       control.evidence_available
-                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                        : "border-red-400/20 bg-red-400/10 text-red-300"
+                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600"
+                        : "border-red-400/20 bg-red-400/10 text-red-600"
                     }`}
                   >
                     {control.evidence_available ? (
@@ -365,19 +365,19 @@ function FrameworkDetails({
 
 function PageHeader() {
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.025] p-6 sm:p-8">
+    <section className="relative overflow-hidden rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-6 sm:p-8">
       <div className="security-grid absolute inset-0 opacity-25" />
 
-      <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-cyan-400/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-indigo-400/5 blur-3xl" />
 
       <div className="relative">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
             <FileCheck2 className="size-3.5" />
             Governance
           </span>
 
-          <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+          <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
             <span className="size-1.5 rounded-full bg-emerald-400" />
             Framework coverage records
           </span>
@@ -385,25 +385,25 @@ function PageHeader() {
 
         <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
               Compliance &amp; Governance
             </h1>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
               Review SentinelX control mappings, supporting evidence,
               implementation status, and identified framework gaps.
             </p>
           </div>
 
-          <div className="flex shrink-0 items-center gap-3 rounded-xl border border-cyan-400/10 bg-cyan-400/[0.035] px-4 py-3">
-            <Shield className="size-4 text-cyan-300" />
+          <div className="flex shrink-0 items-center gap-3 rounded-xl border border-indigo-400/10 bg-indigo-400/[0.035] px-4 py-3">
+            <Shield className="size-4 text-indigo-600" />
 
             <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-cyan-400">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-indigo-600">
                 Governance state
               </p>
 
-              <p className="mt-0.5 text-xs text-slate-400">
+              <p className="mt-0.5 text-xs text-slate-600">
                 Coverage available
               </p>
             </div>
@@ -411,32 +411,32 @@ function PageHeader() {
         </div>
 
         <div className="mt-7 grid gap-2 sm:grid-cols-3">
-          <div className="rounded-xl border border-slate-800/70 bg-slate-950/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-cyan-400">
+          <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
               MAP
             </p>
 
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-600">
               Connect framework controls to SentinelX controls
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-800/70 bg-slate-950/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-emerald-400">
+          <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-emerald-600">
               EVIDENCE
             </p>
 
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-600">
               Track evidence-backed implementation
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-800/70 bg-slate-950/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-amber-400">
+          <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-amber-600">
               REVIEW
             </p>
 
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-600">
               Surface partial implementation and gaps
             </p>
           </div>
@@ -453,7 +453,7 @@ function LoadingState() {
 
       <div className="security-surface flex min-h-48 items-center justify-center">
         <div className="flex items-center gap-3 text-sm text-slate-500">
-          <div className="size-4 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
+          <div className="size-4 animate-spin rounded-full border-2 border-indigo-400/20 border-t-indigo-400" />
           Loading compliance coverage...
         </div>
       </div>
@@ -468,14 +468,14 @@ function ErrorState({ message }: { message: string }) {
 
       <div className="rounded-2xl border border-red-400/15 bg-red-400/[0.04] p-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-300" />
+          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" />
 
           <div>
             <h2 className="font-medium text-red-200">
               Compliance data unavailable
             </h2>
 
-            <p className="mt-1 text-sm leading-6 text-slate-400">
+            <p className="mt-1 text-sm leading-6 text-slate-600">
               {message}
             </p>
           </div>
@@ -549,16 +549,16 @@ export default function CompliancePage() {
     <main className="space-y-6 sm:space-y-8">
       <PageHeader />
 
-      <section className="rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.025] p-5">
+      <section className="rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-5">
         <div className="flex items-start gap-3">
-          <FileCheck2 className="mt-0.5 size-5 shrink-0 text-cyan-300" />
+          <FileCheck2 className="mt-0.5 size-5 shrink-0 text-indigo-600" />
 
           <div>
-            <h2 className="text-sm font-semibold text-cyan-200">
+            <h2 className="text-sm font-semibold text-indigo-600">
               Framework Alignment
             </h2>
 
-            <p className="mt-1 text-xs leading-5 text-slate-400">
+            <p className="mt-1 text-xs leading-5 text-slate-600">
               SentinelX maps its existing security controls and evidence to
               selected framework areas. These measurements describe internal
               implementation and evidence coverage; they do not represent
@@ -604,11 +604,11 @@ export default function CompliancePage() {
 
       {data.length === 0 ? (
         <section className="security-surface flex min-h-56 flex-col items-center justify-center px-6 text-center">
-          <div className="flex size-14 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10">
-            <Shield className="size-7 text-cyan-300" />
+          <div className="flex size-14 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-400/10">
+            <Shield className="size-7 text-indigo-600" />
           </div>
 
-          <h2 className="mt-4 text-sm font-semibold text-white">
+          <h2 className="mt-4 text-sm font-semibold text-slate-900">
             No frameworks configured
           </h2>
 
@@ -641,7 +641,7 @@ export default function CompliancePage() {
 
       <section className="rounded-2xl border border-amber-400/10 bg-amber-400/[0.02] p-5">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-400" />
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
 
           <div>
             <p className="text-sm font-medium text-amber-200">
@@ -677,7 +677,7 @@ function MetricCard({
     <article className="security-surface security-surface-hover relative overflow-hidden p-5">
       <div
         className={`pointer-events-none absolute -right-8 -top-8 size-24 rounded-full blur-2xl ${
-          tone === "cyan" ? "bg-cyan-400/5" : "bg-emerald-400/5"
+          tone === "cyan" ? "bg-indigo-400/5" : "bg-emerald-400/5"
         }`}
       />
 
@@ -687,7 +687,7 @@ function MetricCard({
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-white">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
             {value}
           </p>
 
@@ -697,8 +697,8 @@ function MetricCard({
         <div
           className={`rounded-xl border p-3 ${
             tone === "cyan"
-              ? "border-cyan-400/15 bg-cyan-400/10 text-cyan-300"
-              : "border-emerald-400/15 bg-emerald-400/10 text-emerald-300"
+              ? "border-indigo-400/15 bg-indigo-400/10 text-indigo-600"
+              : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600"
           }`}
         >
           {icon}

@@ -22,10 +22,10 @@ function DecisionBadge({ decision }: { decision: string }) {
   const warning = normalized.includes("WARN");
 
   const style = blocked
-    ? "border-red-400/15 bg-red-400/[0.06] text-red-300"
+    ? "border-red-400/15 bg-red-400/[0.06] text-red-600"
     : warning
-      ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-300"
-      : "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-300";
+      ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-600"
+      : "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-600";
 
   return (
     <span
@@ -91,21 +91,21 @@ export default function EventsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-400">
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
               <Activity className="size-3.5" />
               Security Telemetry
             </div>
 
-            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="h-1 w-1 rounded-full bg-slate-200" />
 
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-600">
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500">
               Runtime / Events
             </span>
           </div>
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
                 Security Events
               </h1>
 
@@ -157,33 +157,33 @@ export default function EventsPage() {
 
       {/* Event stream */}
       <section className="security-surface overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-white/[0.06] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg border border-cyan-400/10 bg-cyan-400/[0.05]">
-                <Activity className="size-3.5 text-cyan-300" />
+              <div className="flex size-7 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.05]">
+                <Activity className="size-3.5 text-indigo-600" />
               </div>
 
-              <h2 className="text-sm font-semibold text-slate-200">
+              <h2 className="text-sm font-semibold text-slate-800">
                 Event Log
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-600">
+            <p className="mt-1 text-[10px] text-slate-500">
               Most recent security event records
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-600">
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
               Page
             </span>
 
-            <span className="rounded-md border border-white/[0.06] bg-white/[0.025] px-2.5 py-1 font-mono text-[10px] text-slate-400">
+            <span className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[10px] text-slate-600">
               01 / {data?.pages ?? "—"}
             </span>
 
-            <span className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.025] px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+            <span className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
               <Filter className="size-3" />
               Latest records
             </span>
@@ -253,10 +253,10 @@ function StreamIndicator({
       : "emerald";
 
   const classes = {
-    red: "border-red-400/15 bg-red-400/[0.05] text-red-300",
-    amber: "border-amber-400/15 bg-amber-400/[0.05] text-amber-300",
+    red: "border-red-400/15 bg-red-400/[0.05] text-red-600",
+    amber: "border-amber-400/15 bg-amber-400/[0.05] text-amber-600",
     emerald:
-      "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-300",
+      "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-600",
   }[tone];
 
   const dot = {
@@ -293,27 +293,27 @@ function MetricCard({
 }) {
   const styles = {
     cyan: {
-      icon: "border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300",
-      value: "text-white",
+      icon: "border-indigo-400/10 bg-indigo-400/[0.05] text-indigo-600",
+      value: "text-slate-900",
     },
     red: {
-      icon: "border-red-400/10 bg-red-400/[0.05] text-red-300",
-      value: "text-red-300",
+      icon: "border-red-400/10 bg-red-400/[0.05] text-red-600",
+      value: "text-red-600",
     },
     amber: {
-      icon: "border-amber-400/10 bg-amber-400/[0.05] text-amber-300",
-      value: "text-amber-300",
+      icon: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600",
+      value: "text-amber-600",
     },
     emerald: {
-      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-300",
-      value: "text-emerald-300",
+      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600",
+      value: "text-emerald-600",
     },
   }[tone];
 
   return (
     <div className="security-surface security-surface-hover p-4">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-600">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500">
           {label}
         </span>
 
@@ -330,7 +330,7 @@ function MetricCard({
         {value}
       </div>
 
-      <p className="mt-1 text-[10px] text-slate-600">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
     </div>
   );
 }
@@ -362,10 +362,10 @@ function EventRow({
       : "border-l-emerald-400/50";
 
   const iconStyle = blocked
-    ? "border-red-400/10 bg-red-400/[0.04] text-red-300"
+    ? "border-red-400/10 bg-red-400/[0.04] text-red-600"
     : warning
-      ? "border-amber-400/10 bg-amber-400/[0.04] text-amber-300"
-      : "border-cyan-400/10 bg-cyan-400/[0.04] text-cyan-300";
+      ? "border-amber-400/10 bg-amber-400/[0.04] text-amber-600"
+      : "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600";
 
   return (
     <article
@@ -387,22 +387,22 @@ function EventRow({
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-[9px] text-slate-700">
+              <span className="font-mono text-[9px] text-slate-400">
                 EVT-{String(index + 1).padStart(2, "0")}
               </span>
 
-              <span className="text-[9px] uppercase tracking-[0.12em] text-slate-700">
+              <span className="text-[9px] uppercase tracking-[0.12em] text-slate-400">
                 #{event.id}
               </span>
 
               <DecisionBadge decision={event.decision} />
             </div>
 
-            <h3 className="mt-1 truncate text-sm font-semibold text-slate-200">
+            <h3 className="mt-1 truncate text-sm font-semibold text-slate-800">
               {event.event_type}
             </h3>
 
-            <p className="mt-1 max-w-2xl truncate text-[10px] text-slate-600">
+            <p className="mt-1 max-w-2xl truncate text-[10px] text-slate-500">
               {event.reason || "No decision reason recorded"}
             </p>
           </div>
@@ -446,12 +446,12 @@ function EventMetadata({
 }) {
   return (
     <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-[8px] font-medium uppercase tracking-[0.14em] text-slate-700">
+      <div className="flex items-center gap-1.5 text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400">
         {icon && <Clock3 className="size-3" />}
         {label}
       </div>
 
-      <div className="mt-1 truncate font-mono text-[10px] text-slate-400">
+      <div className="mt-1 truncate font-mono text-[10px] text-slate-600">
         {value}
       </div>
     </div>
@@ -472,10 +472,10 @@ function OperationalSignal({
   tone: "cyan" | "emerald" | "red";
 }) {
   const style = {
-    cyan: "border-cyan-400/10 bg-cyan-400/[0.04] text-cyan-300",
+    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600",
     emerald:
-      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-300",
-    red: "border-red-400/10 bg-red-400/[0.04] text-red-300",
+      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600",
+    red: "border-red-400/10 bg-red-400/[0.04] text-red-600",
   }[tone];
 
   return (
@@ -487,16 +487,16 @@ function OperationalSignal({
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-600">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500">
           {label}
         </p>
 
         <div className="mt-1 flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-200">
+          <span className="text-xs font-semibold text-slate-800">
             {value}
           </span>
 
-          <span className="truncate text-[9px] text-slate-700">
+          <span className="truncate text-[9px] text-slate-400">
             {detail}
           </span>
         </div>
@@ -508,15 +508,15 @@ function OperationalSignal({
 function EventsLoadingState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center">
-      <div className="flex size-10 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-        <LoaderCircle className="size-5 animate-spin text-cyan-400" />
+      <div className="flex size-10 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+        <LoaderCircle className="size-5 animate-spin text-indigo-600" />
       </div>
 
       <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
         Synchronizing telemetry
       </p>
 
-      <p className="mt-1 text-[10px] text-slate-700">
+      <p className="mt-1 text-[10px] text-slate-400">
         Reading current security event stream
       </p>
     </div>
@@ -527,14 +527,14 @@ function EventsErrorState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-11 items-center justify-center rounded-xl border border-red-400/10 bg-red-400/[0.04]">
-        <ShieldAlert className="size-5 text-red-300" />
+        <ShieldAlert className="size-5 text-red-600" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-300">
+      <p className="mt-4 text-sm font-medium text-slate-700">
         Event stream unavailable
       </p>
 
-      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-600">
+      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-500">
         SentinelX could not retrieve the security event stream. Verify the
         security session and control-plane connection.
       </p>
@@ -547,23 +547,23 @@ function EventsEmptyState() {
     <div className="relative flex min-h-72 flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div className="security-grid pointer-events-none absolute inset-0 opacity-20" />
 
-      <div className="relative flex size-14 items-center justify-center rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-        <Terminal className="size-6 text-cyan-300/70" />
+      <div className="relative flex size-14 items-center justify-center rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+        <Terminal className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="relative mt-4 text-sm font-semibold text-slate-300">
+      <p className="relative mt-4 text-sm font-semibold text-slate-700">
         No security events yet
       </p>
 
-      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-600">
+      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
         Events will appear here when SentinelX evaluates actions from
         registered agents.
       </p>
 
-      <div className="relative mt-5 flex items-center gap-2 rounded-full border border-white/[0.05] bg-white/[0.02] px-3 py-1.5">
+      <div className="relative mt-5 flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
         <span className="size-1.5 rounded-full bg-slate-600" />
 
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-600">
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
           Telemetry awaiting events
         </span>
       </div>

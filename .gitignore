@@ -18,3 +18,10 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+# Local SQLite dev database
+*.db
+backend/sentinelx_dev.db
+
+# Node / Next build
+node_modules/
+.next/

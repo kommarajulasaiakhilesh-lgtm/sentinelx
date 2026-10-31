@@ -175,22 +175,22 @@ export function LoginForm() {
 
   return (
     <div className="relative w-full max-w-5xl">
-      <div className="absolute -inset-20 rounded-full bg-cyan-400/[0.035] blur-3xl" />
+      <div className="absolute -inset-20 rounded-full bg-indigo-400/[0.035] blur-3xl" />
 
-      <div className="relative grid overflow-hidden rounded-3xl border border-white/10 bg-[#090c12]/90 shadow-2xl shadow-black/60 backdrop-blur-2xl lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="relative grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 backdrop-blur-2xl lg:grid-cols-[1.05fr_0.95fr]">
         {/* Left security visualization */}
-        <div className="relative hidden min-h-[620px] overflow-hidden border-r border-white/10 lg:block">
+        <div className="relative hidden min-h-[620px] overflow-hidden border-r border-slate-200 lg:block">
           <div className="absolute inset-0 security-grid opacity-50" />
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(34,211,238,0.12),transparent_30%),linear-gradient(180deg,transparent,rgba(6,8,12,0.85))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(99, 102, 241,0.12),transparent_30%),linear-gradient(180deg,transparent,rgba(6,8,12,0.85))]" />
 
           <div className="absolute left-8 right-8 top-8 flex items-center justify-between">
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">
-              <Terminal className="size-3.5 text-cyan-400" />
+              <Terminal className="size-3.5 text-indigo-600" />
               Secure access layer
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-emerald-300">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-emerald-600">
               <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
               Systems nominal
             </div>
@@ -198,12 +198,12 @@ export function LoginForm() {
 
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative size-72">
-              <div className="absolute inset-0 rounded-full border border-cyan-400/10" />
-              <div className="absolute inset-7 rounded-full border border-cyan-400/10" />
-              <div className="absolute inset-14 rounded-full border border-cyan-400/15" />
+              <div className="absolute inset-0 rounded-full border border-indigo-400/10" />
+              <div className="absolute inset-7 rounded-full border border-indigo-400/10" />
+              <div className="absolute inset-14 rounded-full border border-indigo-400/15" />
 
               <motion.div
-                className="absolute inset-0 rounded-full border border-transparent border-t-cyan-300/70"
+                className="absolute inset-0 rounded-full border border-transparent border-t-indigo-300/70"
                 animate={{ rotate: 360 }}
                 transition={{
                   duration: 7,
@@ -213,7 +213,7 @@ export function LoginForm() {
               />
 
               <motion.div
-                className="absolute inset-10 rounded-full border border-transparent border-r-cyan-400/50"
+                className="absolute inset-10 rounded-full border border-transparent border-r-indigo-400/50"
                 animate={{ rotate: -360 }}
                 transition={{
                   duration: 11,
@@ -223,17 +223,17 @@ export function LoginForm() {
               />
 
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative flex size-28 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-400/[0.04] shadow-[0_0_80px_rgba(34,211,238,0.08)]">
-                  <div className="absolute inset-3 rounded-full border border-cyan-400/10" />
+                <div className="relative flex size-28 items-center justify-center rounded-full border border-indigo-300/20 bg-indigo-400/[0.04] shadow-[0_0_80px_rgba(99, 102, 241,0.08)]">
+                  <div className="absolute inset-3 rounded-full border border-indigo-400/10" />
                   <ShieldCheck
-                    className="size-12 text-cyan-300"
+                    className="size-12 text-indigo-600"
                     strokeWidth={1.3}
                   />
                 </div>
               </div>
 
               <motion.div
-                className="absolute left-1/2 top-1/2 h-px w-36 origin-left bg-gradient-to-r from-cyan-300/60 to-transparent"
+                className="absolute left-1/2 top-1/2 h-px w-36 origin-left bg-gradient-to-r from-indigo-300/60 to-transparent"
                 animate={{ rotate: [0, 360] }}
                 transition={{
                   duration: 5,
@@ -242,19 +242,19 @@ export function LoginForm() {
                 }}
               />
 
-              <div className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_20px_rgba(103,232,249,0.9)]" />
+              <div className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-300 shadow-[0_0_20px_rgba(79, 70, 229,0.9)]" />
             </div>
           </div>
 
           <div className="absolute bottom-8 left-8 right-8">
             <div className="mb-4 flex items-center gap-3">
-              <Radar className="size-4 text-cyan-400" />
-              <span className="text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <Radar className="size-4 text-indigo-600" />
+              <span className="text-[10px] uppercase tracking-[0.22em] text-indigo-600">
                 Sentinel perimeter
               </span>
             </div>
 
-            <h2 className="max-w-md text-3xl font-semibold tracking-tight text-white">
+            <h2 className="max-w-md text-3xl font-semibold tracking-tight text-slate-900">
               One gateway.
               <br />
               <span className="text-slate-500">
@@ -275,12 +275,12 @@ export function LoginForm() {
           <div className="mx-auto w-full max-w-md">
             <div className="mb-8">
               <div className="mb-6 flex items-center gap-3 lg:hidden">
-                <div className="flex size-11 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10">
-                  <ShieldCheck className="size-5 text-cyan-300" />
+                <div className="flex size-11 items-center justify-center rounded-xl border border-indigo-400/20 bg-indigo-400/10">
+                  <ShieldCheck className="size-5 text-indigo-600" />
                 </div>
 
                 <div>
-                  <div className="text-sm font-semibold tracking-[0.2em] text-white">
+                  <div className="text-sm font-semibold tracking-[0.2em] text-slate-900">
                     SENTINELX
                   </div>
                   <div className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
@@ -289,14 +289,14 @@ export function LoginForm() {
                 </div>
               </div>
 
-              <div className="mb-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-400">
+              <div className="mb-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-indigo-600">
                 <Fingerprint className="size-3.5" />
                 {mode === "login"
                   ? "Operator authentication"
                   : "Operator registration"}
               </div>
 
-              <h1 className="text-3xl font-semibold tracking-tight text-white">
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
                 {mode === "login"
                   ? "Enter the control plane."
                   : "Create your operator identity."}
@@ -310,14 +310,14 @@ export function LoginForm() {
             </div>
 
             {/* Login / Register switch */}
-            <div className="mb-6 grid grid-cols-2 rounded-xl border border-white/10 bg-white/[0.02] p-1">
+            <div className="mb-6 grid grid-cols-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
               <button
                 type="button"
                 onClick={() => switchMode("login")}
                 className={`rounded-lg px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
                   mode === "login"
-                    ? "bg-cyan-400/10 text-cyan-300 shadow-sm"
-                    : "text-slate-600 hover:text-slate-300"
+                    ? "bg-indigo-400/10 text-indigo-600 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 Authenticate
@@ -328,8 +328,8 @@ export function LoginForm() {
                 onClick={() => switchMode("register")}
                 className={`rounded-lg px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
                   mode === "register"
-                    ? "bg-cyan-400/10 text-cyan-300 shadow-sm"
-                    : "text-slate-600 hover:text-slate-300"
+                    ? "bg-indigo-400/10 text-indigo-600 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 Register
@@ -345,7 +345,7 @@ export function LoginForm() {
                   exit={{ opacity: 0, height: 0, y: -6 }}
                   className="mb-5 overflow-hidden"
                 >
-                  <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-300">
+                  <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600">
                     {successMessage}
                   </div>
                 </motion.div>
@@ -366,30 +366,30 @@ export function LoginForm() {
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-white/[0.025] px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
                       loginForm.formState.errors.username
                         ? "border-red-400/40"
-                        : "border-white/10 focus-within:border-cyan-400/40 focus-within:bg-cyan-400/[0.025]"
+                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <UserRound className="mr-3 size-4 text-slate-600 transition group-focus-within:text-cyan-400" />
+                    <UserRound className="mr-3 size-4 text-slate-500 transition group-focus-within:text-indigo-600" />
 
                     <input
                       id="username"
                       type="text"
                       autoComplete="username"
                       placeholder="Enter operator identity"
-                      className="h-full w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-700"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                       {...loginForm.register("username")}
                     />
 
-                    <span className="ml-3 hidden font-mono text-[9px] text-slate-700 sm:block">
+                    <span className="ml-3 hidden font-mono text-[9px] text-slate-400 sm:block">
                       ID
                     </span>
                   </div>
 
                   {loginForm.formState.errors.username && (
-                    <p className="mt-2 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-600">
                       {loginForm.formState.errors.username.message}
                     </p>
                   )}
@@ -431,26 +431,26 @@ export function LoginForm() {
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-white/[0.025] px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
                       registerForm.formState.errors.username
                         ? "border-red-400/40"
-                        : "border-white/10 focus-within:border-cyan-400/40 focus-within:bg-cyan-400/[0.025]"
+                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <UserRound className="mr-3 size-4 text-slate-600 group-focus-within:text-cyan-400" />
+                    <UserRound className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
 
                     <input
                       id="register-username"
                       type="text"
                       autoComplete="username"
                       placeholder="Choose operator identity"
-                      className="h-full w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-700"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                       {...registerForm.register("username")}
                     />
                   </div>
 
                   {registerForm.formState.errors.username && (
-                    <p className="mt-2 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-600">
                       {registerForm.formState.errors.username.message}
                     </p>
                   )}
@@ -465,26 +465,26 @@ export function LoginForm() {
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-white/[0.025] px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
                       registerForm.formState.errors.email
                         ? "border-red-400/40"
-                        : "border-white/10 focus-within:border-cyan-400/40 focus-within:bg-cyan-400/[0.025]"
+                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <Mail className="mr-3 size-4 text-slate-600 group-focus-within:text-cyan-400" />
+                    <Mail className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
 
                     <input
                       id="register-email"
                       type="email"
                       autoComplete="email"
                       placeholder="operator@example.com"
-                      className="h-full w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-700"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                       {...registerForm.register("email")}
                     />
                   </div>
 
                   {registerForm.formState.errors.email && (
-                    <p className="mt-2 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-600">
                       {registerForm.formState.errors.email.message}
                     </p>
                   )}
@@ -532,7 +532,7 @@ export function LoginForm() {
                 onClick={() =>
                   switchMode(mode === "login" ? "register" : "login")
                 }
-                className="text-[10px] uppercase tracking-[0.12em] text-slate-600 transition hover:text-cyan-300"
+                className="text-[10px] uppercase tracking-[0.12em] text-slate-500 transition hover:text-indigo-600"
               >
                 {mode === "login"
                   ? "New operator? Register an account"
@@ -540,8 +540,8 @@ export function LoginForm() {
               </button>
             </div>
 
-            <div className="mt-7 border-t border-white/5 pt-5">
-              <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-slate-600">
+            <div className="mt-7 border-t border-slate-200 pt-5">
+              <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-slate-500">
                 <span className="flex items-center gap-2">
                   <KeyRound className="size-3" />
                   JWT protected session
@@ -553,7 +553,7 @@ export function LoginForm() {
                 </span>
               </div>
 
-              <p className="mt-3 text-[10px] leading-5 text-slate-700">
+              <p className="mt-3 text-[10px] leading-5 text-slate-400">
                 Unauthorized access is prohibited. All authenticated activity
                 is subject to SentinelX security policies and audit controls.
               </p>
@@ -594,27 +594,27 @@ function PasswordField({
       </label>
 
       <div
-        className={`group flex h-13 items-center rounded-xl border bg-white/[0.025] px-4 transition ${
+        className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
           error
             ? "border-red-400/40"
-            : "border-white/10 focus-within:border-cyan-400/40 focus-within:bg-cyan-400/[0.025]"
+            : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
         }`}
       >
-        <LockKeyhole className="mr-3 size-4 text-slate-600 group-focus-within:text-cyan-400" />
+        <LockKeyhole className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
 
         <input
           id={id}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className="h-full w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-700"
+          className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
           {...register}
         />
 
         <button
           type="button"
           onClick={onToggle}
-          className="ml-2 rounded-md p-1.5 text-slate-600 transition hover:text-slate-300"
+          className="ml-2 rounded-md p-1.5 text-slate-500 transition hover:text-slate-700"
           aria-label={visible ? "Hide password" : "Show password"}
         >
           {visible ? (
@@ -625,7 +625,7 @@ function PasswordField({
         </button>
       </div>
 
-      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
     </div>
   );
 }
@@ -647,14 +647,14 @@ function Feedback({
           className="overflow-hidden"
         >
           <div className="flex items-start gap-3 rounded-xl border border-red-400/15 bg-red-400/[0.05] p-3.5">
-            <XCircle className="mt-0.5 size-4 shrink-0 text-red-400" />
+            <XCircle className="mt-0.5 size-4 shrink-0 text-red-600" />
 
             <div>
-              <div className="text-xs font-medium text-red-300">
+              <div className="text-xs font-medium text-red-600">
                 Authentication rejected
               </div>
 
-              <div className="mt-1 text-[11px] leading-5 text-red-300/60">
+              <div className="mt-1 text-[11px] leading-5 text-red-600/60">
                 {error}
               </div>
             </div>
@@ -669,7 +669,7 @@ function Feedback({
           exit={{ opacity: 0, height: 0 }}
           className="overflow-hidden"
         >
-          <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-300">
+          <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600">
             {success}
           </div>
         </motion.div>
@@ -691,13 +691,13 @@ function SubmitButton({
     <button
       type="submit"
       disabled={submitting}
-      className="group relative flex h-13 w-full items-center justify-center overflow-hidden rounded-xl border border-cyan-300/20 bg-cyan-400/10 text-sm font-medium text-cyan-100 transition hover:border-cyan-300/40 hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+      className="group relative flex h-13 w-full items-center justify-center overflow-hidden rounded-xl border border-indigo-300/20 bg-indigo-400/10 text-sm font-medium text-indigo-600 transition hover:border-indigo-300/40 hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-60"
     >
-      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cyan-300/[0.08] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-indigo-300/[0.08] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
       {submitting ? (
         <span className="relative flex items-center gap-3">
-          <span className="size-4 animate-spin rounded-full border-2 border-cyan-200/20 border-t-cyan-200" />
+          <span className="size-4 animate-spin rounded-full border-2 border-indigo-200/20 border-t-indigo-200" />
           {loadingText}
         </span>
       ) : (
@@ -718,12 +718,12 @@ function StatusNode({
   value: string;
 }) {
   return (
-    <div className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5">
-      <div className="text-[8px] font-semibold tracking-[0.15em] text-slate-600">
+    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
+      <div className="text-[8px] font-semibold tracking-[0.15em] text-slate-500">
         {label}
       </div>
 
-      <div className="mt-1 flex items-center gap-1.5 text-[9px] font-medium tracking-[0.1em] text-emerald-400">
+      <div className="mt-1 flex items-center gap-1.5 text-[9px] font-medium tracking-[0.1em] text-emerald-600">
         <span className="size-1 rounded-full bg-emerald-400" />
         {value}
       </div>

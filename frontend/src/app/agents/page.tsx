@@ -47,21 +47,21 @@ export default function AgentsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-400">
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
               <Bot className="size-3.5" />
               Agent Operations
             </div>
 
-            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="h-1 w-1 rounded-full bg-slate-200" />
 
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-600">
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500">
               Fleet / Runtime
             </span>
           </div>
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
                 Agent Fleet
               </h1>
 
@@ -116,29 +116,29 @@ export default function AgentsPage() {
 
       {/* Fleet panel */}
       <section className="security-surface overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-white/[0.06] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg border border-cyan-400/10 bg-cyan-400/[0.05]">
-                <Wifi className="size-3.5 text-cyan-300" />
+              <div className="flex size-7 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.05]">
+                <Wifi className="size-3.5 text-indigo-600" />
               </div>
 
-              <h2 className="text-sm font-semibold text-slate-200">
+              <h2 className="text-sm font-semibold text-slate-800">
                 Registered Agents
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-600">
+            <p className="mt-1 text-[10px] text-slate-500">
               Inventory associated with the current security account
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-600">
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
               Nodes
             </span>
 
-            <span className="rounded-md border border-white/[0.06] bg-white/[0.025] px-2.5 py-1 font-mono text-[10px] text-slate-400">
+            <span className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[10px] text-slate-600">
               {isLoading ? "—" : isError ? "ERR" : agents.length}
             </span>
           </div>
@@ -211,9 +211,9 @@ function FleetIndicator({
       : "emerald";
 
   const classes = {
-    red: "border-red-400/15 bg-red-400/[0.05] text-red-300",
-    amber: "border-amber-400/15 bg-amber-400/[0.05] text-amber-300",
-    emerald: "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-300",
+    red: "border-red-400/15 bg-red-400/[0.05] text-red-600",
+    amber: "border-amber-400/15 bg-amber-400/[0.05] text-amber-600",
+    emerald: "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-600",
   }[tone];
 
   const dot = {
@@ -250,27 +250,27 @@ function MetricCard({
 }) {
   const styles = {
     cyan: {
-      icon: "border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300",
-      value: "text-white",
+      icon: "border-indigo-400/10 bg-indigo-400/[0.05] text-indigo-600",
+      value: "text-slate-900",
     },
     emerald: {
-      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-300",
-      value: "text-white",
+      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600",
+      value: "text-slate-900",
     },
     amber: {
-      icon: "border-amber-400/10 bg-amber-400/[0.05] text-amber-300",
-      value: "text-white",
+      icon: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600",
+      value: "text-slate-900",
     },
     slate: {
-      icon: "border-white/[0.06] bg-white/[0.025] text-slate-400",
-      value: "text-white",
+      icon: "border-slate-200 bg-slate-50 text-slate-600",
+      value: "text-slate-900",
     },
   }[accent];
 
   return (
     <div className="security-surface security-surface-hover p-4">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-600">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500">
           {label}
         </span>
 
@@ -285,7 +285,7 @@ function MetricCard({
         {value}
       </div>
 
-      <p className="mt-1 text-[10px] text-slate-600">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
     </div>
   );
 }
@@ -308,25 +308,25 @@ function AgentRow({
     <article className="security-surface-hover group relative px-5 py-5 transition-colors">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-            <Bot className="size-5 text-cyan-300" />
+          <div className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+            <Bot className="size-5 text-indigo-600" />
 
           </div>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-[9px] text-slate-700">
+              <span className="font-mono text-[9px] text-slate-400">
                 NODE-{String(index + 1).padStart(2, "0")}
               </span>
 
               <StatusBadge status={agent.status} />
             </div>
 
-            <h3 className="mt-1 truncate text-sm font-semibold text-slate-200">
+            <h3 className="mt-1 truncate text-sm font-semibold text-slate-800">
               {agent.name}
             </h3>
 
-            <p className="mt-1 max-w-xl truncate text-[10px] text-slate-600">
+            <p className="mt-1 max-w-xl truncate text-[10px] text-slate-500">
               {agent.description || "No agent description provided"}
             </p>
           </div>
@@ -363,9 +363,9 @@ function StatusBadge({ status }: { status: string }) {
   const isSuspended = normalized === "SUSPENDED";
 
   const style = isActive
-    ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-300"
+    ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-600"
     : isSuspended
-      ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-300"
+      ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-600"
       : "border-slate-400/10 bg-slate-400/[0.04] text-slate-500";
 
   const dot = isActive
@@ -395,12 +395,12 @@ function MetadataItem({
 }) {
   return (
     <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-[8px] font-medium uppercase tracking-[0.14em] text-slate-700">
+      <div className="flex items-center gap-1.5 text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400">
         <Icon className="size-3" />
         {label}
       </div>
 
-      <div className="mt-1 truncate font-mono text-[10px] text-slate-400">
+      <div className="mt-1 truncate font-mono text-[10px] text-slate-600">
         {value}
       </div>
     </div>
@@ -421,9 +421,9 @@ function OperationalSignal({
   tone: "cyan" | "emerald" | "red";
 }) {
   const iconStyle = {
-    cyan: "border-cyan-400/10 bg-cyan-400/[0.04] text-cyan-300",
-    emerald: "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-300",
-    red: "border-red-400/10 bg-red-400/[0.04] text-red-300",
+    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600",
+    emerald: "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600",
+    red: "border-red-400/10 bg-red-400/[0.04] text-red-600",
   }[tone];
 
   return (
@@ -435,16 +435,16 @@ function OperationalSignal({
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-600">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500">
           {label}
         </p>
 
         <div className="mt-1 flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-200">
+          <span className="text-xs font-semibold text-slate-800">
             {value}
           </span>
 
-          <span className="truncate text-[9px] text-slate-700">
+          <span className="truncate text-[9px] text-slate-400">
             {detail}
           </span>
         </div>
@@ -456,15 +456,15 @@ function OperationalSignal({
 function AgentsLoadingState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center">
-      <div className="flex size-10 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-        <LoaderCircle className="size-5 animate-spin text-cyan-400" />
+      <div className="flex size-10 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+        <LoaderCircle className="size-5 animate-spin text-indigo-600" />
       </div>
 
       <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
         Synchronizing fleet
       </p>
 
-      <p className="mt-1 text-[10px] text-slate-700">
+      <p className="mt-1 text-[10px] text-slate-400">
         Reading current control-plane inventory
       </p>
     </div>
@@ -475,14 +475,14 @@ function AgentsErrorState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-11 items-center justify-center rounded-xl border border-red-400/10 bg-red-400/[0.04]">
-        <CircleAlert className="size-5 text-red-300" />
+        <CircleAlert className="size-5 text-red-600" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-300">
+      <p className="mt-4 text-sm font-medium text-slate-700">
         Fleet synchronization unavailable
       </p>
 
-      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-600">
+      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-500">
         SentinelX could not retrieve the registered agent fleet. Verify the
         security session and control-plane connection.
       </p>
@@ -495,23 +495,23 @@ function AgentsEmptyState() {
     <div className="relative flex min-h-72 flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div className="security-grid pointer-events-none absolute inset-0 opacity-20" />
 
-      <div className="relative flex size-14 items-center justify-center rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-        <Bot className="size-6 text-cyan-300/70" />
+      <div className="relative flex size-14 items-center justify-center rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+        <Bot className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="relative mt-4 text-sm font-semibold text-slate-300">
+      <p className="relative mt-4 text-sm font-semibold text-slate-700">
         No agents registered
       </p>
 
-      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-600">
+      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
         There are currently no AI agents associated with this security
         account. Connected agents will appear here when registered.
       </p>
 
-      <div className="relative mt-5 flex items-center gap-2 rounded-full border border-white/[0.05] bg-white/[0.02] px-3 py-1.5">
+      <div className="relative mt-5 flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
         <span className="size-1.5 rounded-full bg-slate-600" />
 
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-600">
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
           Fleet awaiting nodes
         </span>
       </div>

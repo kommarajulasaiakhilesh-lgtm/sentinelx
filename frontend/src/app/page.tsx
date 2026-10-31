@@ -1,6 +1,7 @@
 
 "use client";
 
+import { motion } from "motion/react";
 import {
   Activity,
   ArrowUpRight,
@@ -45,12 +46,12 @@ export default function CommandCenterPage() {
         <div className="relative">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-400">
+              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-indigo-600">
                 <Network className="size-3.5" />
                 Security Operations
               </div>
 
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
                 Command Center
               </h1>
 
@@ -69,10 +70,10 @@ export default function CommandCenterPage() {
               <span
                 className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
                   streamStatus === "CONNECTED"
-                    ? "text-emerald-300"
+                    ? "text-emerald-600"
                     : streamStatus === "CONNECTING"
-                      ? "text-amber-300"
-                      : "text-rose-300"
+                      ? "text-amber-600"
+                      : "text-rose-600"
                 }`}
               >
                 {streamStatus === "CONNECTED"
@@ -84,7 +85,7 @@ export default function CommandCenterPage() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.05] pt-4">
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200 pt-4">
             <SystemSignal
               label="Platform"
               value="Control plane"
@@ -115,6 +116,7 @@ export default function CommandCenterPage() {
           value={isLoading ? "—" : isError ? "!" : agents.length.toString()}
           detail={isError ? "Unable to retrieve agent inventory" : "Registered to this account"}
           icon={Bot}
+          index={0}
         />
 
         <MetricCard
@@ -123,6 +125,7 @@ export default function CommandCenterPage() {
           detail={isError ? "Fleet data unavailable" : "Agent status is active"}
           icon={Activity}
           accent="emerald"
+          index={1}
         />
 
         <MetricCard
@@ -131,6 +134,7 @@ export default function CommandCenterPage() {
           detail="Registered agents not suspended"
           icon={ShieldCheck}
           accent="cyan"
+          index={2}
         />
 
         <MetricCard
@@ -139,34 +143,35 @@ export default function CommandCenterPage() {
           detail="Require operator attention"
           icon={CircleAlert}
           accent={suspendedAgents > 0 ? "amber" : "slate"}
+          index={3}
         />
       </section>
 
       {/* Operational Overview */}
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.7fr)]">
         <div className="security-surface overflow-hidden">
-          <div className="flex flex-col gap-3 border-b border-white/[0.05] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <Cpu className="size-4 text-cyan-300" />
+                <Cpu className="size-4 text-indigo-600" />
 
-                <h2 className="text-sm font-semibold text-slate-200">
+                <h2 className="text-sm font-semibold text-slate-800">
                   Agent Fleet
                 </h2>
               </div>
 
-              <p className="mt-1 text-[10px] text-slate-600">
+              <p className="mt-1 text-[10px] text-slate-500">
                 Agent inventory registered to the current security account
               </p>
             </div>
 
             {!isLoading && !isError && (
               <div className="flex items-center gap-2">
-                <span className="rounded-full border border-white/[0.06] bg-white/[0.025] px-2.5 py-1 font-mono text-[9px] text-slate-500">
+                <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[9px] text-slate-500">
                   {agents.length.toString().padStart(2, "0")} NODES
                 </span>
 
-                <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-300">
+                <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-600">
                   <span className="size-1.5 rounded-full bg-emerald-400" />
                   Registered
                 </span>
@@ -191,16 +196,16 @@ export default function CommandCenterPage() {
 
         {/* Security Posture */}
         <div className="security-surface overflow-hidden">
-          <div className="border-b border-white/[0.05] px-5 py-4">
+          <div className="border-b border-slate-200 px-5 py-4">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-emerald-300" />
+              <ShieldCheck className="size-4 text-emerald-600" />
 
-              <h2 className="text-sm font-semibold text-slate-200">
+              <h2 className="text-sm font-semibold text-slate-800">
                 Security Capabilities
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-600">
+            <p className="mt-1 text-[10px] text-slate-500">
               Available control-plane capabilities
             </p>
           </div>
@@ -211,14 +216,14 @@ export default function CommandCenterPage() {
 
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-600">
                     Control plane
                   </span>
 
-                  <ShieldCheck className="size-5 text-emerald-300/70" />
+                  <ShieldCheck className="size-5 text-emerald-600/70" />
                 </div>
 
-                <p className="mt-4 text-xl font-semibold tracking-tight text-white">
+                <p className="mt-4 text-xl font-semibold tracking-tight text-slate-900">
                   Security controls available
                 </p>
 
@@ -258,28 +263,28 @@ export default function CommandCenterPage() {
 
       {/* Operations Overview */}
       <section className="security-surface overflow-hidden">
-        <div className="flex items-center justify-between border-b border-white/[0.05] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           <div>
             <div className="flex items-center gap-2">
-              <Activity className="size-4 text-cyan-300" />
+              <Activity className="size-4 text-indigo-600" />
 
-              <h2 className="text-sm font-semibold text-slate-200">
+              <h2 className="text-sm font-semibold text-slate-800">
                 Operations Overview
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-600">
+            <p className="mt-1 text-[10px] text-slate-500">
               Explore recorded security activity and platform intelligence
             </p>
           </div>
 
-          <span className="hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-600 sm:flex">
+          <span className="hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:flex">
             <span className="size-1.5 rounded-full bg-slate-600" />
             Security console
           </span>
         </div>
 
-        <div className="grid gap-px bg-white/[0.04] sm:grid-cols-3">
+        <div className="grid gap-px bg-slate-100 sm:grid-cols-3">
           <OverviewTile
             label="Security Events"
             value="View"
@@ -323,13 +328,13 @@ function SystemSignal({
         }`}
       />
 
-      <span className="text-[9px] uppercase tracking-[0.14em] text-slate-600">
+      <span className="text-[9px] uppercase tracking-[0.14em] text-slate-500">
         {label}
       </span>
 
       <span
         className={`text-[10px] font-medium ${
-          status === "healthy" ? "text-slate-300" : "text-amber-300"
+          status === "healthy" ? "text-slate-700" : "text-amber-600"
         }`}
       >
         {value}
@@ -344,42 +349,50 @@ function MetricCard({
   detail,
   icon: Icon,
   accent = "cyan",
+  index = 0,
 }: {
   label: string;
   value: string;
   detail: string;
   icon: typeof Bot;
   accent?: "cyan" | "emerald" | "amber" | "slate";
+  index?: number;
 }) {
   const accentClasses = {
     cyan: {
-      border: "border-cyan-400/10",
-      background: "bg-cyan-400/[0.045]",
-      icon: "text-cyan-300",
+      border: "border-indigo-400/10",
+      background: "bg-indigo-400/[0.045]",
+      icon: "text-indigo-600",
     },
     emerald: {
       border: "border-emerald-400/10",
       background: "bg-emerald-400/[0.04]",
-      icon: "text-emerald-300",
+      icon: "text-emerald-600",
     },
     amber: {
       border: "border-amber-400/10",
       background: "bg-amber-400/[0.04]",
-      icon: "text-amber-300",
+      icon: "text-amber-600",
     },
     slate: {
-      border: "border-white/[0.06]",
-      background: "bg-white/[0.025]",
-      icon: "text-slate-400",
+      border: "border-slate-200",
+      background: "bg-slate-50",
+      icon: "text-slate-600",
     },
   };
 
   const colors = accentClasses[accent];
 
   return (
-    <div className="security-surface security-surface-hover p-4">
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -3 }}
+      className="security-surface security-surface-hover p-4"
+    >
       <div className="flex items-center justify-between">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           {label}
         </span>
 
@@ -390,12 +403,12 @@ function MetricCard({
         </div>
       </div>
 
-      <div className="mt-3 text-2xl font-semibold tracking-tight text-white">
+      <div className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">
         {value}
       </div>
 
-      <div className="mt-1 text-[10px] text-slate-600">{detail}</div>
-    </div>
+      <div className="mt-1 text-[10px] text-slate-500">{detail}</div>
+    </motion.div>
   );
 }
 
@@ -412,27 +425,27 @@ function AgentRow({
   };
 }) {
   return (
-    <article className="group px-5 py-4 transition-colors duration-200 hover:bg-white/[0.018]">
+    <article className="group px-5 py-4 transition-colors duration-200 hover:bg-slate-50">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-lg border border-cyan-400/10 bg-cyan-400/[0.04]">
-            <Bot className="size-5 text-cyan-300" />
+          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.04]">
+            <Bot className="size-5 text-indigo-600" />
 
             {agent.status.toUpperCase() === "ACTIVE" && (
-              <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-[#0b1017] bg-emerald-400" />
+              <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-slate-200 bg-emerald-400" />
             )}
           </div>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-sm font-medium text-slate-200">
+              <h3 className="truncate text-sm font-medium text-slate-800">
                 {agent.name}
               </h3>
 
               <StatusBadge status={agent.status} />
             </div>
 
-            <p className="mt-1 truncate text-[10px] text-slate-600">
+            <p className="mt-1 truncate text-[10px] text-slate-500">
               {agent.description || "No description provided"}
             </p>
           </div>
@@ -472,9 +485,9 @@ function StatusBadge({ status }: { status: string }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.12em] ${
         isActive
-          ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-300"
+          ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-600"
           : isSuspended
-            ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-300"
+            ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-600"
             : "border-slate-400/10 bg-slate-400/[0.04] text-slate-500"
       }`}
     >
@@ -504,12 +517,12 @@ function MetadataItem({
 }) {
   return (
     <div>
-      <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.14em] text-slate-700">
+      <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.14em] text-slate-400">
         <Icon className="size-3" />
         {label}
       </div>
 
-      <div className="mt-1 truncate font-mono text-[10px] text-slate-400">
+      <div className="mt-1 truncate font-mono text-[10px] text-slate-600">
         {value}
       </div>
     </div>
@@ -527,11 +540,11 @@ function PostureRow({
 }) {
   return (
     <div className="flex items-center justify-between border-b border-white/[0.035] py-2.5 last:border-0">
-      <span className="text-[10px] text-slate-600">{label}</span>
+      <span className="text-[10px] text-slate-500">{label}</span>
 
       <span
         className={`text-[9px] font-medium uppercase tracking-[0.1em] ${
-          warning ? "text-amber-300" : "text-slate-400"
+          warning ? "text-amber-600" : "text-slate-600"
         }`}
       >
         {value}
@@ -554,19 +567,19 @@ function OverviewTile({
   return (
     <a
       href={href}
-      className="group bg-[#0b1017] p-5 transition-colors duration-200 hover:bg-[#101722] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50"
+      className="group bg-white p-5 transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           {label}
         </span>
 
-        <ArrowUpRight className="size-3.5 text-slate-700 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300" />
+        <ArrowUpRight className="size-3.5 text-slate-400 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-indigo-600" />
       </div>
 
-      <div className="mt-4 text-sm font-medium text-slate-300">{value}</div>
+      <div className="mt-4 text-sm font-medium text-slate-700">{value}</div>
 
-      <p className="mt-1 text-[10px] text-slate-600">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
     </a>
   );
 }
@@ -574,9 +587,9 @@ function OverviewTile({
 function FleetLoadingState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center">
-      <LoaderCircle className="size-5 animate-spin text-cyan-400" />
+      <LoaderCircle className="size-5 animate-spin text-indigo-600" />
 
-      <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-600">
+      <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-500">
         Loading registered agents
       </p>
     </div>
@@ -587,14 +600,14 @@ function FleetErrorState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-10 items-center justify-center rounded-full border border-red-400/10 bg-red-400/[0.05]">
-        <CircleAlert className="size-5 text-red-300" />
+        <CircleAlert className="size-5 text-red-600" />
       </div>
 
-      <p className="mt-3 text-sm font-medium text-slate-300">
+      <p className="mt-3 text-sm font-medium text-slate-700">
         Agent inventory unavailable
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-600">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
         SentinelX could not retrieve the registered agent inventory. Check
         the security session and backend connection.
       </p>
@@ -605,15 +618,15 @@ function FleetErrorState() {
 function FleetEmptyState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
-      <div className="flex size-12 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-400/[0.04]">
-        <Bot className="size-6 text-cyan-300/70" />
+      <div className="flex size-12 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
+        <Bot className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-300">
+      <p className="mt-4 text-sm font-medium text-slate-700">
         No agents registered
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-600">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
         There are currently no AI agents associated with this security
         account.
       </p>

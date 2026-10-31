@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
+from app.services.audit_service import record_audit
 from app.models.agent import Agent
 from app.models.policy import Policy
 from app.models.user import User
@@ -60,6 +61,17 @@ def create_policy(
      )
 
     db.add(policy)
+    db.flush()
+
+    record_audit(
+        db,
+        actor=current_user,
+        action="POLICY_CREATED",
+        resource_type="POLICY",
+        resource_id=policy.id,
+        summary=f"Created policy '{policy.name}' on agent '{agent.name}'",
+    )
+
     db.commit()
     db.refresh(policy)
 
@@ -142,6 +154,17 @@ def update_policy(
     for field, value in update_data.items():
         setattr(policy, field, value)
 
+    changed_fields = ", ".join(sorted(update_data.keys())) or "no fields"
+
+    record_audit(
+        db,
+        actor=current_user,
+        action="POLICY_UPDATED",
+        resource_type="POLICY",
+        resource_id=policy.id,
+        summary=f"Updated policy '{policy.name}' ({changed_fields})",
+    )
+
     db.commit()
     db.refresh(policy)
 
@@ -175,6 +198,17 @@ def delete_policy(
             status_code=404,
             detail="Policy not found"
         )
+
+    deleted_name = policy.name
+
+    record_audit(
+        db,
+        actor=current_user,
+        action="POLICY_DELETED",
+        resource_type="POLICY",
+        resource_id=policy_id,
+        summary=f"Deleted policy '{deleted_name}'",
+    )
 
     db.delete(policy)
     db.commit()

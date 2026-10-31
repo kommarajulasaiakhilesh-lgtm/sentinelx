@@ -38,9 +38,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hydrated) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#06090e]">
+      <main className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-indigo-400/20 border-t-indigo-400" />
 
           <p className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
             Initializing SentinelX
@@ -52,9 +52,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!token && pathname !== "/login") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#06090e]">
+      <main className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-indigo-400/20 border-t-indigo-400" />
 
           <p className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
             Redirecting to security gateway
