@@ -1,0 +1,33 @@
+# Render blueprint for the SentinelX FastAPI backend.
+# Deploy: Render Dashboard -> New -> Blueprint -> pick this repo.
+# Then set the two sync:false secrets (DATABASE_URL, CORS_ORIGINS) in the
+# Render dashboard. See DEPLOYMENT.md for the full runbook.
+
+services:
+  - type: web
+    name: sentinelx-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /health
+    buildCommand: pip install -r requirements.txt
+    # Apply database migrations before each deploy goes live.
+    preDeployCommand: alembic -c alembic.ini upgrade head
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Auto-generated 32+ char secret for JWT signing.
+      - key: SECRET_KEY
+        generateValue: true
+      # Supabase (or any Postgres) connection string. Set in the dashboard.
+      # e.g. postgresql://postgres:<pwd>@db.<ref>.supabase.co:5432/postgres
+      - key: DATABASE_URL
+        sync: false
+      # Comma-separated allowed origins, e.g. your Vercel production URL.
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SQL_ECHO
+        value: "false"
+      - key: PYTHON_VERSION
+        value: "3.13.4"
