@@ -16,8 +16,15 @@ import {
   AUTH_SESSION_EXPIRED_EVENT,
 } from "./auth-storage";
 
+interface AuthUser {
+  id: string | null;
+  username: string | null;
+  role: string | null;
+}
+
 interface AuthContextValue {
   token: string | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
@@ -25,6 +32,23 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+function decodeUser(token: string | null): AuthUser | null {
+  if (!token) return null;
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return null;
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const json = JSON.parse(atob(normalized));
+    return {
+      id: json.sub ?? null,
+      username: json.username ?? null,
+      role: json.role ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => getAccessToken());
@@ -59,15 +83,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
   }, []);
 
+  const user = useMemo(() => decodeUser(token), [token]);
+
   const value = useMemo(
     () => ({
       token,
+      user,
       isAuthenticated: Boolean(token),
       isLoading,
       login,
       logout,
     }),
-    [token, isLoading, login, logout],
+    [token, user, isLoading, login, logout],
   );
 
   return (
