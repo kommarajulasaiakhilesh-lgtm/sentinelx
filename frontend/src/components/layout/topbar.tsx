@@ -53,11 +53,16 @@ const navigationItems = [
 export function Topbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const currentPage = pageLabels[pathname] ?? "Security Operations";
+
+  const displayName = user?.username ?? "Operator";
+  const displayRole =
+    user?.role === "ADMIN" ? "Administrator" : "Operator";
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   const handleLogout = () => {
     logout();
@@ -128,16 +133,16 @@ export function Topbar() {
 
           <div className="hidden items-center gap-2 sm:flex">
             <div className="flex size-8 items-center justify-center rounded-full border border-indigo-400/20 bg-indigo-400/[0.07] text-[10px] font-semibold tracking-wide text-indigo-600">
-              SX
+              {initials}
             </div>
 
             <div className="hidden text-left md:block">
               <div className="text-xs font-medium text-slate-800">
-                Security Admin
+                {displayName}
               </div>
 
               <div className="mt-0.5 text-[10px] text-slate-500">
-                Control Plane
+                {displayRole}
               </div>
             </div>
           </div>

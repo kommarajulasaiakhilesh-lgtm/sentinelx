@@ -69,7 +69,10 @@ const fallbackMeta = {
 
 function relativeTime(iso: string | null): string {
   if (!iso) return "—";
-  const then = new Date(iso).getTime();
+  // Backend timestamps are UTC; if the ISO string carries no timezone
+  // designator, treat it as UTC so relative times are correct locally.
+  const hasTz = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
+  const then = new Date(hasTz ? iso : `${iso}Z`).getTime();
   const diff = Date.now() - then;
   const mins = Math.round(diff / 60000);
   if (mins < 1) return "just now";
