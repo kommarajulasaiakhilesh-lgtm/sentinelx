@@ -12,6 +12,7 @@ import {
   FlaskConical,
   Gauge,
   LayoutDashboard,
+  ScrollText,
     SlidersHorizontal,
   Shield,
   ShieldCheck,
@@ -51,6 +52,11 @@ const primaryNavigation = [
 ];
 
 const securityNavigation = [
+  {
+    label: "Agent Posture",
+    href: "/posture",
+    icon: Gauge,
+  },
   {
     label: "Security Testing",
     href: "/security-tests",
@@ -93,6 +99,11 @@ const securityNavigation = [
     href: "/risk-configurations",
     icon: SlidersHorizontal,
   },
+  {
+    label: "Audit Log",
+    href: "/audit",
+    icon: ScrollText,
+  },
 
 ];
 
@@ -108,21 +119,21 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-white/[0.07] bg-[#070a0f] lg:flex lg:flex-col">
-      <div className="relative flex h-[76px] shrink-0 items-center border-b border-white/[0.07] px-5">
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white lg:flex lg:flex-col">
+      <div className="relative flex h-[76px] shrink-0 items-center border-b border-slate-200 px-5">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent" />
 
         <Link
           href="/"
           className="group flex items-center gap-3 rounded-lg outline-none"
         >
-          <div className="relative flex size-10 items-center justify-center rounded-xl border border-cyan-400/25 bg-cyan-400/[0.07] transition-all duration-200 group-hover:border-cyan-300/40 group-hover:bg-cyan-400/10">
-            <div className="absolute inset-1 rounded-lg border border-cyan-300/10" />
-            <ShieldCheck className="relative size-[18px] text-cyan-300" />
+          <div className="relative flex size-10 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/[0.07] transition-all duration-200 group-hover:border-indigo-300/40 group-hover:bg-indigo-400/10">
+            <div className="absolute inset-1 rounded-lg border border-indigo-300/10" />
+            <ShieldCheck className="relative size-[18px] text-indigo-600" />
           </div>
 
           <div className="min-w-0">
-            <div className="text-[13px] font-semibold tracking-[0.24em] text-slate-100">
+            <div className="text-[13px] font-semibold tracking-[0.24em] text-slate-900">
               SENTINELX
             </div>
 
@@ -147,26 +158,26 @@ export function Sidebar() {
         />
       </div>
 
-      <div className="shrink-0 border-t border-white/[0.07] p-3">
+      <div className="shrink-0 border-t border-slate-200 p-3">
         <div className="rounded-xl border border-emerald-400/10 bg-emerald-400/[0.025] p-3">
           <div className="flex items-center gap-2.5">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/30" />
-              <CircleDot className="relative size-2 text-emerald-400" />
+              <CircleDot className="relative size-2 text-emerald-600" />
             </span>
 
-            <span className="text-[11px] font-medium text-emerald-300">
+            <span className="text-[11px] font-medium text-emerald-600">
               Control plane operational
             </span>
           </div>
 
-          <div className="mt-2.5 flex items-center gap-2 text-[10px] text-slate-600">
+          <div className="mt-2.5 flex items-center gap-2 text-[10px] text-slate-500">
             <Gauge className="size-3.5" />
             <span>Security services online</span>
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-2 px-1 text-[9px] uppercase tracking-[0.18em] text-slate-700">
+        <div className="mt-3 flex items-center gap-2 px-1 text-[9px] uppercase tracking-[0.18em] text-slate-400">
           <Terminal className="size-3" />
           <span>SentinelX v0.1.0</span>
         </div>
@@ -192,7 +203,7 @@ function NavigationSection({
 }) {
   return (
     <div className="mb-6">
-      <div className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-600">
+      <div className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500">
         {title}
       </div>
 
@@ -208,19 +219,19 @@ function NavigationSection({
               aria-current={active ? "page" : undefined}
               className={`group relative flex items-center gap-3 overflow-hidden rounded-lg border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                 active
-                  ? "border-cyan-400/15 bg-cyan-400/[0.075] text-cyan-100"
-                  : "border-transparent text-slate-500 hover:border-white/[0.04] hover:bg-white/[0.025] hover:text-slate-200"
+                  ? "border-indigo-400/15 bg-indigo-400/[0.075] text-indigo-600"
+                  : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-800"
               }`}
             >
               {active && (
-                <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-r-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.7)]" />
+                <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-r-full bg-indigo-300 shadow-[0_0_10px_rgba(79, 70, 229,0.7)]" />
               )}
 
               <Icon
                 className={`size-[17px] shrink-0 transition-colors duration-200 ${
                   active
-                    ? "text-cyan-300"
-                    : "text-slate-600 group-hover:text-slate-300"
+                    ? "text-indigo-600"
+                    : "text-slate-500 group-hover:text-slate-700"
                 }`}
               />
 
@@ -228,7 +239,7 @@ function NavigationSection({
 
               {active && (
                 <span className="ml-auto flex items-center">
-                  <span className="size-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.8)]" />
+                  <span className="size-1.5 rounded-full bg-indigo-300 shadow-[0_0_8px_rgba(79, 70, 229,0.8)]" />
                 </span>
               )}
             </Link>

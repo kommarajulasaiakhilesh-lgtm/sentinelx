@@ -62,28 +62,28 @@ function formatDate(value?: string | null) {
 function severityClass(value: string) {
   switch (value.toUpperCase()) {
     case "CRITICAL":
-      return "border-red-400/20 bg-red-400/10 text-red-300";
+      return "border-red-400/20 bg-red-400/10 text-red-600";
     case "HIGH":
       return "border-orange-400/20 bg-orange-400/10 text-orange-300";
     case "MEDIUM":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
     default:
-      return "border-slate-700 bg-slate-800/50 text-slate-300";
+      return "border-slate-700 bg-slate-100/50 text-slate-700";
   }
 }
 
 function statusClass(value: string) {
   switch (value.toUpperCase()) {
     case "OPEN":
-      return "border-red-400/20 bg-red-400/10 text-red-300";
+      return "border-red-400/20 bg-red-400/10 text-red-600";
     case "INVESTIGATING":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
     case "CONTAINED":
-      return "border-cyan-400/20 bg-cyan-400/10 text-cyan-300";
+      return "border-indigo-400/20 bg-indigo-400/10 text-indigo-600";
     case "RESOLVED":
-      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
+      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-600";
     default:
-      return "border-slate-700 bg-slate-800/50 text-slate-300";
+      return "border-slate-700 bg-slate-100/50 text-slate-700";
   }
 }
 
@@ -215,7 +215,7 @@ export default function IncidentsPage() {
       incidentsQuery.data?.total ?? 0,
       "Correlated incidents",
       ShieldAlert,
-      "text-cyan-300",
+      "text-indigo-600",
     ],
     [
       "Active",
@@ -229,7 +229,7 @@ export default function IncidentsPage() {
       criticalCount,
       "Critical severity",
       Siren,
-      "text-red-300",
+      "text-red-600",
     ],
   ];
 
@@ -242,23 +242,23 @@ export default function IncidentsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-red-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
               <Siren className="size-3.5" />
               Security Operations
             </span>
 
-            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Incident records
             </span>
           </div>
 
           <div className="mt-5">
-            <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
               Incident Response
             </h1>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
               Investigate correlated security incidents, review their
               timeline, and execute authorized containment actions.
             </p>
@@ -278,7 +278,7 @@ export default function IncidentsPage() {
                   {label}
                 </p>
 
-                <p className="mt-3 text-3xl font-semibold text-white">
+                <p className="mt-3 text-3xl font-semibold text-slate-900">
                   {String(value)}
                 </p>
 
@@ -287,7 +287,7 @@ export default function IncidentsPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
+              <div className="rounded-xl border border-slate-800 bg-slate-100/60 p-3">
                 <Icon className={`size-5 ${tone}`} />
               </div>
             </div>
@@ -300,16 +300,16 @@ export default function IncidentsPage() {
           <div className="border-b border-slate-800/80 p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-red-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
                   Case queue
                 </p>
 
-                <h2 className="mt-1 text-lg font-semibold text-white">
+                <h2 className="mt-1 text-lg font-semibold text-slate-900">
                   Incidents
                 </h2>
               </div>
 
-              <span className="text-[10px] uppercase tracking-[0.15em] text-slate-600">
+              <span className="text-[10px] uppercase tracking-[0.15em] text-slate-500">
                 {incidents.length} loaded
               </span>
             </div>
@@ -318,7 +318,7 @@ export default function IncidentsPage() {
               <select
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
-                className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-300 outline-none focus:border-cyan-400/40"
+                className="rounded-xl border border-slate-800 bg-slate-100 px-3 py-2 text-xs text-slate-700 outline-none focus:border-indigo-400/40"
               >
                 <option value="ALL">All statuses</option>
                 <option value="OPEN">Open</option>
@@ -334,7 +334,7 @@ export default function IncidentsPage() {
                 onChange={(event) =>
                   setSeverity(event.target.value)
                 }
-                className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-300 outline-none focus:border-cyan-400/40"
+                className="rounded-xl border border-slate-800 bg-slate-100 px-3 py-2 text-xs text-slate-700 outline-none focus:border-indigo-400/40"
               >
                 <option value="ALL">All severities</option>
                 <option value="CRITICAL">Critical</option>
@@ -347,13 +347,13 @@ export default function IncidentsPage() {
 
           {incidentsQuery.isLoading ? (
             <div className="flex min-h-72 items-center justify-center">
-              <LoaderCircle className="size-5 animate-spin text-cyan-400" />
+              <LoaderCircle className="size-5 animate-spin text-indigo-600" />
             </div>
           ) : incidentsQuery.isError ? (
             <div className="p-8 text-center">
-              <XCircle className="mx-auto size-8 text-red-400" />
+              <XCircle className="mx-auto size-8 text-red-600" />
 
-              <p className="mt-3 text-sm font-semibold text-white">
+              <p className="mt-3 text-sm font-semibold text-slate-900">
                 Incident telemetry unavailable
               </p>
 
@@ -363,9 +363,9 @@ export default function IncidentsPage() {
             </div>
           ) : incidents.length === 0 ? (
             <div className="p-10 text-center">
-              <ShieldCheck className="mx-auto size-9 text-emerald-300" />
+              <ShieldCheck className="mx-auto size-9 text-emerald-600" />
 
-              <p className="mt-4 text-sm font-semibold text-white">
+              <p className="mt-4 text-sm font-semibold text-slate-900">
                 No incidents found
               </p>
 
@@ -388,17 +388,17 @@ export default function IncidentsPage() {
                   }}
                   className={`w-full border-l-2 p-5 text-left transition ${
                     activeId === incident.id
-                      ? "border-l-cyan-400 bg-cyan-400/[0.035]"
+                      ? "border-l-indigo-400 bg-indigo-400/[0.035]"
                       : "border-l-transparent hover:bg-white/[0.015]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-white">
+                      <p className="truncate text-sm font-semibold text-slate-900">
                         {incident.title}
                       </p>
 
-                      <p className="mt-1 font-mono text-[10px] text-slate-600">
+                      <p className="mt-1 font-mono text-[10px] text-slate-500">
                         INC-{incident.id}
                       </p>
                     </div>
@@ -419,7 +419,7 @@ export default function IncidentsPage() {
                       {incident.status}
                     </Badge>
 
-                    <span className="text-[10px] text-slate-600">
+                    <span className="text-[10px] text-slate-500">
                       {formatDate(incident.updated_at)}
                     </span>
                   </div>
@@ -433,7 +433,7 @@ export default function IncidentsPage() {
           {!activeIncident ? (
             <div className="flex min-h-[650px] items-center justify-center p-8 text-center">
               <div>
-                <ShieldAlert className="mx-auto size-10 text-slate-700" />
+                <ShieldAlert className="mx-auto size-10 text-slate-400" />
 
                 <p className="mt-4 text-sm text-slate-500">
                   Select an incident to investigate.
@@ -444,7 +444,7 @@ export default function IncidentsPage() {
             <>
               <div className="border-b border-slate-800/80 p-5 sm:p-6">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-[10px] text-slate-600">
+                  <span className="font-mono text-[10px] text-slate-500">
                     INC-{activeIncident.id}
                   </span>
 
@@ -465,7 +465,7 @@ export default function IncidentsPage() {
                   </Badge>
                 </div>
 
-                <h2 className="mt-4 text-xl font-semibold text-white">
+                <h2 className="mt-4 text-xl font-semibold text-slate-900">
                   {activeIncident.title}
                 </h2>
 
@@ -474,7 +474,7 @@ export default function IncidentsPage() {
                     "No incident description provided."}
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-4 text-[10px] text-slate-600">
+                <div className="mt-4 flex flex-wrap gap-4 text-[10px] text-slate-500">
                   <span>Agent #{activeIncident.agent_id}</span>
 
                   {activeAgent && (
@@ -494,40 +494,40 @@ export default function IncidentsPage() {
               <div className="grid gap-5 p-5 sm:p-6">
                 <div>
                   <div className="flex items-center gap-2">
-                    <Clock3 className="size-4 text-cyan-300" />
+                    <Clock3 className="size-4 text-indigo-600" />
 
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-semibold text-slate-900">
                       Investigation Timeline
                     </h3>
                   </div>
 
                   <div className="mt-4 space-y-3">
                     {timelineQuery.isLoading ? (
-                      <LoaderCircle className="size-4 animate-spin text-cyan-400" />
+                      <LoaderCircle className="size-4 animate-spin text-indigo-600" />
                     ) : (timelineQuery.data ?? []).length === 0 ? (
-                      <p className="text-xs text-slate-600">
+                      <p className="text-xs text-slate-500">
                         No timeline entries yet.
                       </p>
                     ) : (
                       timelineQuery.data?.map((entry) => (
                         <div
                           key={entry.id}
-                          className="relative rounded-xl border border-slate-800 bg-slate-950/40 p-4"
+                          className="relative rounded-xl border border-slate-800 bg-slate-100/40 p-4"
                         >
                           <div className="flex items-center justify-between gap-3">
-                            <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-cyan-400">
+                            <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-indigo-600">
                               {entry.entry_type.replaceAll(
                                 "_",
                                 " ",
                               )}
                             </span>
 
-                            <span className="text-[10px] text-slate-600">
+                            <span className="text-[10px] text-slate-500">
                               {formatDate(entry.created_at)}
                             </span>
                           </div>
 
-                          <p className="mt-2 text-sm leading-6 text-slate-400">
+                          <p className="mt-2 text-sm leading-6 text-slate-600">
                             {entry.description}
                           </p>
                         </div>
@@ -536,11 +536,11 @@ export default function IncidentsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-950/30 p-4">
+                <div className="rounded-xl border border-slate-800 bg-slate-100/30 p-4">
                   <div className="flex items-center gap-2">
-                    <MessageSquare className="size-4 text-cyan-300" />
+                    <MessageSquare className="size-4 text-indigo-600" />
 
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-semibold text-slate-900">
                       Operator Note
                     </h3>
                   </div>
@@ -552,14 +552,14 @@ export default function IncidentsPage() {
                     }
                     placeholder="Record an investigation observation..."
                     rows={3}
-                    className="mt-3 w-full resize-none rounded-xl border border-slate-800 bg-slate-950 px-3 py-3 text-sm text-slate-300 outline-none placeholder:text-slate-700 focus:border-cyan-400/40"
+                    className="mt-3 w-full resize-none rounded-xl border border-slate-800 bg-slate-100 px-3 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-indigo-400/40"
                   />
 
                   <button
                     type="button"
                     disabled={!note.trim() || addNote.isPending}
                     onClick={submitNote}
-                    className="mt-3 inline-flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-2.5 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="mt-3 inline-flex items-center gap-2 rounded-xl border border-indigo-400/20 bg-indigo-400/10 px-4 py-2.5 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {addNote.isPending ? (
                       <LoaderCircle className="size-4 animate-spin" />
@@ -575,12 +575,12 @@ export default function IncidentsPage() {
                   <div className="flex items-center gap-2">
                     <ShieldAlert className="size-4 text-orange-300" />
 
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-semibold text-slate-900">
                       Authorized Response
                     </h3>
                   </div>
 
-                  <p className="mt-1 text-xs leading-5 text-slate-600">
+                  <p className="mt-1 text-xs leading-5 text-slate-500">
                     Actions below execute existing SentinelX controls and
                     are recorded in the incident audit trail.
                   </p>
@@ -604,7 +604,7 @@ export default function IncidentsPage() {
                         setSelectedToolId("");
                         setSelectedApiKeyId("");
                       }}
-                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-300 outline-none focus:border-orange-400/40"
+                      className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-orange-400/40"
                     >
                       <option value="SUSPEND_AGENT">
                         Suspend agent
@@ -630,8 +630,8 @@ export default function IncidentsPage() {
                       </label>
 
                       {toolsQuery.isLoading ? (
-                        <div className="mt-2 flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-600">
-                          <LoaderCircle className="size-3.5 animate-spin text-cyan-400" />
+                        <div className="mt-2 flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-500">
+                          <LoaderCircle className="size-3.5 animate-spin text-indigo-600" />
                           Loading agent tools...
                         </div>
                       ) : tools.length === 0 ? (
@@ -645,7 +645,7 @@ export default function IncidentsPage() {
                           onChange={(event) =>
                             setSelectedToolId(event.target.value)
                           }
-                          className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-300 outline-none focus:border-orange-400/40"
+                          className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-orange-400/40"
                         >
                           <option value="">
                             Select a tool...
@@ -674,8 +674,8 @@ export default function IncidentsPage() {
                       </label>
 
                       {apiKeysQuery.isLoading ? (
-                        <div className="mt-2 flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-600">
-                          <LoaderCircle className="size-3.5 animate-spin text-cyan-400" />
+                        <div className="mt-2 flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-500">
+                          <LoaderCircle className="size-3.5 animate-spin text-indigo-600" />
                           Loading API key metadata...
                         </div>
                       ) : apiKeys.length === 0 ? (
@@ -689,7 +689,7 @@ export default function IncidentsPage() {
                           onChange={(event) =>
                             setSelectedApiKeyId(event.target.value)
                           }
-                          className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-300 outline-none focus:border-orange-400/40"
+                          className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-orange-400/40"
                         >
                           <option value="">
                             Select an API key...
@@ -711,7 +711,7 @@ export default function IncidentsPage() {
                         </select>
                       )}
 
-                      <p className="mt-2 text-[9px] text-slate-600">
+                      <p className="mt-2 text-[9px] text-slate-500">
                         Only API-key metadata is displayed. The existing
                         secret is never exposed.
                       </p>
@@ -724,7 +724,7 @@ export default function IncidentsPage() {
                       setActionReason(event.target.value)
                     }
                     placeholder="Required reason for response action"
-                    className="mt-4 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-slate-300 outline-none placeholder:text-slate-700 focus:border-orange-400/40"
+                    className="mt-4 w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-xs text-slate-700 outline-none placeholder:text-slate-400 focus:border-orange-400/40"
                   />
 
                   <button
@@ -761,9 +761,9 @@ export default function IncidentsPage() {
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="size-4 text-emerald-300" />
+                    <ShieldCheck className="size-4 text-emerald-600" />
 
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-semibold text-slate-900">
                       Response Audit
                     </h3>
                   </div>
@@ -773,10 +773,10 @@ export default function IncidentsPage() {
                       actionsQuery.data.map((action) => (
                         <div
                           key={action.id}
-                          className="rounded-xl border border-slate-800 bg-slate-950/40 p-4"
+                          className="rounded-xl border border-slate-800 bg-slate-100/40 p-4"
                         >
                           <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">
                               {action.action_type.replaceAll(
                                 "_",
                                 " ",
@@ -786,8 +786,8 @@ export default function IncidentsPage() {
                             <span
                               className={`text-[9px] font-semibold uppercase tracking-[0.14em] ${
                                 action.result === "SUCCESS"
-                                  ? "text-emerald-300"
-                                  : "text-red-300"
+                                  ? "text-emerald-600"
+                                  : "text-red-600"
                               }`}
                             >
                               {action.result}
@@ -798,7 +798,7 @@ export default function IncidentsPage() {
                             {action.reason}
                           </p>
 
-                          <p className="mt-2 text-[10px] text-slate-700">
+                          <p className="mt-2 text-[10px] text-slate-400">
                             Authorized by user #
                             {action.authorized_by_user_id}
                             {" · "}
@@ -807,7 +807,7 @@ export default function IncidentsPage() {
                         </div>
                       ))
                     ) : (
-                      <p className="text-xs text-slate-600">
+                      <p className="text-xs text-slate-500">
                         No response actions recorded.
                       </p>
                     )}
@@ -815,7 +815,7 @@ export default function IncidentsPage() {
                 </div>
 
                 {containedCount > 0 && (
-                  <div className="flex items-center gap-2 rounded-xl border border-cyan-400/10 bg-cyan-400/[0.025] p-3 text-xs text-cyan-300">
+                  <div className="flex items-center gap-2 rounded-xl border border-indigo-400/10 bg-indigo-400/[0.025] p-3 text-xs text-indigo-600">
                     <CheckCircle2 className="size-4" />
 
                     {containedCount} contained incident

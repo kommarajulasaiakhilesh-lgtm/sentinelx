@@ -44,13 +44,13 @@ function formatDate(value: string) {
 function severityClass(severity: string) {
   switch (severity) {
     case "CRITICAL":
-      return "border-red-400/20 bg-red-400/10 text-red-300";
+      return "border-red-400/20 bg-red-400/10 text-red-600";
     case "HIGH":
       return "border-orange-400/20 bg-orange-400/10 text-orange-300";
     case "MEDIUM":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
     default:
-      return "border-slate-700 bg-slate-800/50 text-slate-300";
+      return "border-slate-700 bg-slate-100/50 text-slate-700";
   }
 }
 
@@ -67,7 +67,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function InputClass() {
-  return "w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-700 focus:border-cyan-400/40";
+  return "w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-400/40";
 }
 
 export default function DetectionRulesPage() {
@@ -205,19 +205,19 @@ export default function DetectionRulesPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <section className="relative overflow-hidden rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.025] p-6 sm:p-8">
+      <section className="relative overflow-hidden rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-6 sm:p-8">
         <div className="security-grid pointer-events-none absolute inset-0 opacity-20" />
         <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
             <Activity className="size-3.5" />
             Detection Engineering
           </div>
 
-          <h1 className="mt-5 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+          <h1 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Detection Rules
           </h1>
 
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
             Configure deterministic security rules, inspect their conditions,
             and control which rules are active for your agents.
           </p>
@@ -236,13 +236,13 @@ export default function DetectionRulesPage() {
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   {label}
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-white">
+                <p className="mt-3 text-3xl font-semibold text-slate-900">
                   {value}
                 </p>
                 <p className="mt-1 text-xs text-slate-500">{detail}</p>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-                <Icon className="size-5 text-cyan-300" />
+              <div className="rounded-xl border border-slate-800 bg-slate-100/60 p-3">
+                <Icon className="size-5 text-indigo-600" />
               </div>
             </div>
           </article>
@@ -250,14 +250,14 @@ export default function DetectionRulesPage() {
       </section>
 
       {(formError || createRule.isError || updateRule.isError || deleteRule.isError) && (
-        <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-400/20 bg-red-400/[0.05] p-4 text-sm text-red-300">
+        <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-400/20 bg-red-400/[0.05] p-4 text-sm text-red-600">
           <XCircle className="mt-0.5 size-4 shrink-0" />
           <span>{formError || "The requested operation failed."}</span>
         </div>
       )}
 
       {successMessage && (
-        <div role="status" className="flex items-center gap-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 text-sm text-emerald-300">
+        <div role="status" className="flex items-center gap-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 text-sm text-emerald-600">
           <CheckCircle2 className="size-4 shrink-0" />
           {successMessage}
         </div>
@@ -265,11 +265,11 @@ export default function DetectionRulesPage() {
 
       <section className="security-surface p-5 sm:p-6">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] p-2.5">
-            <Plus className="size-4 text-cyan-300" />
+          <div className="rounded-xl border border-indigo-400/20 bg-indigo-400/[0.06] p-2.5">
+            <Plus className="size-4 text-indigo-600" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">Create detection rule</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Create detection rule</h2>
             <p className="mt-1 text-xs text-slate-500">
               Conditions must be a non-empty JSON object supported by the backend.
             </p>
@@ -320,14 +320,14 @@ export default function DetectionRulesPage() {
           <label className="md:col-span-2">
             <FieldLabel>Conditions — JSON</FieldLabel>
             <textarea required rows={5} value={conditionsText} onChange={(event) => setConditionsText(event.target.value)} spellCheck={false} className={`${InputClass()} font-mono text-xs leading-6`} />
-            <span className="mt-2 block text-[11px] leading-5 text-slate-600">
+            <span className="mt-2 block text-[11px] leading-5 text-slate-500">
               Supported fields: event_type, action, decision, reason, agent_id, policy_id.
               Values can be strings, integers, or lists of values.
             </span>
           </label>
 
           <div className="md:col-span-2">
-            <button type="submit" disabled={createRule.isPending} className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-5 py-3 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="submit" disabled={createRule.isPending} className="inline-flex items-center gap-2 rounded-xl border border-indigo-400/20 bg-indigo-400/10 px-5 py-3 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-50">
               {createRule.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-4" />}
               {createRule.isPending ? "Creating rule..." : "Create rule"}
             </button>
@@ -338,10 +338,10 @@ export default function DetectionRulesPage() {
       <section className="security-surface overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 p-5">
           <div>
-            <h2 className="text-lg font-semibold text-white">Configured rules</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Configured rules</h2>
             <p className="mt-1 text-xs text-slate-500">Rules returned for your authenticated account.</p>
           </div>
-          <button type="button" onClick={() => void rulesQuery.refetch()} disabled={rulesQuery.isFetching} className="inline-flex items-center gap-2 rounded-lg border border-slate-800 px-3 py-2 text-xs text-slate-400 transition hover:border-cyan-400/20 hover:text-cyan-200 disabled:opacity-50">
+          <button type="button" onClick={() => void rulesQuery.refetch()} disabled={rulesQuery.isFetching} className="inline-flex items-center gap-2 rounded-lg border border-slate-800 px-3 py-2 text-xs text-slate-600 transition hover:border-indigo-400/20 hover:text-indigo-600 disabled:opacity-50">
             <RefreshCw className={`size-3.5 ${rulesQuery.isFetching ? "animate-spin" : ""}`} />
             Refresh
           </button>
@@ -349,20 +349,20 @@ export default function DetectionRulesPage() {
 
         {rulesQuery.isLoading ? (
           <div className="flex min-h-48 items-center justify-center gap-3 text-sm text-slate-500">
-            <LoaderCircle className="size-5 animate-spin text-cyan-300" />
+            <LoaderCircle className="size-5 animate-spin text-indigo-600" />
             Loading detection rules...
           </div>
         ) : rulesQuery.isError ? (
           <div className="p-8 text-center">
-            <XCircle className="mx-auto size-8 text-red-300" />
-            <p className="mt-3 text-sm font-semibold text-white">Rules unavailable</p>
+            <XCircle className="mx-auto size-8 text-red-600" />
+            <p className="mt-3 text-sm font-semibold text-slate-900">Rules unavailable</p>
             <p className="mt-2 text-xs text-slate-500">{getErrorMessage(rulesQuery.error)}</p>
-            <button type="button" onClick={() => void rulesQuery.refetch()} className="mt-4 rounded-lg border border-slate-700 px-4 py-2 text-xs text-slate-300">Try again</button>
+            <button type="button" onClick={() => void rulesQuery.refetch()} className="mt-4 rounded-lg border border-slate-700 px-4 py-2 text-xs text-slate-700">Try again</button>
           </div>
         ) : rules.length === 0 ? (
           <div className="p-10 text-center">
-            <ShieldCheck className="mx-auto size-9 text-slate-600" />
-            <p className="mt-4 text-sm font-semibold text-white">No custom rules yet</p>
+            <ShieldCheck className="mx-auto size-9 text-slate-500" />
+            <p className="mt-4 text-sm font-semibold text-slate-900">No custom rules yet</p>
             <p className="mt-2 text-xs text-slate-500">Create a rule above to begin configuring deterministic detection.</p>
           </div>
         ) : (
@@ -372,35 +372,35 @@ export default function DetectionRulesPage() {
                 <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] text-slate-600">RULE-{rule.id}</span>
+                      <span className="font-mono text-[10px] text-slate-500">RULE-{rule.id}</span>
                       <span className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${severityClass(rule.severity)}`}>{rule.severity}</span>
-                      <span className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${rule.enabled ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300" : "border-slate-700 bg-slate-800/50 text-slate-400"}`}>
+                      <span className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${rule.enabled ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600" : "border-slate-700 bg-slate-100/50 text-slate-600"}`}>
                         {rule.enabled ? "Enabled" : "Disabled"}
                       </span>
                     </div>
 
-                    <h3 className="mt-3 text-base font-semibold text-white">{rule.name}</h3>
-                    <p className="mt-1 text-sm text-slate-400">{rule.title}</p>
+                    <h3 className="mt-3 text-base font-semibold text-slate-900">{rule.name}</h3>
+                    <p className="mt-1 text-sm text-slate-600">{rule.title}</p>
                     {rule.description && <p className="mt-2 text-xs leading-5 text-slate-500">{rule.description}</p>}
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                      <div className="rounded-lg border border-slate-800 bg-slate-950/50 p-3">
-                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-600">Alert type</p>
-                        <p className="mt-1 break-words text-xs text-slate-300">{rule.alert_type}</p>
+                      <div className="rounded-lg border border-slate-800 bg-slate-100/50 p-3">
+                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-500">Alert type</p>
+                        <p className="mt-1 break-words text-xs text-slate-700">{rule.alert_type}</p>
                       </div>
-                      <div className="rounded-lg border border-slate-800 bg-slate-950/50 p-3">
-                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-600">Threshold</p>
-                        <p className="mt-1 text-xs text-slate-300">{rule.threshold} event(s) · {rule.window_seconds === 0 ? "No lower time limit" : `${rule.window_seconds}s window`}</p>
+                      <div className="rounded-lg border border-slate-800 bg-slate-100/50 p-3">
+                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-500">Threshold</p>
+                        <p className="mt-1 text-xs text-slate-700">{rule.threshold} event(s) · {rule.window_seconds === 0 ? "No lower time limit" : `${rule.window_seconds}s window`}</p>
                       </div>
-                      <div className="rounded-lg border border-slate-800 bg-slate-950/50 p-3">
-                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-600">Updated</p>
-                        <p className="mt-1 text-xs text-slate-300">{formatDate(rule.updated_at)}</p>
+                      <div className="rounded-lg border border-slate-800 bg-slate-100/50 p-3">
+                        <p className="text-[9px] uppercase tracking-[0.14em] text-slate-500">Updated</p>
+                        <p className="mt-1 text-xs text-slate-700">{formatDate(rule.updated_at)}</p>
                       </div>
                     </div>
 
                     <details className="mt-4">
-                      <summary className="cursor-pointer text-xs font-medium text-cyan-300 hover:text-cyan-200">Inspect matching conditions</summary>
-                      <pre className="mt-3 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs leading-5 text-slate-300">{(() => {
+                      <summary className="cursor-pointer text-xs font-medium text-indigo-600 hover:text-indigo-600">Inspect matching conditions</summary>
+                      <pre className="mt-3 overflow-x-auto rounded-xl border border-slate-800 bg-slate-100 p-4 text-xs leading-5 text-slate-700">{(() => {
                         try {
                           return JSON.stringify(JSON.parse(rule.conditions ?? "null"), null, 2);
                         } catch {
@@ -411,11 +411,11 @@ export default function DetectionRulesPage() {
                   </div>
 
                   <div className="flex shrink-0 flex-wrap gap-2 xl:flex-col">
-                    <button type="button" onClick={() => void toggleRule(rule)} disabled={updateRule.isPending} className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2.5 text-xs text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-200 disabled:opacity-50">
-                      {rule.enabled ? <ToggleRight className="size-4 text-emerald-300" /> : <ToggleLeft className="size-4" />}
+                    <button type="button" onClick={() => void toggleRule(rule)} disabled={updateRule.isPending} className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2.5 text-xs text-slate-700 transition hover:border-indigo-400/30 hover:text-indigo-600 disabled:opacity-50">
+                      {rule.enabled ? <ToggleRight className="size-4 text-emerald-600" /> : <ToggleLeft className="size-4" />}
                       {rule.enabled ? "Disable" : "Enable"}
                     </button>
-                    <button type="button" onClick={() => void removeRule(rule)} disabled={deleteRule.isPending || pendingDelete === rule.id} className="inline-flex items-center gap-2 rounded-lg border border-red-400/15 px-3 py-2.5 text-xs text-red-300 transition hover:border-red-400/30 hover:bg-red-400/[0.05] disabled:opacity-50">
+                    <button type="button" onClick={() => void removeRule(rule)} disabled={deleteRule.isPending || pendingDelete === rule.id} className="inline-flex items-center gap-2 rounded-lg border border-red-400/15 px-3 py-2.5 text-xs text-red-600 transition hover:border-red-400/30 hover:bg-red-400/[0.05] disabled:opacity-50">
                       {pendingDelete === rule.id ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
                       Delete
                     </button>

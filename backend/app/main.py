@@ -52,6 +52,9 @@ from app.api.dependencies import (
 from app.api.risk_scoring_configurations import (
     router as risk_scoring_configurations_router,
 )
+from app.api.agent_posture import router as agent_posture_router
+from app.api.audit import router as audit_router
+from app.models.audit_log import AuditLog
 
 
 app = FastAPI(
@@ -156,6 +159,8 @@ app.include_router(incidents_router)
 app.include_router(webhooks_router)
 app.include_router(detection_rules_router)
 app.include_router(risk_scoring_configurations_router)
+app.include_router(agent_posture_router)
+app.include_router(audit_router)
 
 
 @app.get("/")

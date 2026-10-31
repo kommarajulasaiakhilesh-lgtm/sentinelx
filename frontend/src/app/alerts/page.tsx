@@ -36,7 +36,7 @@ function getSeverityClass(severity: string) {
   const normalized = severity.toUpperCase();
 
   if (normalized === "CRITICAL") {
-    return "border-red-400/20 bg-red-400/10 text-red-300";
+    return "border-red-400/20 bg-red-400/10 text-red-600";
   }
 
   if (normalized === "HIGH") {
@@ -44,28 +44,28 @@ function getSeverityClass(severity: string) {
   }
 
   if (normalized === "MEDIUM") {
-    return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+    return "border-amber-400/20 bg-amber-400/10 text-amber-600";
   }
 
-  return "border-slate-700 bg-slate-800/50 text-slate-300";
+  return "border-slate-700 bg-slate-100/50 text-slate-700";
 }
 
 function getStatusClass(status: string) {
   const normalized = status.toUpperCase();
 
   if (normalized === "OPEN") {
-    return "border-red-400/20 bg-red-400/10 text-red-300";
+    return "border-red-400/20 bg-red-400/10 text-red-600";
   }
 
   if (normalized === "INVESTIGATING") {
-    return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+    return "border-amber-400/20 bg-amber-400/10 text-amber-600";
   }
 
   if (normalized === "RESOLVED" || normalized === "CLOSED") {
-    return "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
+    return "border-emerald-400/20 bg-emerald-400/10 text-emerald-600";
   }
 
-  return "border-slate-700 bg-slate-800/50 text-slate-300";
+  return "border-slate-700 bg-slate-100/50 text-slate-700";
 }
 
 function MetricCard({
@@ -83,7 +83,7 @@ function MetricCard({
 }) {
   const toneClasses = {
     red: {
-      icon: "border-red-400/15 bg-red-400/10 text-red-300",
+      icon: "border-red-400/15 bg-red-400/10 text-red-600",
       value: "text-red-200",
     },
     orange: {
@@ -91,11 +91,11 @@ function MetricCard({
       value: "text-orange-200",
     },
     amber: {
-      icon: "border-amber-400/15 bg-amber-400/10 text-amber-300",
+      icon: "border-amber-400/15 bg-amber-400/10 text-amber-600",
       value: "text-amber-200",
     },
     emerald: {
-      icon: "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
+      icon: "border-emerald-400/15 bg-emerald-400/10 text-emerald-600",
       value: "text-emerald-200",
     },
   }[tone];
@@ -165,7 +165,7 @@ function LoadingState() {
   return (
     <div className="flex min-h-72 items-center justify-center">
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <LoaderCircle className="size-4 animate-spin text-cyan-400" />
+        <LoaderCircle className="size-4 animate-spin text-indigo-600" />
         Loading alert telemetry...
       </div>
     </div>
@@ -176,10 +176,10 @@ function EmptyState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-14 items-center justify-center rounded-2xl border border-emerald-400/15 bg-emerald-400/10">
-        <ShieldCheck className="size-7 text-emerald-300" />
+        <ShieldCheck className="size-7 text-emerald-600" />
       </div>
 
-      <h3 className="mt-5 text-sm font-semibold text-white">
+      <h3 className="mt-5 text-sm font-semibold text-slate-900">
         No security alerts
       </h3>
 
@@ -188,7 +188,7 @@ function EmptyState() {
         current account.
       </p>
 
-      <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
+      <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-600">
         <CheckCircle2 className="size-3.5" />
         No active incidents
       </div>
@@ -200,9 +200,9 @@ function ErrorState() {
   return (
     <div className="flex min-h-72 items-center justify-center p-6">
       <div className="max-w-md text-center">
-        <AlertTriangle className="mx-auto size-9 text-red-400" />
+        <AlertTriangle className="mx-auto size-9 text-red-600" />
 
-        <h3 className="mt-4 text-sm font-semibold text-white">
+        <h3 className="mt-4 text-sm font-semibold text-slate-900">
           Alert telemetry unavailable
         </h3>
 
@@ -229,12 +229,12 @@ function OperationalCard({
   return (
     <div className="security-surface security-surface-hover p-5">
       <div className="flex items-center gap-3">
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-2.5">
+        <div className="rounded-xl border border-slate-800 bg-slate-100/60 p-2.5">
           {icon}
         </div>
 
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-white">{title}</p>
+          <p className="text-sm font-semibold text-slate-900">{title}</p>
           <p className="mt-0.5 text-xs text-slate-500">{description}</p>
         </div>
       </div>
@@ -285,12 +285,12 @@ export default function AlertsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-red-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
               <Siren className="size-3.5" />
               Alert Review
             </span>
 
-            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Alert records
             </span>
@@ -298,11 +298,11 @@ export default function AlertsPage() {
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
                 Security Alerts
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
                 Review alerts created by SentinelX detection and event
                 processing, then track their recorded status.
               </p>
@@ -310,15 +310,15 @@ export default function AlertsPage() {
 
             <div className="flex shrink-0 items-center gap-3 rounded-xl border border-red-400/10 bg-red-400/[0.035] px-4 py-3">
               <div className="flex size-9 items-center justify-center rounded-lg border border-red-400/15 bg-red-400/10">
-                <ShieldAlert className="size-4 text-red-300" />
+                <ShieldAlert className="size-4 text-red-600" />
               </div>
 
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-red-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-red-600">
                   Alert state
                 </p>
 
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-slate-600">
                   {openAlerts > 0
                     ? `${openAlerts} open alert${openAlerts === 1 ? "" : "s"} on this page`
                     : "No open alerts on this page"}
@@ -335,13 +335,13 @@ export default function AlertsPage() {
             ].map(([title, description]) => (
               <div
                 key={title}
-                className="rounded-xl border border-slate-800/70 bg-slate-950/30 p-4"
+                className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4"
               >
-                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-cyan-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
                   {title}
                 </p>
 
-                <p className="mt-2 text-xs text-slate-400">
+                <p className="mt-2 text-xs text-slate-600">
                   {description}
                 </p>
               </div>
@@ -391,16 +391,16 @@ export default function AlertsPage() {
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-red-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
                   Security operations
                 </p>
 
-                <h2 className="mt-1 text-lg font-semibold text-white">
+                <h2 className="mt-1 text-lg font-semibold text-slate-900">
                   Recent Alert Records
                 </h2>
               </div>
 
-              <span className="rounded-full border border-slate-800 bg-slate-950/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+              <span className="rounded-full border border-slate-800 bg-slate-100/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500">
                 {data?.total ?? 0} alerts
               </span>
             </div>
@@ -410,7 +410,7 @@ export default function AlertsPage() {
             </p>
           </div>
 
-          <span className="inline-flex w-fit items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-2.5 text-xs font-semibold text-slate-400">
+          <span className="inline-flex w-fit items-center gap-2 rounded-xl border border-slate-800 bg-slate-100/50 px-4 py-2.5 text-xs font-semibold text-slate-600">
             <Eye className="size-4" />
             Latest alerts
           </span>
@@ -443,13 +443,13 @@ export default function AlertsPage() {
 
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
                   <div className="flex min-w-0 gap-4">
-                    <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl border border-red-400/15 bg-red-400/10 text-red-300">
+                    <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl border border-red-400/15 bg-red-400/10 text-red-600">
                       <Siren className="size-5" />
                     </div>
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <h3 className="truncate text-sm font-semibold text-white">
+                        <h3 className="truncate text-sm font-semibold text-slate-900">
                           {alert.title}
                         </h3>
 
@@ -461,7 +461,7 @@ export default function AlertsPage() {
                           "No incident description provided."}
                       </p>
 
-                      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-slate-600">
+                      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-slate-500">
                         <span className="font-mono text-slate-500">
                           ALERT-{alert.id}
                         </span>
@@ -492,28 +492,28 @@ export default function AlertsPage() {
       {/* Alert record summary */}
       <section className="grid gap-3 lg:grid-cols-3">
         <OperationalCard
-          icon={<Siren className="size-5 text-cyan-300" />}
+          icon={<Siren className="size-5 text-indigo-600" />}
           title="Detection Capability"
           description="Event processing can create alert records"
         >
           <div className="flex items-center gap-3">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-800">
-              <div className="h-full w-full rounded-full bg-cyan-400" />
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full w-full rounded-full bg-indigo-400" />
             </div>
 
-            <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-cyan-300">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-indigo-600">
               Implemented
             </span>
           </div>
         </OperationalCard>
 
         <OperationalCard
-          icon={<AlertTriangle className="size-5 text-amber-300" />}
+          icon={<AlertTriangle className="size-5 text-amber-600" />}
           title="Severity Values"
           description="Severity stored on alert records"
         >
           <div className="flex items-center gap-4 text-xs">
-            <span className="flex items-center gap-2 text-red-300">
+            <span className="flex items-center gap-2 text-red-600">
               <span className="size-1.5 rounded-full bg-red-400" />
               {criticalAlerts} critical
             </span>
@@ -526,11 +526,11 @@ export default function AlertsPage() {
         </OperationalCard>
 
         <OperationalCard
-          icon={<CheckCircle2 className="size-5 text-emerald-300" />}
+          icon={<CheckCircle2 className="size-5 text-emerald-600" />}
           title="Alert Status"
           description="Recorded alert state"
         >
-          <div className="flex items-center gap-2 text-xs text-emerald-300">
+          <div className="flex items-center gap-2 text-xs text-emerald-600">
             <span className="size-1.5 rounded-full bg-emerald-400" />
             Status available on listed alerts
           </div>
