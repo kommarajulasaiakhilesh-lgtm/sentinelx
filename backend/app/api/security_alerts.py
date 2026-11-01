@@ -8,8 +8,10 @@ from app.models.security_alert import SecurityAlert
 from app.models.user import User
 from app.schemas.security_alert import (
     SecurityAlertResponse,
-    SecurityAlertListResponse
+    SecurityAlertListResponse,
+    BulkAlertStatusUpdate
 )
+from app.services.audit_service import record_audit_safely
 
 
 router = APIRouter(
@@ -171,3 +173,53 @@ def update_security_alert_status(
     db.refresh(alert)
 
     return alert
+
+@router.post("/bulk-status")
+def bulk_update_alert_status(
+    payload: BulkAlertStatusUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not payload.alert_ids:
+        raise HTTPException(status_code=400, detail="No alert IDs provided")
+
+    alerts = (
+        db.query(SecurityAlert)
+        .join(Agent, SecurityAlert.agent_id == Agent.id)
+        .filter(
+            SecurityAlert.id.in_(payload.alert_ids),
+            Agent.owner_id == current_user.id,
+        )
+        .all()
+    )
+
+    updated = 0
+    skipped_resolved = 0
+    for alert in alerts:
+        if alert.status == "RESOLVED":
+            skipped_resolved += 1
+            continue
+        if alert.status != payload.status:
+            alert.status = payload.status
+            updated += 1
+
+    db.commit()
+
+    record_audit_safely(
+        db,
+        actor=current_user,
+        action="ALERT_STATUS_CHANGED",
+        resource_type="SECURITY_ALERT",
+        summary=(
+            f"Bulk set {updated} alert(s) to {payload.status} "
+            f"({len(payload.alert_ids)} requested)"
+        ),
+    )
+
+    return {
+        "requested": len(payload.alert_ids),
+        "matched": len(alerts),
+        "updated": updated,
+        "skipped_resolved": skipped_resolved,
+        "status": payload.status,
+    }

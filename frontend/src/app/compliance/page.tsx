@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   AlertTriangle,
   CheckCircle2,
+  Download,
   FileCheck2,
   Shield,
   Target,
@@ -545,26 +546,71 @@ export default function CompliancePage() {
         ) / data.length
       : 0;
 
+  const exportReport = () => {
+    const header = [
+      "framework",
+      "version",
+      "total_controls",
+      "mapped_controls",
+      "mapped_percentage",
+      "evidence_backed_controls",
+      "evidence_coverage_percentage",
+      "implementation_coverage_percentage",
+    ].join(",");
+    const rows = data.map((f) =>
+      [
+        `"${f.framework_name}"`,
+        f.framework_version ?? "",
+        f.total_controls,
+        f.mapped_controls,
+        f.mapped_percentage,
+        f.evidence_backed_controls,
+        f.evidence_coverage_percentage,
+        f.implementation_coverage_percentage,
+      ].join(","),
+    );
+    const blob = new Blob([[header, ...rows].join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sentinelx-compliance-report.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <main className="space-y-6 sm:space-y-8">
       <PageHeader />
 
       <section className="rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-5">
-        <div className="flex items-start gap-3">
-          <FileCheck2 className="mt-0.5 size-5 shrink-0 text-indigo-600" />
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <FileCheck2 className="mt-0.5 size-5 shrink-0 text-indigo-600" />
 
-          <div>
-            <h2 className="text-sm font-semibold text-indigo-600">
-              Framework Alignment
-            </h2>
+            <div>
+              <h2 className="text-sm font-semibold text-indigo-600">
+                Framework Alignment
+              </h2>
 
-            <p className="mt-1 text-xs leading-5 text-slate-600">
-              SentinelX maps its existing security controls and evidence to
-              selected framework areas. These measurements describe internal
-              implementation and evidence coverage; they do not represent
-              certification or a claim of compliance.
-            </p>
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                SentinelX maps its existing security controls and evidence to
+                selected framework areas. These measurements describe internal
+                implementation and evidence coverage; they do not represent
+                certification or a claim of compliance.
+              </p>
+            </div>
           </div>
+
+          <button
+            type="button"
+            onClick={exportReport}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+          >
+            <Download className="size-3.5" />
+            Export report
+          </button>
         </div>
       </section>
 

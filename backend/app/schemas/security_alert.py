@@ -1,6 +1,13 @@
 from datetime import datetime
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict
+
+
+class BulkAlertStatusUpdate(BaseModel):
+    alert_ids: list[int]
+    status: Literal["OPEN", "ACKNOWLEDGED", "RESOLVED"]
 
 
 class SecurityAlertResponse(BaseModel):

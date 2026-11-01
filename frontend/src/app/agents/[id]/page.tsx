@@ -17,6 +17,7 @@ import { get } from "@/lib/api-client";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyAgents } from "@/features/agents/use-agents";
 import { ApiKeysPanel } from "@/components/agents/api-keys-panel";
+import { AttackBatteryPanel } from "@/components/agents/attack-battery-panel";
 import type { AgentPosture } from "@/features/posture/posture-api";
 import type { Policy, SecurityEvent, Tool } from "@/types/api";
 
@@ -176,6 +177,8 @@ export default function AgentDetailPage({
           )}
         </Panel>
       </div>
+
+      <AttackBatteryPanel agentId={agentId} />
 
       <ApiKeysPanel agentId={agentId} />
 
