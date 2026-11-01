@@ -12,6 +12,7 @@ from app.schemas.security_test import (
     SecurityTestRunResponse,
 )
 from app.services.attack_simulation_service import simulate_security_test
+from app.services.attack_battery_service import run_attack_battery
 from app.services.security_test_service import (
     create_security_test_scenario,
     get_security_test_scenario,
@@ -23,6 +24,24 @@ router = APIRouter(
     prefix="/api/security-tests",
     tags=["Security Testing"],
 )
+
+
+@router.get("/attack-battery/{agent_id}")
+def run_prompt_injection_battery(
+    agent_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Run the fixed prompt-injection attack battery against an owned agent."""
+    agent = (
+        db.query(Agent)
+        .filter(Agent.id == agent_id, Agent.owner_id == current_user.id)
+        .first()
+    )
+    if agent is None:
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    return run_attack_battery(db, agent)
 
 
 def _can_access_scenario(
