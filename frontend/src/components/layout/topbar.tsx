@@ -2,14 +2,28 @@
 
 import {
   Bell,
+  ChevronDown,
   LogOut,
   Menu,
   Search,
+  Settings,
   ShieldCheck,
+  TriangleAlert,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+
+import { useSecurityAlerts } from "@/features/alerts/use-security-alerts";
+
+const severityDot: Record<string, string> = {
+  CRITICAL: "bg-red-500",
+  HIGH: "bg-red-400",
+  MEDIUM: "bg-amber-400",
+  LOW: "bg-slate-300",
+};
 
 import { useAuth } from "@/hooks/use-auth";
 
@@ -28,6 +42,7 @@ const pageLabels: Record<string, string> = {
   "/detection-rules": "Detection Rules",
   "/incidents": "Incident Response",
   "/audit": "Audit Log",
+  "/settings": "Account & Security",
 
 };
 
@@ -56,6 +71,15 @@ export function Topbar() {
   const { logout, user } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<null | "notifications" | "profile">(
+    null,
+  );
+
+  const { data: alertData } = useSecurityAlerts(1, 6);
+  const alerts = alertData?.items ?? [];
+  const openAlerts = alerts.filter(
+    (a) => a.status === "OPEN" || a.status === "ACKNOWLEDGED",
+  ).length;
 
   const currentPage = pageLabels[pathname] ?? "Security Operations";
 
@@ -69,6 +93,9 @@ export function Topbar() {
     router.replace("/login");
   };
 
+  const toggle = (menu: "notifications" | "profile") =>
+    setOpenMenu((cur) => (cur === menu ? null : menu));
+
   const handleMobileNavigation = (href: string) => {
     setMobileMenuOpen(false);
     router.push(href);
@@ -76,7 +103,7 @@ export function Topbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
@@ -119,45 +146,155 @@ export function Topbar() {
             <Search className="size-4" />
           </button>
 
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-200 hover:border-amber-400/20 hover:bg-amber-400/[0.05] hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/40"
-            aria-label="Notifications"
-          >
-            <Bell className="size-4" />
+          {/* Notifications */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => toggle("notifications")}
+              className="relative flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-200 hover:border-indigo-400/30 hover:bg-indigo-50 hover:text-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40"
+              aria-label="Notifications"
+              aria-expanded={openMenu === "notifications"}
+            >
+              <Bell className="size-4" />
+              {openAlerts > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                  {openAlerts}
+                </span>
+              )}
+            </button>
 
-            <span className="absolute right-2 top-2 size-1.5 rounded-full bg-red-400 shadow-[0_0_7px_rgba(248,113,113,0.7)]" />
-          </button>
-
-          <div className="hidden h-7 w-px bg-white/[0.08] sm:block" />
-
-          <div className="hidden items-center gap-2 sm:flex">
-            <div className="flex size-8 items-center justify-center rounded-full border border-indigo-400/20 bg-indigo-400/[0.07] text-[10px] font-semibold tracking-wide text-indigo-600">
-              {initials}
-            </div>
-
-            <div className="hidden text-left md:block">
-              <div className="text-xs font-medium text-slate-800">
-                {displayName}
-              </div>
-
-              <div className="mt-0.5 text-[10px] text-slate-500">
-                {displayRole}
-              </div>
-            </div>
+            <AnimatePresence>
+              {openMenu === "notifications" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                    <span className="text-xs font-semibold text-slate-800">
+                      Notifications
+                    </span>
+                    <span className="text-[10px] font-medium text-slate-500">
+                      {openAlerts} open
+                    </span>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto">
+                    {alerts.length === 0 ? (
+                      <div className="px-4 py-8 text-center text-xs text-slate-400">
+                        No recent alerts.
+                      </div>
+                    ) : (
+                      alerts.map((a) => (
+                        <div
+                          key={a.id}
+                          className="flex items-start gap-3 border-b border-slate-50 px-4 py-3 last:border-0 hover:bg-slate-50"
+                        >
+                          <span
+                            className={`mt-1 size-2 shrink-0 rounded-full ${severityDot[a.severity] ?? "bg-slate-300"}`}
+                          />
+                          <div className="min-w-0">
+                            <div className="truncate text-xs font-medium text-slate-800">
+                              {a.title}
+                            </div>
+                            <div className="mt-0.5 text-[10px] text-slate-500">
+                              {a.severity} · {a.status}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <Link
+                    href="/alerts"
+                    onClick={() => setOpenMenu(null)}
+                    className="flex items-center justify-center gap-1.5 border-t border-slate-100 py-2.5 text-xs font-medium text-indigo-600 hover:bg-indigo-50"
+                  >
+                    <TriangleAlert className="size-3.5" />
+                    View all alerts
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="group flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-200 hover:border-red-400/20 hover:bg-red-400/[0.05] hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
-            aria-label="Sign out"
-            title="Sign out"
-          >
-            <LogOut className="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
-          </button>
+          <div className="hidden h-7 w-px bg-slate-200 sm:block" />
+
+          {/* Profile */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => toggle("profile")}
+              className="flex items-center gap-2 rounded-lg border border-transparent px-1.5 py-1 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40"
+              aria-label="Account menu"
+              aria-expanded={openMenu === "profile"}
+            >
+              <div className="flex size-8 items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 text-[10px] font-semibold tracking-wide text-indigo-600">
+                {initials}
+              </div>
+              <div className="hidden text-left md:block">
+                <div className="text-xs font-medium text-slate-800">
+                  {displayName}
+                </div>
+                <div className="mt-0.5 text-[10px] text-slate-500">
+                  {displayRole}
+                </div>
+              </div>
+              <ChevronDown className="hidden size-3.5 text-slate-400 md:block" />
+            </button>
+
+            <AnimatePresence>
+              {openMenu === "profile" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10"
+                >
+                  <div className="border-b border-slate-100 px-4 py-3">
+                    <div className="text-sm font-semibold text-slate-900">
+                      {displayName}
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      {displayRole}
+                    </div>
+                  </div>
+                  <Link
+                    href="/settings"
+                    onClick={() => setOpenMenu(null)}
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                  >
+                    <Settings className="size-4 text-slate-400" />
+                    Account &amp; Security
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenMenu(null);
+                      handleLogout();
+                    }}
+                    className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50"
+                  >
+                    <LogOut className="size-4" />
+                    Sign out
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </header>
+
+      {/* Click-away backdrop for dropdowns */}
+      {openMenu && (
+        <div
+          className="fixed inset-0 z-30"
+          aria-hidden
+          onClick={() => setOpenMenu(null)}
+        />
+      )}
 
       {mobileMenuOpen && (
         <div

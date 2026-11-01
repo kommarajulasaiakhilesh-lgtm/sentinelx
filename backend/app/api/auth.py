@@ -10,8 +10,11 @@ from app.schemas.auth import (
     RegisterRequest,
     LoginRequest,
     TokenResponse,
-    UserResponse
+    UserResponse,
+    ChangePasswordRequest
 )
+
+from app.api.dependencies import get_current_user
 
 from app.core.security import (
     hash_password,
@@ -149,3 +152,43 @@ def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+@router.post(
+    "/change-password",
+    status_code=status.HTTP_200_OK
+)
+def change_password(
+    request: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if not verify_password(
+        request.current_password,
+        current_user.password_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Current password is incorrect"
+        )
+
+    if request.new_password == request.current_password:
+        raise HTTPException(
+            status_code=400,
+            detail="New password must be different from the current password"
+        )
+
+    current_user.password_hash = hash_password(request.new_password)
+
+    db.commit()
+
+    record_audit_safely(
+        db,
+        actor=current_user,
+        action="USER_PASSWORD_CHANGED",
+        resource_type="USER",
+        resource_id=current_user.id,
+        summary=f"Operator '{current_user.username}' changed their password",
+    )
+
+    return {"message": "Password changed successfully"}
