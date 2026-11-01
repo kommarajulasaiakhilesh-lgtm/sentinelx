@@ -8,6 +8,7 @@ class AgentAPIKeyResponse(BaseModel):
     agent_id: int
     created_at: datetime
     expires_at: datetime | None
+    last_used_at: datetime | None
     is_active: bool
 
     model_config = ConfigDict(

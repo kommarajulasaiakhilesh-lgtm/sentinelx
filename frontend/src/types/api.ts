@@ -32,7 +32,12 @@ export interface AgentAPIKey {
   agent_id: number;
   created_at: string;
   expires_at?: string | null;
+  last_used_at?: string | null;
   is_active: boolean;
+}
+
+export interface AgentAPIKeyCreated extends AgentAPIKey {
+  api_key: string;
 }
 
 export interface Policy {

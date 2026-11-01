@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthGate } from "@/features/auth/auth-gate";
 import { AuthProvider } from "@/features/auth/auth-context";
 import { QueryProvider } from "@/providers/query-provider";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const geist = Geist({
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body className={`${geist.variable} ${geistMono.variable}`}>
         <QueryProvider>
           <AuthProvider>
-            <AuthGate>{children}</AuthGate>
+            <ToastProvider>
+              <AuthGate>{children}</AuthGate>
+            </ToastProvider>
           </AuthProvider>
         </QueryProvider>
       </body>

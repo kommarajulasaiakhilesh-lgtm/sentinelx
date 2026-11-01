@@ -6,6 +6,19 @@ from app.main import app
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
 from app.models.user import User
+from app.api.auth import (
+    login_rate_limit,
+    register_rate_limit,
+    change_password_rate_limit,
+)
+
+
+@pytest.fixture(autouse=True)
+def reset_auth_rate_limiters():
+    """Keep per-process rate-limit state from leaking across tests."""
+    for dep in (login_rate_limit, register_rate_limit, change_password_rate_limit):
+        dep.limiter.reset()
+    yield
 
 
 class FakeQuery:
@@ -441,3 +454,52 @@ def test_password_hashing_uses_unique_salts():
     assert first_hash != second_hash
     assert verify_password(password, first_hash)
     assert verify_password(password, second_hash)
+
+
+def test_change_password_updates_hash(auth_client):
+    client, db = auth_client
+    user = make_user(password_hash=hash_password("oldpass123"))
+    db.users.append(user)
+
+    app.dependency_overrides[get_current_user] = lambda: user
+
+    response = client.post(
+        "/api/auth/change-password",
+        json={"current_password": "oldpass123", "new_password": "newpass456"},
+    )
+
+    assert response.status_code == 200
+    assert verify_password("newpass456", user.password_hash)
+    assert not verify_password("oldpass123", user.password_hash)
+
+
+def test_change_password_rejects_wrong_current(auth_client):
+    client, db = auth_client
+    user = make_user(password_hash=hash_password("oldpass123"))
+    db.users.append(user)
+
+    app.dependency_overrides[get_current_user] = lambda: user
+
+    response = client.post(
+        "/api/auth/change-password",
+        json={"current_password": "wrongpass", "new_password": "newpass456"},
+    )
+
+    assert response.status_code == 400
+    # Hash must be unchanged.
+    assert verify_password("oldpass123", user.password_hash)
+
+
+def test_change_password_rejects_same_password(auth_client):
+    client, db = auth_client
+    user = make_user(password_hash=hash_password("samepass123"))
+    db.users.append(user)
+
+    app.dependency_overrides[get_current_user] = lambda: user
+
+    response = client.post(
+        "/api/auth/change-password",
+        json={"current_password": "samepass123", "new_password": "samepass123"},
+    )
+
+    assert response.status_code == 400

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import {
   Bot,
+  Download,
   FileText,
   KeyRound,
   LoaderCircle,
@@ -15,8 +16,14 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
+import { useAuth } from "@/hooks/use-auth";
 import { useAuditLog } from "@/features/audit/use-audit";
-import type { AuditEntry } from "@/features/audit/audit-api";
+import {
+  exportAuditLog,
+  verifyAuditIntegrity,
+  type AuditEntry,
+} from "@/features/audit/audit-api";
+import { useToast } from "@/components/ui/toast";
 
 const actionMeta: Record<
   string,
@@ -90,24 +97,97 @@ function prettyAction(action: string): string {
 export default function AuditPage() {
   const [filter, setFilter] = useState<string | undefined>(undefined);
   const { data, isLoading, isError } = useAuditLog(filter);
+  const { token } = useAuth();
+  const toast = useToast();
+
+  const handleExport = async () => {
+    try {
+      const res = await exportAuditLog(token as string);
+      const csvHeader = "id,actor,action,resource_type,resource_id,summary,created_at";
+      const rows = res.entries.map((e) =>
+        [
+          e.id,
+          e.actor_username,
+          e.action,
+          e.resource_type,
+          e.resource_id ?? "",
+          `"${(e.summary ?? "").replace(/"/g, '""')}"`,
+          e.created_at ?? "",
+        ].join(","),
+      );
+      const blob = new Blob([[csvHeader, ...rows].join("\n")], {
+        type: "text/csv;charset=utf-8;",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "sentinelx-audit-log.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast({ variant: "success", title: `Exported ${res.count} audit entries` });
+    } catch {
+      toast({ variant: "error", title: "Export failed" });
+    }
+  };
+
+  const handleVerify = async () => {
+    try {
+      const res = await verifyAuditIntegrity(token as string);
+      if (res.ok) {
+        toast({
+          variant: "success",
+          title: "Audit log verified",
+          description: `${res.verified} entries intact${res.legacy_unhashed ? `, ${res.legacy_unhashed} legacy` : ""}.`,
+        });
+      } else {
+        toast({
+          variant: "error",
+          title: "Tampering detected",
+          description: `${res.tampered_ids.length} entries failed verification.`,
+        });
+      }
+    } catch {
+      toast({ variant: "error", title: "Verification failed" });
+    }
+  };
 
   return (
     <div className="space-y-6">
       <section className="security-surface relative overflow-hidden">
         <div className="absolute inset-0 security-grid opacity-40" />
-        <div className="relative px-6 py-6">
-          <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
-            <ScrollText className="size-3.5" />
-            Governance Evidence
+        <div className="relative flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
+              <ScrollText className="size-3.5" />
+              Governance Evidence
+            </div>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+              Audit Log
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+              An append-only trail of security-relevant actions — agent
+              lifecycle, policy changes, and authentication — scoped to your
+              operator account for compliance and investigation.
+            </p>
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            Audit Log
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            An append-only trail of security-relevant actions — agent
-            lifecycle, policy changes, and authentication — scoped to your
-            operator account for compliance and investigation.
-          </p>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={handleVerify}
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+            >
+              <ShieldCheck className="size-3.5" />
+              Verify integrity
+            </button>
+            <button
+              type="button"
+              onClick={handleExport}
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+            >
+              <Download className="size-3.5" />
+              Export CSV
+            </button>
+          </div>
         </div>
       </section>
 

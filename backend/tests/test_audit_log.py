@@ -108,3 +108,51 @@ def test_entries_are_owner_scoped_by_actor(session):
     )
     assert len(owner_entries) == 1
     assert owner_entries[0].summary == "owner policy"
+
+
+def test_record_audit_sets_entry_hash(session):
+    from app.services.audit_service import compute_entry_hash
+
+    user = _user(session)
+    entry = record_audit(
+        session,
+        actor=user,
+        action="AGENT_CREATED",
+        resource_type="AGENT",
+        resource_id=7,
+        summary="Registered agent 'X'",
+    )
+    session.commit()
+
+    assert entry.entry_hash is not None
+    assert entry.entry_hash == compute_entry_hash(
+        user.id, "admin", "AGENT_CREATED", "AGENT", 7, "Registered agent 'X'"
+    )
+
+
+def test_tampering_changes_recomputed_hash(session):
+    from app.services.audit_service import compute_entry_hash
+
+    user = _user(session)
+    entry = record_audit(
+        session,
+        actor=user,
+        action="POLICY_DELETED",
+        resource_type="POLICY",
+        resource_id=3,
+        summary="Deleted policy 'A'",
+    )
+    session.commit()
+    original = entry.entry_hash
+
+    # Simulate tampering with the stored summary.
+    entry.summary = "Deleted policy 'B'"
+    recomputed = compute_entry_hash(
+        entry.actor_user_id,
+        entry.actor_username,
+        entry.action,
+        entry.resource_type,
+        entry.resource_id,
+        entry.summary,
+    )
+    assert recomputed != original

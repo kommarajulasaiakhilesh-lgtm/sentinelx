@@ -35,6 +35,10 @@ class AuditLog(Base):
 
     summary: Mapped[str] = mapped_column(Text, nullable=False)
 
+    # SHA-256 of the entry's content fields; lets the log be verified for
+    # tampering of existing rows. Null for legacy rows written before this.
+    entry_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),

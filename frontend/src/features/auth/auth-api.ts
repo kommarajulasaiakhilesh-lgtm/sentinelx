@@ -7,3 +7,15 @@ export function loginUser(credentials: LoginRequest) {
     credentials,
   );
 }
+
+export function changePassword(
+  token: string,
+  currentPassword: string,
+  newPassword: string,
+) {
+  return post<{ message: string }>(
+    "/api/auth/change-password",
+    { current_password: currentPassword, new_password: newPassword },
+    token,
+  );
+}

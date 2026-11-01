@@ -10,8 +10,11 @@ from app.schemas.auth import (
     RegisterRequest,
     LoginRequest,
     TokenResponse,
-    UserResponse
+    UserResponse,
+    ChangePasswordRequest
 )
+
+from app.api.dependencies import get_current_user
 
 from app.core.security import (
     hash_password,
@@ -20,6 +23,16 @@ from app.core.security import (
 )
 
 from app.services.audit_service import record_audit_safely
+
+from app.core.rate_limit import rate_limit
+
+
+# Brute-force protection on sensitive auth endpoints (per client IP).
+login_rate_limit = rate_limit(limit=10, window_seconds=60, scope="login")
+register_rate_limit = rate_limit(limit=5, window_seconds=60, scope="register")
+change_password_rate_limit = rate_limit(
+    limit=10, window_seconds=60, scope="change-password"
+)
 
 
 router = APIRouter(
@@ -35,7 +48,8 @@ router = APIRouter(
 )
 def register(
     request: RegisterRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(register_rate_limit),
 ):
 
     existing_username = db.query(User).filter(
@@ -92,7 +106,8 @@ def register(
 )
 def login(
     request: LoginRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(login_rate_limit),
 ):
 
     user = db.query(User).filter(
@@ -149,3 +164,44 @@ def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+@router.post(
+    "/change-password",
+    status_code=status.HTTP_200_OK
+)
+def change_password(
+    request: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    _: None = Depends(change_password_rate_limit),
+):
+    if not verify_password(
+        request.current_password,
+        current_user.password_hash
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Current password is incorrect"
+        )
+
+    if request.new_password == request.current_password:
+        raise HTTPException(
+            status_code=400,
+            detail="New password must be different from the current password"
+        )
+
+    current_user.password_hash = hash_password(request.new_password)
+
+    db.commit()
+
+    record_audit_safely(
+        db,
+        actor=current_user,
+        action="USER_PASSWORD_CHANGED",
+        resource_type="USER",
+        resource_id=current_user.id,
+        summary=f"Operator '{current_user.username}' changed their password",
+    )
+
+    return {"message": "Password changed successfully"}

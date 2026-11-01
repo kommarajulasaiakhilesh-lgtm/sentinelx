@@ -1,5 +1,13 @@
 import { get } from "@/lib/api-client";
 
+export type AuditIntegrity = {
+  total: number;
+  verified: number;
+  legacy_unhashed: number;
+  tampered_ids: number[];
+  ok: boolean;
+};
+
 export type AuditEntry = {
   id: number;
   actor_username: string;
@@ -19,4 +27,15 @@ export type AuditResponse = {
 export function getAuditLog(token: string, action?: string) {
   const query = action ? `?action=${encodeURIComponent(action)}` : "";
   return get<AuditResponse>(`/api/audit${query}`, token);
+}
+
+export function exportAuditLog(token: string) {
+  return get<{ count: number; entries: AuditEntry[] }>(
+    "/api/audit/export",
+    token,
+  );
+}
+
+export function verifyAuditIntegrity(token: string) {
+  return get<AuditIntegrity>("/api/audit/integrity", token);
 }

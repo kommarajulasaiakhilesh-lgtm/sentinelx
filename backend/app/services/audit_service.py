@@ -9,6 +9,7 @@ committed so that an audit-logging problem (e.g. a missing table during a
 rollout) can never fail or roll back the action it describes.
 """
 
+import hashlib
 import logging
 
 from sqlalchemy.orm import Session
@@ -18,6 +19,27 @@ from app.models.user import User
 
 
 logger = logging.getLogger("sentinelx.audit")
+
+
+def compute_entry_hash(
+    actor_user_id: int | None,
+    actor_username: str,
+    action: str,
+    resource_type: str,
+    resource_id: int | None,
+    summary: str,
+) -> str:
+    """SHA-256 over an audit entry's content fields (tamper-evidence)."""
+    parts = [
+        str(actor_user_id if actor_user_id is not None else ""),
+        actor_username,
+        action,
+        resource_type,
+        str(resource_id if resource_id is not None else ""),
+        summary,
+    ]
+    joined = "\x1f".join(parts)  # unit-separator avoids delimiter collisions
+    return hashlib.sha256(joined.encode("utf-8")).hexdigest()
 
 
 def record_audit(
@@ -30,15 +52,25 @@ def record_audit(
     resource_id: int | None = None,
     actor_username: str | None = None,
 ) -> AuditLog:
+    resolved_actor_id = actor.id if actor is not None else None
+    resolved_username = (
+        actor.username if actor is not None else (actor_username or "unknown")
+    )
     entry = AuditLog(
-        actor_user_id=actor.id if actor is not None else None,
-        actor_username=(
-            actor.username if actor is not None else (actor_username or "unknown")
-        ),
+        actor_user_id=resolved_actor_id,
+        actor_username=resolved_username,
         action=action,
         resource_type=resource_type,
         resource_id=resource_id,
         summary=summary,
+        entry_hash=compute_entry_hash(
+            resolved_actor_id,
+            resolved_username,
+            action,
+            resource_type,
+            resource_id,
+            summary,
+        ),
     )
     db.add(entry)
     return entry

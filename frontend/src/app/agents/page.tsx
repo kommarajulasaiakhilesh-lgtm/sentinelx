@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Activity,
   Bot,
@@ -322,9 +323,12 @@ function AgentRow({
               <StatusBadge status={agent.status} />
             </div>
 
-            <h3 className="mt-1 truncate text-sm font-semibold text-slate-800">
+            <Link
+              href={`/agents/${agent.id}`}
+              className="mt-1 block truncate text-sm font-semibold text-slate-800 transition-colors hover:text-indigo-600"
+            >
               {agent.name}
-            </h3>
+            </Link>
 
             <p className="mt-1 max-w-xl truncate text-[10px] text-slate-500">
               {agent.description || "No agent description provided"}

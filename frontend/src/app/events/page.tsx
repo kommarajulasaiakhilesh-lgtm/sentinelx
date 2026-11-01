@@ -7,14 +7,15 @@ import {
   Ban,
   CheckCircle2,
   Clock3,
-  Filter,
-  LoaderCircle,
   ShieldAlert,
   ShieldCheck,
   Terminal,
 } from "lucide-react";
 
 import { useSecurityEvents } from "@/features/events/use-security-events";
+import { DataTable, type Column } from "@/components/ui/data-table";
+import { SkeletonTable } from "@/components/ui/skeleton";
+import type { SecurityEvent } from "@/types/api";
 
 function DecisionBadge({ decision }: { decision: string }) {
   const normalized = decision.toUpperCase();
@@ -59,8 +60,57 @@ function formatDate(value: string) {
   });
 }
 
+const eventColumns: Column<SecurityEvent>[] = [
+  {
+    key: "event_type",
+    header: "Event type",
+    sortValue: (e) => e.event_type,
+    render: (e) => (
+      <span className="font-medium text-slate-800">{e.event_type}</span>
+    ),
+  },
+  {
+    key: "agent_id",
+    header: "Agent",
+    sortValue: (e) => e.agent_id,
+    render: (e) => <span className="text-slate-500">#{e.agent_id}</span>,
+  },
+  {
+    key: "action",
+    header: "Action",
+    sortValue: (e) => e.action ?? "",
+  },
+  {
+    key: "decision",
+    header: "Decision",
+    sortValue: (e) => e.decision,
+    render: (e) => <DecisionBadge decision={e.decision} />,
+  },
+  {
+    key: "reason",
+    header: "Reason",
+    csvValue: (e) => e.reason ?? "",
+    render: (e) => (
+      <span className="block max-w-[260px] truncate text-slate-500">
+        {e.reason || "—"}
+      </span>
+    ),
+  },
+  {
+    key: "created_at",
+    header: "Time",
+    sortValue: (e) => e.created_at ?? "",
+    csvValue: (e) => e.created_at ?? "",
+    render: (e) => (
+      <span className="whitespace-nowrap text-[11px] text-slate-500">
+        {formatDate(e.created_at)}
+      </span>
+    ),
+  },
+];
+
 export default function EventsPage() {
-  const { data, isLoading, isError } = useSecurityEvents(1, 10);
+  const { data, isLoading, isError } = useSecurityEvents(1, 200);
 
   const events = data?.items ?? [];
   const total = data?.total ?? 0;
@@ -157,55 +207,34 @@ export default function EventsPage() {
 
       {/* Event stream */}
       <section className="security-surface overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.05]">
-                <Activity className="size-3.5 text-indigo-600" />
-              </div>
-
-              <h2 className="text-sm font-semibold text-slate-800">
-                Event Log
-              </h2>
-            </div>
-
-            <p className="mt-1 text-[10px] text-slate-500">
-              Most recent security event records
-            </p>
+        <div className="flex items-center gap-2 border-b border-slate-200 px-5 py-4">
+          <div className="flex size-7 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.05]">
+            <Activity className="size-3.5 text-indigo-600" />
           </div>
-
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
-              Page
-            </span>
-
-            <span className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[10px] text-slate-600">
-              01 / {data?.pages ?? "—"}
-            </span>
-
-            <span className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-              <Filter className="size-3" />
-              Latest records
-            </span>
+          <div>
+            <h2 className="text-sm font-semibold text-slate-800">Event Log</h2>
+            <p className="text-[10px] text-slate-500">
+              Searchable, sortable security event records
+            </p>
           </div>
         </div>
 
         {isLoading ? (
-          <EventsLoadingState />
+          <SkeletonTable rows={8} />
         ) : isError ? (
           <EventsErrorState />
         ) : events.length === 0 ? (
           <EventsEmptyState />
         ) : (
-          <div className="divide-y divide-white/[0.05]">
-            {events.map((event, index) => (
-              <EventRow
-                key={event.id}
-                event={event}
-                index={index}
-              />
-            ))}
-          </div>
+          <DataTable<SecurityEvent>
+            data={events}
+            searchable={(e) =>
+              `${e.event_type} ${e.action} ${e.decision} ${e.reason ?? ""}`
+            }
+            searchPlaceholder="Search events…"
+            csvFilename="sentinelx-events.csv"
+            columns={eventColumns}
+          />
         )}
       </section>
 
@@ -335,129 +364,6 @@ function MetricCard({
   );
 }
 
-function EventRow({
-  event,
-  index,
-}: {
-  event: {
-    id: number;
-    agent_id: number;
-    policy_id?: number | null;
-    event_type: string;
-    action?: string | null;
-    decision: string;
-    reason?: string | null;
-    created_at: string;
-  };
-  index: number;
-}) {
-  const normalized = event.decision.toUpperCase();
-  const blocked = normalized.includes("BLOCK");
-  const warning = normalized.includes("WARN");
-
-  const accent = blocked
-    ? "border-l-red-400/60"
-    : warning
-      ? "border-l-amber-400/60"
-      : "border-l-emerald-400/50";
-
-  const iconStyle = blocked
-    ? "border-red-400/10 bg-red-400/[0.04] text-red-600"
-    : warning
-      ? "border-amber-400/10 bg-amber-400/[0.04] text-amber-600"
-      : "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600";
-
-  return (
-    <article
-      className={`group border-l-2 ${accent} px-5 py-4 transition-colors hover:bg-white/[0.015]`}
-    >
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex min-w-0 items-start gap-3">
-          <div
-            className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${iconStyle}`}
-          >
-            {blocked ? (
-              <Ban className="size-4" />
-            ) : warning ? (
-              <AlertTriangle className="size-4" />
-            ) : (
-              <Activity className="size-4" />
-            )}
-          </div>
-
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-[9px] text-slate-400">
-                EVT-{String(index + 1).padStart(2, "0")}
-              </span>
-
-              <span className="text-[9px] uppercase tracking-[0.12em] text-slate-400">
-                #{event.id}
-              </span>
-
-              <DecisionBadge decision={event.decision} />
-            </div>
-
-            <h3 className="mt-1 truncate text-sm font-semibold text-slate-800">
-              {event.event_type}
-            </h3>
-
-            <p className="mt-1 max-w-2xl truncate text-[10px] text-slate-500">
-              {event.reason || "No decision reason recorded"}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-x-7 gap-y-3 sm:grid-cols-4 xl:min-w-[520px]">
-          <EventMetadata
-            label="Agent"
-            value={`#${event.agent_id}`}
-          />
-
-          <EventMetadata
-            label="Action"
-            value={event.action || "No action recorded"}
-          />
-
-          <EventMetadata
-            label="Policy"
-            value={event.policy_id ? `#${event.policy_id}` : "None"}
-          />
-
-          <EventMetadata
-            label="Timestamp"
-            value={formatDate(event.created_at)}
-            icon
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function EventMetadata({
-  label,
-  value,
-  icon = false,
-}: {
-  label: string;
-  value: string;
-  icon?: boolean;
-}) {
-  return (
-    <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400">
-        {icon && <Clock3 className="size-3" />}
-        {label}
-      </div>
-
-      <div className="mt-1 truncate font-mono text-[10px] text-slate-600">
-        {value}
-      </div>
-    </div>
-  );
-}
-
 function OperationalSignal({
   icon: Icon,
   label,
@@ -501,24 +407,6 @@ function OperationalSignal({
           </span>
         </div>
       </div>
-    </div>
-  );
-}
-
-function EventsLoadingState() {
-  return (
-    <div className="flex min-h-72 flex-col items-center justify-center">
-      <div className="flex size-10 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
-        <LoaderCircle className="size-5 animate-spin text-indigo-600" />
-      </div>
-
-      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-        Synchronizing telemetry
-      </p>
-
-      <p className="mt-1 text-[10px] text-slate-400">
-        Reading current security event stream
-      </p>
     </div>
   );
 }
