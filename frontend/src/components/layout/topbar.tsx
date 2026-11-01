@@ -17,6 +17,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useSecurityAlerts } from "@/features/alerts/use-security-alerts";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const severityDot: Record<string, string> = {
   CRITICAL: "bg-red-500",
@@ -74,6 +75,7 @@ export function Topbar() {
   const [openMenu, setOpenMenu] = useState<null | "notifications" | "profile">(
     null,
   );
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   const { data: alertData } = useSecurityAlerts(1, 6);
   const alerts = alertData?.items ?? [];
@@ -279,7 +281,7 @@ export function Topbar() {
                     type="button"
                     onClick={() => {
                       setOpenMenu(null);
-                      handleLogout();
+                      setConfirmLogout(true);
                     }}
                     className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50"
                   >
@@ -346,6 +348,20 @@ export function Topbar() {
           </nav>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmLogout}
+        variant="danger"
+        title="Sign out of SentinelX?"
+        description="You'll need to authenticate again to access the control plane."
+        confirmLabel="Sign out"
+        cancelLabel="Stay signed in"
+        onConfirm={() => {
+          setConfirmLogout(false);
+          handleLogout();
+        }}
+        onCancel={() => setConfirmLogout(false)}
+      />
     </>
   );
 }
