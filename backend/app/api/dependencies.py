@@ -191,6 +191,10 @@ def get_current_agent(
             detail="Agent API key has expired"
         )
 
+    # Track last use for credential-lifecycle visibility.
+    stored_key.last_used_at = now
+    db.commit()
+
     # --------------------------------------------------------
     # Find active agent
     # --------------------------------------------------------

@@ -239,6 +239,52 @@ def get_agent_api_keys(
 
 
 # ---------------------------------------------------------
+# Revoke Agent API Key
+# ---------------------------------------------------------
+
+@router.post(
+    "/{agent_id}/api-keys/{key_id}/revoke",
+    response_model=AgentAPIKeyResponse,
+)
+def revoke_agent_api_key(
+    agent_id: int,
+    key_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    agent = (
+        db.query(Agent)
+        .filter(Agent.id == agent_id, Agent.owner_id == current_user.id)
+        .first()
+    )
+    if agent is None:
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    api_key = (
+        db.query(AgentAPIKey)
+        .filter(AgentAPIKey.id == key_id, AgentAPIKey.agent_id == agent.id)
+        .first()
+    )
+    if api_key is None:
+        raise HTTPException(status_code=404, detail="API key not found")
+
+    api_key.is_active = False
+    db.commit()
+    db.refresh(api_key)
+
+    record_audit_safely(
+        db,
+        actor=current_user,
+        action="API_KEY_REVOKED",
+        resource_type="AGENT_API_KEY",
+        resource_id=api_key.id,
+        summary=f"Revoked an API key for agent '{agent.name}'",
+    )
+
+    return api_key
+
+
+# ---------------------------------------------------------
 # Update Agent Status
 # ---------------------------------------------------------
 

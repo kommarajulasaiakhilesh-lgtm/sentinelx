@@ -24,6 +24,16 @@ from app.core.security import (
 
 from app.services.audit_service import record_audit_safely
 
+from app.core.rate_limit import rate_limit
+
+
+# Brute-force protection on sensitive auth endpoints (per client IP).
+login_rate_limit = rate_limit(limit=10, window_seconds=60, scope="login")
+register_rate_limit = rate_limit(limit=5, window_seconds=60, scope="register")
+change_password_rate_limit = rate_limit(
+    limit=10, window_seconds=60, scope="change-password"
+)
+
 
 router = APIRouter(
     prefix="/api/auth",
@@ -38,7 +48,8 @@ router = APIRouter(
 )
 def register(
     request: RegisterRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(register_rate_limit),
 ):
 
     existing_username = db.query(User).filter(
@@ -95,7 +106,8 @@ def register(
 )
 def login(
     request: LoginRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(login_rate_limit),
 ):
 
     user = db.query(User).filter(
@@ -161,7 +173,8 @@ def login(
 def change_password(
     request: ChangePasswordRequest,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(change_password_rate_limit),
 ):
     if not verify_password(
         request.current_password,

@@ -6,6 +6,19 @@ from app.main import app
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
 from app.models.user import User
+from app.api.auth import (
+    login_rate_limit,
+    register_rate_limit,
+    change_password_rate_limit,
+)
+
+
+@pytest.fixture(autouse=True)
+def reset_auth_rate_limiters():
+    """Keep per-process rate-limit state from leaking across tests."""
+    for dep in (login_rate_limit, register_rate_limit, change_password_rate_limit):
+        dep.limiter.reset()
+    yield
 
 
 class FakeQuery:

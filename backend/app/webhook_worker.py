@@ -4,21 +4,19 @@ from __future__ import annotations
 import argparse
 import hashlib
 import hmac
-import ipaddress
 import json
 import logging
-import socket
 import threading
 import time
 from uuid import uuid4
 from datetime import datetime, timedelta, timezone
-from urllib.parse import urlsplit
 
 import httpx
 from sqlalchemy import or_, select, update
 from sqlalchemy.orm import Session
 
 from app.db.database import SessionLocal
+from app.core.ssrf import validate_destination  # noqa: F401 - re-exported
 
 # Register application models and their ORM relationships.
 from app.models.user import User  # noqa: F401
@@ -55,61 +53,6 @@ def canonical_payload(payload: object) -> bytes:
     ).encode("utf-8")
 
 
-def validate_destination(url: str) -> None:
-    """Reject non-HTTP destinations and hostnames resolving to unsafe IPs.
-
-    DNS is checked before the HTTP request. This alone cannot completely
-    prevent DNS rebinding; enforce outbound network restrictions as well.
-    """
-    parsed = urlsplit(url)
-
-    if parsed.scheme.lower() not in {"http", "https"}:
-        raise ValueError("Only HTTP and HTTPS webhook URLs are allowed.")
-
-    if not parsed.hostname or parsed.username is not None or parsed.password is not None:
-        raise ValueError("Webhook URL has an invalid or credential-bearing authority.")
-
-    host = parsed.hostname.rstrip(".").lower()
-
-    if (
-        host == "localhost"
-        or host.endswith(".localhost")
-        or host.endswith(".local")
-        or host.endswith(".internal")
-    ):
-        raise ValueError("Local webhook destinations are not allowed.")
-
-    try:
-        literal_ip = ipaddress.ip_address(host)
-    except ValueError:
-        literal_ip = None
-
-    if literal_ip is not None:
-        if not literal_ip.is_global:
-            raise ValueError("Webhook destination IP is not globally routable.")
-        return
-
-    try:
-        results = socket.getaddrinfo(
-            host,
-            parsed.port or (443 if parsed.scheme.lower() == "https" else 80),
-            type=socket.SOCK_STREAM,
-        )
-    except (OSError, socket.gaierror) as exc:
-        raise ValueError("Webhook hostname could not be safely resolved.") from exc
-
-    if not results:
-        raise ValueError("Webhook hostname did not resolve.")
-
-    for result in results:
-        address = result[4][0].split("%", 1)[0]
-        try:
-            ip = ipaddress.ip_address(address)
-        except ValueError as exc:
-            raise ValueError("Webhook hostname resolved to an invalid address.") from exc
-
-        if not ip.is_global:
-            raise ValueError("Webhook hostname resolves to a non-public IP address.")
 
 
 def claim_batch(batch_size: int) -> list[tuple[int, str]]:
