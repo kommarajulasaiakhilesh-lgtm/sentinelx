@@ -140,10 +140,16 @@ export function Topbar() {
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
-            className="flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-200 hover:border-indigo-400/20 hover:bg-indigo-400/[0.05] hover:text-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40"
+            onClick={() =>
+              window.dispatchEvent(new Event("sentinelx:open-command"))
+            }
+            className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 text-slate-500 transition-all duration-200 hover:border-indigo-400/30 hover:bg-indigo-50 hover:text-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40"
             aria-label="Search"
           >
             <Search className="size-4" />
+            <kbd className="hidden rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-slate-400 lg:block">
+              ⌘K
+            </kbd>
           </button>
 
           {/* Notifications */}

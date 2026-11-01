@@ -17,6 +17,7 @@ import {
 
 import { useAuth } from "@/hooks/use-auth";
 import { changePassword } from "@/features/auth/auth-api";
+import { useToast } from "@/components/ui/toast";
 
 const schema = z
   .object({
@@ -40,6 +41,7 @@ type FormValues = z.infer<typeof schema>;
 
 export default function SettingsPage() {
   const { token, user } = useAuth();
+  const toast = useToast();
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +67,11 @@ export default function SettingsPage() {
       );
       setSuccess(true);
       reset();
+      toast({
+        variant: "success",
+        title: "Password changed",
+        description: "Your access credential was updated.",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not change password.");
     } finally {

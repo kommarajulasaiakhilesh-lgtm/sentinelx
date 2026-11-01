@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { motion } from "motion/react";
 import {
   Activity,
@@ -17,6 +18,7 @@ import {
 
 import { useMyAgents } from "@/features/agents/use-agents";
 import { useSecurityEventStream } from "@/features/security-events/use-security-event-stream";
+import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 
 export default function CommandCenterPage() {
   const { status: streamStatus } = useSecurityEventStream();
@@ -146,6 +148,9 @@ export default function CommandCenterPage() {
           index={3}
         />
       </section>
+
+      {/* Analytics charts */}
+      <AnalyticsCharts />
 
       {/* Operational Overview */}
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.7fr)]">
@@ -438,9 +443,12 @@ function AgentRow({
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-sm font-medium text-slate-800">
+              <Link
+                href={`/agents/${agent.id}`}
+                className="truncate text-sm font-medium text-slate-800 transition-colors hover:text-indigo-600"
+              >
                 {agent.name}
-              </h3>
+              </Link>
 
               <StatusBadge status={agent.status} />
             </div>
