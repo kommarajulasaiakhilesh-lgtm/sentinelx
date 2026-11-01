@@ -13,6 +13,11 @@ class AgentStatusUpdate(BaseModel):
     status: Literal["ACTIVE", "SUSPENDED"]
 
 
+class BulkAgentStatusUpdate(BaseModel):
+    agent_ids: list[int]
+    status: Literal["ACTIVE", "SUSPENDED"]
+
+
 class AgentResponse(BaseModel):
     id: int
     owner_id: int

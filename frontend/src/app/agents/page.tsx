@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
   Bot,
@@ -9,11 +11,16 @@ import {
   CircleCheck,
   Clock3,
   LoaderCircle,
+  Power,
   ShieldCheck,
   UserRound,
   Wifi,
+  X,
 } from "lucide-react";
 import { useMyAgents } from "@/features/agents/use-agents";
+import { bulkUpdateAgentStatus } from "@/features/agents/agents-api";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/components/ui/toast";
 
 export default function AgentsPage() {
   const {
@@ -21,6 +28,34 @@ export default function AgentsPage() {
     isLoading,
     isError,
   } = useMyAgents();
+
+  const { token } = useAuth();
+  const toast = useToast();
+  const qc = useQueryClient();
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+
+  const toggle = (id: number) =>
+    setSelected((cur) => {
+      const next = new Set(cur);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  const bulkMut = useMutation({
+    mutationFn: (status: "ACTIVE" | "SUSPENDED") =>
+      bulkUpdateAgentStatus(token as string, [...selected], status),
+    onSuccess: (res) => {
+      qc.invalidateQueries({ queryKey: ["agents"] });
+      setSelected(new Set());
+      toast({
+        variant: "success",
+        title: `Updated ${res.updated} agent${res.updated === 1 ? "" : "s"}`,
+        description: `Set to ${res.status}.`,
+      });
+    },
+    onError: () => toast({ variant: "error", title: "Bulk update failed" }),
+  });
 
   const activeAgents = agents.filter(
     (agent) => agent.status === "ACTIVE",
@@ -158,6 +193,8 @@ export default function AgentsPage() {
                 key={agent.id}
                 agent={agent}
                 index={index}
+                selected={selected.has(agent.id)}
+                onToggle={() => toggle(agent.id)}
               />
             ))}
           </div>
@@ -194,6 +231,43 @@ export default function AgentsPage() {
           tone="emerald"
         />
       </section>
+
+      {selected.size > 0 && (
+        <div className="fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-xl shadow-slate-900/10">
+            <span className="text-xs font-medium text-slate-600">
+              {selected.size} selected
+            </span>
+            <div className="h-5 w-px bg-slate-200" />
+            <button
+              type="button"
+              onClick={() => bulkMut.mutate("ACTIVE")}
+              disabled={bulkMut.isPending}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-60"
+            >
+              <Power className="size-3.5" />
+              Activate
+            </button>
+            <button
+              type="button"
+              onClick={() => bulkMut.mutate("SUSPENDED")}
+              disabled={bulkMut.isPending}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 transition hover:bg-amber-100 disabled:opacity-60"
+            >
+              <Power className="size-3.5" />
+              Suspend
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelected(new Set())}
+              className="rounded-lg p-1.5 text-slate-400 transition hover:text-slate-600"
+              aria-label="Clear selection"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -294,6 +368,8 @@ function MetricCard({
 function AgentRow({
   agent,
   index,
+  selected,
+  onToggle,
 }: {
   agent: {
     id: number;
@@ -304,11 +380,20 @@ function AgentRow({
     created_at?: string;
   };
   index: number;
+  selected: boolean;
+  onToggle: () => void;
 }) {
   return (
     <article className="security-surface-hover group relative px-5 py-5 transition-colors">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex min-w-0 items-start gap-3">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={onToggle}
+            aria-label={`Select ${agent.name}`}
+            className="mt-3.5 size-4 shrink-0 cursor-pointer accent-indigo-600"
+          />
           <div className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
             <Bot className="size-5 text-indigo-600" />
 

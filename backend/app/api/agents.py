@@ -10,7 +10,8 @@ from app.models.user import User
 from app.schemas.agent import (
     AgentCreate,
     AgentResponse,
-    AgentStatusUpdate
+    AgentStatusUpdate,
+    BulkAgentStatusUpdate
 )
 from app.schemas.agent_api_key import (
     AgentAPIKeyCreateResponse,
@@ -282,6 +283,55 @@ def revoke_agent_api_key(
     )
 
     return api_key
+
+
+# ---------------------------------------------------------
+# Bulk Update Agent Status
+# ---------------------------------------------------------
+
+@router.post("/bulk-status")
+def bulk_update_agent_status(
+    payload: BulkAgentStatusUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not payload.agent_ids:
+        raise HTTPException(status_code=400, detail="No agent IDs provided")
+
+    agents = (
+        db.query(Agent)
+        .filter(
+            Agent.id.in_(payload.agent_ids),
+            Agent.owner_id == current_user.id,
+        )
+        .all()
+    )
+
+    updated = 0
+    for agent in agents:
+        if agent.status != payload.status:
+            agent.status = payload.status
+            updated += 1
+
+    db.commit()
+
+    record_audit_safely(
+        db,
+        actor=current_user,
+        action="AGENT_STATUS_CHANGED",
+        resource_type="AGENT",
+        summary=(
+            f"Bulk set {updated} agent(s) to {payload.status} "
+            f"({len(payload.agent_ids)} requested)"
+        ),
+    )
+
+    return {
+        "requested": len(payload.agent_ids),
+        "matched": len(agents),
+        "updated": updated,
+        "status": payload.status,
+    }
 
 
 # ---------------------------------------------------------

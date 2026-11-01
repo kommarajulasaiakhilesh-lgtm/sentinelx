@@ -12,6 +12,18 @@ export function getAgentApiKeys(token: string, agentId: number) {
   );
 }
 
+export function bulkUpdateAgentStatus(
+  token: string,
+  agentIds: number[],
+  status: "ACTIVE" | "SUSPENDED",
+) {
+  return post<{ requested: number; matched: number; updated: number; status: string }>(
+    "/api/agents/bulk-status",
+    { agent_ids: agentIds, status },
+    token,
+  );
+}
+
 export function createAgentApiKey(token: string, agentId: number) {
   return post<AgentAPIKeyCreated>(
     `/api/agents/${agentId}/api-keys`,

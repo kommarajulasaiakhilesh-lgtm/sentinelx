@@ -54,6 +54,7 @@ from app.api.risk_scoring_configurations import (
 )
 from app.api.agent_posture import router as agent_posture_router
 from app.api.audit import router as audit_router
+from app.api.admin import router as admin_router
 from app.models.audit_log import AuditLog
 from app.models.policy_version import PolicyVersion
 
@@ -162,6 +163,7 @@ app.include_router(detection_rules_router)
 app.include_router(risk_scoring_configurations_router)
 app.include_router(agent_posture_router)
 app.include_router(audit_router)
+app.include_router(admin_router)
 
 
 @app.get("/")
