@@ -19,7 +19,7 @@ from app.core.security import (
     create_access_token
 )
 
-from app.services.audit_service import record_audit
+from app.services.audit_service import record_audit_safely
 
 
 router = APIRouter(
@@ -135,7 +135,7 @@ def login(
         }
     )
 
-    record_audit(
+    record_audit_safely(
         db,
         actor=user,
         action="USER_LOGIN",
@@ -143,7 +143,6 @@ def login(
         resource_id=user.id,
         summary=f"Operator '{user.username}' authenticated",
     )
-    db.commit()
 
 
     return {
