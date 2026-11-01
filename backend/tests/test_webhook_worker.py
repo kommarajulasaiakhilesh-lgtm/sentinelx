@@ -8,6 +8,7 @@ import httpx
 import pytest
 
 from app import webhook_worker as worker
+from app.core import ssrf
 
 
 class FakeSession:
@@ -453,7 +454,7 @@ def test_dns_resolution_rejects_mixed_public_and_private_addresses(monkeypatch):
     )
 
     monkeypatch.setattr(
-        worker.socket,
+        ssrf.socket,
         "getaddrinfo",
         lambda *args, **kwargs: [public_result, private_result],
     )
@@ -468,7 +469,7 @@ def test_dns_resolution_failure_is_rejected(monkeypatch):
     def fail_resolution(*args, **kwargs):
         raise socket.gaierror("simulated DNS failure")
 
-    monkeypatch.setattr(worker.socket, "getaddrinfo", fail_resolution)
+    monkeypatch.setattr(ssrf.socket, "getaddrinfo", fail_resolution)
 
     with pytest.raises(ValueError, match="could not be safely resolved"):
         worker.validate_destination("https://hooks.example.com/events")
@@ -476,7 +477,7 @@ def test_dns_resolution_failure_is_rejected(monkeypatch):
 
 def test_empty_dns_resolution_is_rejected(monkeypatch):
     monkeypatch.setattr(
-        worker.socket,
+        ssrf.socket,
         "getaddrinfo",
         lambda *args, **kwargs: [],
     )
