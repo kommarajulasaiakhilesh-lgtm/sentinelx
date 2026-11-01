@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import {
   AlertTriangle,
   Ban,
@@ -8,6 +9,7 @@ import {
   CircleAlert,
   FileSliders,
   Gauge,
+  History,
   LoaderCircle,
   ShieldCheck,
   ShieldOff,
@@ -16,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { usePolicies } from "@/features/policies/use-policies";
+import { PolicyHistoryDialog } from "@/components/policies/policy-history-dialog";
 import type { Policy } from "@/types/api";
 
 export default function PoliciesPage() {
@@ -482,6 +485,7 @@ function DistributionRow({
 }
 
 function PolicyRow({ policy }: { policy: Policy }) {
+  const [historyOpen, setHistoryOpen] = useState(false);
   const action = policy.action.toUpperCase();
 
   const actionStyles =
@@ -560,6 +564,24 @@ function PolicyRow({ policy }: { policy: Policy }) {
           />
         </div>
       </div>
+
+      <div className="mt-3 flex justify-end">
+        <button
+          type="button"
+          onClick={() => setHistoryOpen(true)}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600"
+        >
+          <History className="size-3.5" />
+          Version history
+        </button>
+      </div>
+
+      <PolicyHistoryDialog
+        policyId={policy.id}
+        policyName={policy.name}
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+      />
     </article>
   );
 }

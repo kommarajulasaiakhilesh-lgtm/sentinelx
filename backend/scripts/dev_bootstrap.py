@@ -109,7 +109,7 @@ def seed() -> None:
             ("Prompt Injection Guard", "PROMPT_INJECTION", "BLOCK", 100),
             ("PII Egress Control", "DATA_LOSS_PREVENTION", "BLOCK", 90),
             ("Tool Allowlist", "TOOL_ACCESS", "ALLOW", 50),
-            ("Rate Limit Policy", "RATE_LIMIT", "THROTTLE", 40),
+            ("Rate Limit Policy", "RATE_LIMIT", "WARN", 40),
         ]
         policies: list[Policy] = []
         for a in agents:

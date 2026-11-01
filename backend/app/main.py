@@ -55,6 +55,7 @@ from app.api.risk_scoring_configurations import (
 from app.api.agent_posture import router as agent_posture_router
 from app.api.audit import router as audit_router
 from app.models.audit_log import AuditLog
+from app.models.policy_version import PolicyVersion
 
 
 app = FastAPI(
