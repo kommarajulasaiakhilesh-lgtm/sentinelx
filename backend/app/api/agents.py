@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user, get_current_agent
 from app.db.database import get_db
-from app.services.audit_service import record_audit
+from app.services.audit_service import record_audit_safely
 from app.models.agent import Agent
 from app.models.agent_api_key import AgentAPIKey
 from app.models.user import User
@@ -49,9 +49,10 @@ def create_agent(
     )
 
     db.add(agent)
-    db.flush()
+    db.commit()
+    db.refresh(agent)
 
-    record_audit(
+    record_audit_safely(
         db,
         actor=current_user,
         action="AGENT_CREATED",
@@ -59,9 +60,6 @@ def create_agent(
         resource_id=agent.id,
         summary=f"Registered agent '{agent.name}'",
     )
-
-    db.commit()
-    db.refresh(agent)
 
     return agent
 
@@ -273,7 +271,10 @@ def update_agent_status(
     new_status = status_data.status
     agent.status = new_status
 
-    record_audit(
+    db.commit()
+    db.refresh(agent)
+
+    record_audit_safely(
         db,
         actor=current_user,
         action="AGENT_STATUS_CHANGED",
@@ -284,9 +285,6 @@ def update_agent_status(
             f"from {previous_status} to {new_status}"
         ),
     )
-
-    db.commit()
-    db.refresh(agent)
 
     return {
         "message": "Agent status updated successfully",

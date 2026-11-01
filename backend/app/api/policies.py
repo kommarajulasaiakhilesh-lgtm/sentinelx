@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
-from app.services.audit_service import record_audit
+from app.services.audit_service import record_audit_safely
 from app.models.agent import Agent
 from app.models.policy import Policy
 from app.models.user import User
@@ -61,9 +61,10 @@ def create_policy(
      )
 
     db.add(policy)
-    db.flush()
+    db.commit()
+    db.refresh(policy)
 
-    record_audit(
+    record_audit_safely(
         db,
         actor=current_user,
         action="POLICY_CREATED",
@@ -71,9 +72,6 @@ def create_policy(
         resource_id=policy.id,
         summary=f"Created policy '{policy.name}' on agent '{agent.name}'",
     )
-
-    db.commit()
-    db.refresh(policy)
 
     return policy
 
@@ -156,7 +154,10 @@ def update_policy(
 
     changed_fields = ", ".join(sorted(update_data.keys())) or "no fields"
 
-    record_audit(
+    db.commit()
+    db.refresh(policy)
+
+    record_audit_safely(
         db,
         actor=current_user,
         action="POLICY_UPDATED",
@@ -164,9 +165,6 @@ def update_policy(
         resource_id=policy.id,
         summary=f"Updated policy '{policy.name}' ({changed_fields})",
     )
-
-    db.commit()
-    db.refresh(policy)
 
     return policy
 
@@ -201,7 +199,10 @@ def delete_policy(
 
     deleted_name = policy.name
 
-    record_audit(
+    db.delete(policy)
+    db.commit()
+
+    record_audit_safely(
         db,
         actor=current_user,
         action="POLICY_DELETED",
@@ -209,9 +210,6 @@ def delete_policy(
         resource_id=policy_id,
         summary=f"Deleted policy '{deleted_name}'",
     )
-
-    db.delete(policy)
-    db.commit()
 
     return {
         "message": "Policy deleted successfully",
