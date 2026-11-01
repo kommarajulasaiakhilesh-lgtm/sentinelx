@@ -51,19 +51,19 @@ const modules = [
 const toneClasses = {
   cyan: {
     dot: "bg-indigo-400",
-    text: "text-indigo-600",
+    text: "text-indigo-600 dark:text-indigo-400",
     border: "border-indigo-400/20",
     background: "bg-indigo-400/[0.06]",
   },
   red: {
     dot: "bg-red-400",
-    text: "text-red-600",
+    text: "text-red-600 dark:text-red-400",
     border: "border-red-400/20",
     background: "bg-red-400/[0.06]",
   },
   emerald: {
     dot: "bg-emerald-400",
-    text: "text-emerald-600",
+    text: "text-emerald-600 dark:text-emerald-400",
     border: "border-emerald-400/20",
     background: "bg-emerald-400/[0.06]",
   },
@@ -102,12 +102,12 @@ export function SecurityPulse() {
   return (
     <section
       aria-label="Security pulse"
-      className="mb-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-white"
+      className="mb-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-white dark:bg-slate-900"
     >
       <div className="flex flex-col lg:flex-row lg:items-stretch">
         <div className="flex min-w-0 items-center gap-3 border-b border-slate-800/80 px-4 py-3 lg:w-[250px] lg:border-b-0 lg:border-r">
           <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-indigo-400/20 bg-indigo-400/[0.06]">
-            <Zap className="h-4 w-4 text-indigo-600" />
+            <Zap className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-indigo-400" />
           </div>
 
@@ -116,12 +116,12 @@ export function SecurityPulse() {
               Security Pulse
             </p>
 
-            <p className="mt-0.5 truncate text-xs text-slate-500">
+            <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
               Cross-module telemetry
             </p>
           </div>
 
-          <div className="ml-auto hidden items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 sm:flex lg:hidden">
+          <div className="ml-auto hidden items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400 sm:flex lg:hidden">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             Linked
           </div>
@@ -147,7 +147,7 @@ export function SecurityPulse() {
               <Link
                 key={module.href}
                 href={module.href}
-                className={`group flex min-w-[108px] flex-1 items-center gap-2 border-r border-slate-800/70 px-3 py-3 transition-colors last:border-r-0 hover:bg-slate-50 ${
+                className={`group flex min-w-[108px] flex-1 items-center gap-2 border-r border-slate-800/70 px-3 py-3 transition-colors last:border-r-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${
                   active ? tone.background : ""
                 }`}
                 aria-current={active ? "page" : undefined}
@@ -161,7 +161,7 @@ export function SecurityPulse() {
                 >
                   <Icon
                     className={`h-3.5 w-3.5 ${
-                      active ? tone.text : "text-slate-500"
+                      active ? tone.text : "text-slate-500 dark:text-slate-400"
                     }`}
                   />
                 </span>
@@ -169,13 +169,13 @@ export function SecurityPulse() {
                 <span className="min-w-0">
                   <span
                     className={`block text-[10px] font-semibold uppercase tracking-[0.12em] ${
-                      active ? tone.text : "text-slate-600"
+                      active ? tone.text : "text-slate-600 dark:text-slate-300"
                     }`}
                   >
                     {module.label}
                   </span>
 
-                  <span className="mt-0.5 block text-[9px] text-slate-500">
+                  <span className="mt-0.5 block text-[9px] text-slate-500 dark:text-slate-400">
                     {module.href === "/security-tests"
                       ? "Controlled"
                       : module.href === "/guardrails"
@@ -191,7 +191,7 @@ export function SecurityPulse() {
                 </span>
 
                 {module.href === "/events" && blockedEvents > 0 && (
-                  <span className="ml-auto hidden rounded-full border border-red-400/20 bg-red-400/10 px-1.5 py-0.5 text-[8px] font-bold text-red-600 xl:block">
+                  <span className="ml-auto hidden rounded-full border border-red-400/20 bg-red-400/10 px-1.5 py-0.5 text-[8px] font-bold text-red-600 dark:text-red-400 xl:block">
                     {blockedEvents}
                   </span>
                 )}
@@ -211,11 +211,11 @@ export function SecurityPulse() {
         </div>
 
         <div className="flex items-center justify-between border-t border-slate-800/80 px-4 py-2.5 lg:w-[155px] lg:border-l lg:border-t-0">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
             Control link
           </span>
 
-          <span className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+          <span className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400">
             <span
               className={`h-1.5 w-1.5 rounded-full ${
                 telemetryLoading

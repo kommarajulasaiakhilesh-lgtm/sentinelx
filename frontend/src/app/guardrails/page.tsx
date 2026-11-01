@@ -31,25 +31,25 @@ function MetricCard({
   icon: typeof ShieldCheck;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white/[0.035] p-5">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/[0.035] p-5">
       <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-indigo-400/5 blur-2xl" />
 
       <div className="relative flex items-start justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold text-slate-900">
+          <p className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {detail}
           </p>
         </div>
 
-        <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600">
+        <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600 dark:text-indigo-400">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -96,40 +96,40 @@ export default function GuardrailsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-600">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="h-3.5 w-3.5" />
               Policy Evaluation
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-emerald-600">
+            <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               Evaluation API
             </div>
           </div>
 
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
             Runtime Guardrails
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
             Review policy decisions for requests submitted to SentinelX. Callers
             must enforce decisions before accessing external resources.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-emerald-600" />
+              <Zap className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               Evaluate
             </span>
 
-            <span className="text-slate-400">→</span>
+            <span className="text-slate-400 dark:text-slate-500">→</span>
 
             <span className="flex items-center gap-2">
-              <LockKeyhole className="h-4 w-4 text-indigo-600" />
+              <LockKeyhole className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
               Enforce
             </span>
 
-            <span className="text-slate-400">→</span>
+            <span className="text-slate-400 dark:text-slate-500">→</span>
 
             <span className="flex items-center gap-2">
               <Activity className="h-4 w-4 text-blue-400" />
@@ -172,19 +172,19 @@ export default function GuardrailsPage() {
 
       {/* ENFORCEMENT PIPELINE */}
       <section className="grid gap-6 xl:grid-cols-[1.45fr_1fr]">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-slate-900 dark:text-slate-100">
                 Enforcement Pipeline
               </h2>
 
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Policy evaluation request flow
               </p>
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-emerald-600">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-emerald-600 dark:text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               Flow
             </div>
@@ -222,22 +222,22 @@ export default function GuardrailsPage() {
 
               return (
                 <div key={stage.title} className="relative">
-                  <div className="rounded-xl border border-slate-200 bg-black/20 p-4">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-indigo-400/15 bg-indigo-400/10 text-indigo-600">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-black/20 p-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-indigo-400/15 bg-indigo-400/10 text-indigo-600 dark:text-indigo-400">
                       <Icon className="h-4 w-4" />
                     </div>
 
-                    <p className="mt-4 text-[9px] font-semibold tracking-[0.18em] text-slate-500">
+                    <p className="mt-4 text-[9px] font-semibold tracking-[0.18em] text-slate-500 dark:text-slate-400">
                       {stage.title}
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-slate-600">
+                    <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">
                       {stage.text}
                     </p>
                   </div>
 
                   {index < 4 && (
-                    <div className="absolute -right-3 top-1/2 z-10 hidden text-slate-400 md:block">
+                    <div className="absolute -right-3 top-1/2 z-10 hidden text-slate-400 dark:text-slate-500 md:block">
                       →
                     </div>
                   )}
@@ -248,18 +248,18 @@ export default function GuardrailsPage() {
         </div>
 
         {/* SYSTEM STATUS */}
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-5">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/10 p-2.5 text-emerald-600">
+            <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/10 p-2.5 text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="h-5 w-5" />
             </div>
 
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-slate-900 dark:text-slate-100">
                 Guardrail Status
               </h2>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Control-plane protection state
               </p>
             </div>
@@ -274,21 +274,21 @@ export default function GuardrailsPage() {
             ].map(([label, healthy]) => (
               <div
                 key={String(label)}
-                className="flex items-center justify-between rounded-xl border border-slate-200 bg-black/20 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-black/20 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
                   {healthy ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                   ) : (
-                    <ShieldOff className="h-4 w-4 text-red-600" />
+                    <ShieldOff className="h-4 w-4 text-red-600 dark:text-red-400" />
                   )}
 
-                  <span className="text-sm text-slate-700">
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
                     {label}
                   </span>
                 </div>
 
-                <span className="text-[9px] font-semibold tracking-[0.15em] text-emerald-600">
+                <span className="text-[9px] font-semibold tracking-[0.15em] text-emerald-600 dark:text-emerald-400">
                   Implemented
                 </span>
               </div>
@@ -298,53 +298,53 @@ export default function GuardrailsPage() {
       </section>
 
       {/* RECENT DECISIONS */}
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <section className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-4">
           <div>
-            <h2 className="font-semibold text-slate-900">
+            <h2 className="font-semibold text-slate-900 dark:text-slate-100">
               Recent Policy Decisions
             </h2>
 
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Latest decisions recorded from enforcement requests
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-200 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-500">
+          <div className="rounded-lg border border-slate-200 dark:border-slate-800 px-3 py-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-500 dark:text-slate-400">
             Latest records
           </div>
         </div>
 
         {isLoading ? (
           <div className="flex min-h-56 items-center justify-center">
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
               <LoaderCircle className="h-4 w-4 animate-spin" />
               Loading runtime activity...
             </div>
           </div>
         ) : isError ? (
-          <div className="flex min-h-56 items-center justify-center px-6 text-center text-sm text-amber-600">
+          <div className="flex min-h-56 items-center justify-center px-6 text-center text-sm text-amber-600 dark:text-amber-400">
             Security records are unavailable. Check the agent and event APIs.
           </div>
         ) : events.length === 0 ? (
           <div className="flex min-h-56 items-center justify-center px-6 text-center">
             <div>
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-400/10">
-                <Activity className="h-6 w-6 text-indigo-600" />
+                <Activity className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
               </div>
 
-              <h3 className="mt-4 font-semibold text-slate-900">
+              <h3 className="mt-4 font-semibold text-slate-900 dark:text-slate-100">
                 No runtime decisions yet
               </h3>
 
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
                 Runtime policy decisions will appear here when agents
                 begin submitting actions for evaluation.
               </p>
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800">
             {events.map((event) => {
               const decision = event.decision.toUpperCase();
 
@@ -360,10 +360,10 @@ export default function GuardrailsPage() {
                     <div
                       className={`flex h-9 w-9 items-center justify-center rounded-lg border ${
                         isBlocked
-                          ? "border-red-400/15 bg-red-400/10 text-red-600"
+                          ? "border-red-400/15 bg-red-400/10 text-red-600 dark:text-red-400"
                           : isWarn
-                            ? "border-amber-400/15 bg-amber-400/10 text-amber-600"
-                            : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600"
+                            ? "border-amber-400/15 bg-amber-400/10 text-amber-600 dark:text-amber-400"
+                            : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
                       }`}
                     >
                       {isBlocked ? (
@@ -376,11 +376,11 @@ export default function GuardrailsPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-slate-900">
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                         {event.event_type}
                       </p>
 
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                         Agent #{event.agent_id}
                         {event.action ? ` · ${event.action}` : ""}
                       </p>
@@ -390,10 +390,10 @@ export default function GuardrailsPage() {
                   <span
                     className={`w-fit rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.14em] ${
                       isBlocked
-                        ? "border-red-400/20 bg-red-400/10 text-red-600"
+                        ? "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400"
                         : isWarn
-                          ? "border-amber-400/20 bg-amber-400/10 text-amber-600"
-                          : "border-emerald-400/20 bg-emerald-400/10 text-emerald-600"
+                          ? "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-400"
+                          : "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
                     }`}
                   >
                     {decision}
@@ -407,14 +407,14 @@ export default function GuardrailsPage() {
 
       {/* SECURITY NOTE */}
       <div className="flex items-start gap-3 rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-5">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
 
         <div>
-          <p className="text-sm font-medium text-indigo-600">
+          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
             Runtime enforcement boundary
           </p>
 
-          <p className="mt-1 text-xs leading-5 text-slate-500">
+          <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
             SentinelX returns policy decisions for requests submitted to its
             API and records them for audit. Callers must enforce those decisions
             before executing external actions.

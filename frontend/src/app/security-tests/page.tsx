@@ -32,9 +32,9 @@ function StatCard({
   tone?: "cyan" | "emerald" | "red" | "violet";
 }) {
   const toneClasses = {
-    cyan: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600",
-    emerald: "border-emerald-400/15 bg-emerald-400/10 text-emerald-600",
-    red: "border-red-400/15 bg-red-400/10 text-red-600",
+    cyan: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600 dark:text-indigo-400",
+    emerald: "border-emerald-400/15 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400",
+    red: "border-red-400/15 bg-red-400/10 text-red-600 dark:text-red-400",
     violet: "border-violet-400/15 bg-violet-400/10 text-violet-600",
   };
 
@@ -54,15 +54,15 @@ function StatCard({
 
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{detail}</p>
         </div>
 
         <div className={`rounded-xl border p-3 ${toneClasses[tone]}`}>
@@ -76,13 +76,13 @@ function StatCard({
 function getCategoryClass(category: string) {
   switch (category.toUpperCase()) {
     case "PROMPT_INJECTION":
-      return "border-red-400/20 bg-red-400/10 text-red-600";
+      return "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400";
 
     case "UNAUTHORIZED_TOOL":
       return "border-orange-400/20 bg-orange-400/10 text-orange-300";
 
     case "POLICY_BYPASS":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-400";
 
     case "RATE_LIMIT":
       return "border-violet-400/20 bg-violet-400/10 text-violet-600";
@@ -94,7 +94,7 @@ function getCategoryClass(category: string) {
       return "border-yellow-400/20 bg-yellow-400/10 text-yellow-300";
 
     default:
-      return "border-slate-700 bg-slate-100/60 text-slate-700";
+      return "border-slate-700 bg-slate-100/60 text-slate-700 dark:text-slate-300";
   }
 }
 
@@ -122,10 +122,10 @@ function DecisionBadge({
   tone: "expected" | "actual" | "passed" | "failed";
 }) {
   const classes = {
-    expected: "border-slate-700 bg-slate-100 text-slate-700",
-    actual: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600",
-    passed: "border-emerald-400/20 bg-emerald-400/10 text-emerald-600",
-    failed: "border-red-400/20 bg-red-400/10 text-red-600",
+    expected: "border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300",
+    actual: "border-indigo-400/15 bg-indigo-400/10 text-indigo-600 dark:text-indigo-400",
+    passed: "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400",
+    failed: "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400",
   };
 
   return (
@@ -154,11 +154,11 @@ function PipelineStage({
         </span>
 
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
             {label}
           </p>
 
-          <p className="mt-1 text-[10px] leading-4 text-slate-500">
+          <p className="mt-1 text-[10px] leading-4 text-slate-500 dark:text-slate-400">
             {detail}
           </p>
         </div>
@@ -187,7 +187,7 @@ function ScenarioRow({
               <Target className="size-3.5" />
             </span>
 
-            <h3 className="font-medium text-slate-900">{scenario.name}</h3>
+            <h3 className="font-medium text-slate-900 dark:text-slate-100">{scenario.name}</h3>
 
             <span
               className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${getCategoryClass(
@@ -200,48 +200,48 @@ function ScenarioRow({
             <span
               className={`rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] ${
                 scenario.enabled
-                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600"
-                  : "border-slate-700 bg-slate-100 text-slate-500"
+                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
+                  : "border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
               }`}
             >
               {scenario.enabled ? "Enabled" : "Disabled"}
             </span>
           </div>
 
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">
             {scenario.description || "No scenario description provided."}
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[10px] text-slate-500">
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[10px] text-slate-500 dark:text-slate-400">
             <span>
               Expected{" "}
-              <span className="text-slate-600">
+              <span className="text-slate-600 dark:text-slate-300">
                 {scenario.expected_decision}
               </span>
             </span>
 
             {scenario.tool_name && (
               <span>
-                Tool <span className="text-slate-600">{scenario.tool_name}</span>
+                Tool <span className="text-slate-600 dark:text-slate-300">{scenario.tool_name}</span>
               </span>
             )}
 
             {scenario.action && (
               <span>
-                Action <span className="text-slate-600">{scenario.action}</span>
+                Action <span className="text-slate-600 dark:text-slate-300">{scenario.action}</span>
               </span>
             )}
 
             {scenario.resource && (
               <span>
                 Resource{" "}
-                <span className="text-slate-600">{scenario.resource}</span>
+                <span className="text-slate-600 dark:text-slate-300">{scenario.resource}</span>
               </span>
             )}
 
             <span>
               Created{" "}
-              <span className="text-slate-600">
+              <span className="text-slate-600 dark:text-slate-300">
                 {formatDate(scenario.created_at)}
               </span>
             </span>
@@ -324,7 +324,7 @@ export default function SecurityTestsPage() {
               Security Testing
             </span>
 
-            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Controlled simulation
             </span>
@@ -332,11 +332,11 @@ export default function SecurityTestsPage() {
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
                 Security Testing &amp; Attack Simulation
               </h1>
 
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">
                 Run controlled scenario simulations against SentinelX policy
                 logic and compare returned decisions with expected results.
               </p>
@@ -350,7 +350,7 @@ export default function SecurityTestsPage() {
                   Test boundary
                 </p>
 
-                <p className="mt-0.5 text-xs text-slate-600">
+                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">
                   Controlled simulation only
                 </p>
               </div>
@@ -442,14 +442,14 @@ export default function SecurityTestsPage() {
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
               {passedLastRun ? (
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
               ) : (
-                <XCircle className="mt-0.5 size-5 shrink-0 text-red-600" />
+                <XCircle className="mt-0.5 size-5 shrink-0 text-red-600 dark:text-red-400" />
               )}
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold text-slate-900">
+                  <p className="font-semibold text-slate-900 dark:text-slate-100">
                     Latest simulation: {lastRun.result}
                   </p>
 
@@ -463,7 +463,7 @@ export default function SecurityTestsPage() {
                   />
                 </div>
 
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                   <span>Expected</span>
                   <DecisionBadge
                     label={lastRun.expected_decision}
@@ -479,14 +479,14 @@ export default function SecurityTestsPage() {
               </div>
             </div>
 
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               <Clock3 className="size-3" />
               Run #{lastRun.id}
             </span>
           </div>
 
           {lastRun.details && (
-            <p className="mt-5 border-t border-slate-200 pt-4 text-xs leading-5 text-slate-500">
+            <p className="mt-5 border-t border-slate-200 dark:border-slate-800 pt-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
               {lastRun.details}
             </p>
           )}
@@ -496,14 +496,14 @@ export default function SecurityTestsPage() {
       {runError && (
         <section className="rounded-2xl border border-red-400/15 bg-red-400/[0.035] p-5">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" />
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600 dark:text-red-400" />
 
             <div>
               <p className="font-medium text-red-200">
                 Security test execution failed
               </p>
 
-              <p className="mt-1 text-xs leading-5 text-slate-500">
+              <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
                 {runError.message}
               </p>
             </div>
@@ -519,16 +519,16 @@ export default function SecurityTestsPage() {
                 Simulation registry
               </p>
 
-              <h2 className="mt-1 text-base font-semibold text-slate-900">
+              <h2 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
                 Attack Simulation Scenarios
               </h2>
 
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Controlled tests mapped to SentinelX security controls
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-800 bg-slate-100/60 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               <span className="size-1.5 rounded-full bg-violet-400" />
               {scenarios.length} scenarios
             </div>
@@ -537,7 +537,7 @@ export default function SecurityTestsPage() {
 
         {isLoading ? (
           <div className="flex min-h-72 items-center justify-center">
-            <div className="flex items-center gap-3 text-sm text-slate-500">
+            <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
               <LoaderCircle className="size-4 animate-spin text-violet-600" />
               Loading security scenarios...
             </div>
@@ -545,13 +545,13 @@ export default function SecurityTestsPage() {
         ) : isError ? (
           <div className="flex min-h-72 items-center justify-center px-6 text-center">
             <div>
-              <AlertTriangle className="mx-auto size-8 text-amber-600" />
+              <AlertTriangle className="mx-auto size-8 text-amber-600 dark:text-amber-400" />
 
-              <p className="mt-3 font-medium text-slate-900">
+              <p className="mt-3 font-medium text-slate-900 dark:text-slate-100">
                 Security testing unavailable
               </p>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 SentinelX could not retrieve the registered attack simulation
                 scenarios.
               </p>
@@ -564,11 +564,11 @@ export default function SecurityTestsPage() {
                 <FlaskConical className="size-6 text-violet-600" />
               </div>
 
-              <h3 className="mt-4 font-semibold text-slate-900">
+              <h3 className="mt-4 font-semibold text-slate-900 dark:text-slate-100">
                 No security scenarios
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-slate-500">
+              <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
                 No attack simulation scenarios have been registered with
                 SentinelX yet.
               </p>
@@ -598,7 +598,7 @@ export default function SecurityTestsPage() {
               Attack simulation boundary
             </p>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
               Security scenarios are controlled validation exercises. Results
               compare the expected security decision with the runtime decision
               returned by SentinelX.

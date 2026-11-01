@@ -37,18 +37,18 @@ function MetricCard({
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{detail}</p>
         </div>
 
-        <div className="shrink-0 rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600">
+        <div className="shrink-0 rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600 dark:text-indigo-400">
           {icon}
         </div>
       </div>
@@ -67,17 +67,17 @@ function StatusLine({
     <div className="flex items-center justify-between rounded-xl border border-slate-800/70 bg-slate-100/40 px-4 py-3">
       <div className="flex min-w-0 items-center gap-3">
         {healthy ? (
-          <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+          <CheckCircle2 className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
         ) : (
-          <ShieldOff className="size-4 shrink-0 text-red-600" />
+          <ShieldOff className="size-4 shrink-0 text-red-600 dark:text-red-400" />
         )}
 
-        <span className="truncate text-sm text-slate-700">{label}</span>
+        <span className="truncate text-sm text-slate-700 dark:text-slate-300">{label}</span>
       </div>
 
       <span
         className={`shrink-0 text-[9px] font-semibold uppercase tracking-[0.15em] ${
-          healthy ? "text-emerald-600" : "text-red-600"
+          healthy ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
         }`}
       >
         {healthy ? "Implemented" : "Attention"}
@@ -93,10 +93,10 @@ function DecisionBadge({ decision }: { decision: string }) {
   const warning = normalized.includes("WARN");
 
   const className = blocked
-    ? "border-red-400/20 bg-red-400/10 text-red-600"
+    ? "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400"
     : warning
-      ? "border-amber-400/20 bg-amber-400/10 text-amber-600"
-      : "border-emerald-400/20 bg-emerald-400/10 text-emerald-600";
+      ? "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-400"
+      : "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400";
 
   return (
     <span
@@ -132,20 +132,20 @@ function PipelineStage({
     <div className="relative">
       <div className="security-surface-hover h-full rounded-xl p-4">
         <div className="flex items-center justify-between">
-          <div className="flex size-9 items-center justify-center rounded-lg border border-indigo-400/15 bg-indigo-400/10 text-indigo-600">
+          <div className="flex size-9 items-center justify-center rounded-lg border border-indigo-400/15 bg-indigo-400/10 text-indigo-600 dark:text-indigo-400">
             {icon}
           </div>
 
-          <span className="font-mono text-[9px] text-slate-400">
+          <span className="font-mono text-[9px] text-slate-400 dark:text-slate-500">
             {number}
           </span>
         </div>
 
-        <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
           {title}
         </p>
 
-        <p className="mt-1 text-xs leading-5 text-slate-600">
+        <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">
           {description}
         </p>
       </div>
@@ -156,8 +156,8 @@ function PipelineStage({
 function LoadingState() {
   return (
     <div className="flex min-h-56 items-center justify-center">
-      <div className="flex items-center gap-2 text-sm text-slate-500">
-        <LoaderCircle className="size-4 animate-spin text-indigo-600" />
+      <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <LoaderCircle className="size-4 animate-spin text-indigo-600 dark:text-indigo-400" />
         Loading runtime activity...
       </div>
     </div>
@@ -167,9 +167,9 @@ function LoadingState() {
 function GuardrailsErrorState() {
   return (
     <div className="flex min-h-56 flex-col items-center justify-center px-6 text-center">
-      <AlertTriangle className="size-8 text-amber-600" />
-      <p className="mt-3 font-medium text-slate-900">Security records unavailable</p>
-      <p className="mt-1 max-w-md text-sm text-slate-500">
+      <AlertTriangle className="size-8 text-amber-600 dark:text-amber-400" />
+      <p className="mt-3 font-medium text-slate-900 dark:text-slate-100">Security records unavailable</p>
+      <p className="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">
         SentinelX could not retrieve the agent or event data for this view.
       </p>
     </div>
@@ -180,14 +180,14 @@ function EmptyState() {
   return (
     <div className="flex min-h-56 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-14 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-400/10">
-        <Activity className="size-6 text-indigo-600" />
+        <Activity className="size-6 text-indigo-600 dark:text-indigo-400" />
       </div>
 
-      <h3 className="mt-4 font-semibold text-slate-900">
+      <h3 className="mt-4 font-semibold text-slate-900 dark:text-slate-100">
         No runtime decisions yet
       </h3>
 
-      <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+      <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
         Runtime policy decisions will appear here when agents begin submitting
         actions for evaluation.
       </p>
@@ -233,12 +233,12 @@ export default function GuardrailsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-600">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="size-3.5" />
               Policy Evaluation
             </span>
 
-            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
+            <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Policy evaluation flow
             </span>
@@ -246,11 +246,11 @@ export default function GuardrailsPage() {
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
                 Runtime Guardrails
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
                 Review policy decisions for tool-action requests submitted to
                 SentinelX. The calling agent remains responsible for enforcing
                 decisions before it accesses external resources.
@@ -258,14 +258,14 @@ export default function GuardrailsPage() {
             </div>
 
             <div className="flex shrink-0 items-center gap-2 rounded-xl border border-emerald-400/10 bg-emerald-400/[0.035] px-4 py-3">
-              <LockKeyhole className="size-4 text-emerald-600" />
+              <LockKeyhole className="size-4 text-emerald-600 dark:text-emerald-400" />
 
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-emerald-600">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
                   Evaluation path
                 </p>
 
-                <p className="mt-0.5 text-xs text-slate-600">
+                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">
                   Requests evaluated through the API
                 </p>
               </div>
@@ -274,22 +274,22 @@ export default function GuardrailsPage() {
 
           <div className="mt-7 grid gap-2 sm:grid-cols-3">
             <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-100/30 px-3 py-2.5">
-              <Zap className="size-3.5 text-emerald-600" />
-              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600">
+              <Zap className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600 dark:text-slate-300">
                 Evaluate
               </span>
             </div>
 
             <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-100/30 px-3 py-2.5">
-              <LockKeyhole className="size-3.5 text-indigo-600" />
-              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600">
+              <LockKeyhole className="size-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600 dark:text-slate-300">
                 Enforce
               </span>
             </div>
 
             <div className="flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-100/30 px-3 py-2.5">
               <Activity className="size-3.5 text-blue-400" />
-              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600">
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-600 dark:text-slate-300">
                 Audit
               </span>
             </div>
@@ -333,20 +333,20 @@ export default function GuardrailsPage() {
         <div className="security-surface p-5 sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
                 Decision path
               </p>
 
-              <h2 className="mt-1 text-lg font-semibold text-slate-900">
+              <h2 className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Enforcement Pipeline
               </h2>
 
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Policy evaluation request flow
               </p>
             </div>
 
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/[0.05] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/[0.05] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400">
               <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
               Flow
             </span>
@@ -393,16 +393,16 @@ export default function GuardrailsPage() {
         {/* System status */}
         <div className="security-surface p-5 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/10 p-2.5 text-emerald-600">
+            <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/10 p-2.5 text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="size-5" />
             </div>
 
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-600">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
                 Implemented paths
               </p>
 
-              <h2 className="mt-1 font-semibold text-slate-900">
+              <h2 className="mt-1 font-semibold text-slate-900 dark:text-slate-100">
                 Guardrail Capabilities
               </h2>
             </div>
@@ -416,9 +416,9 @@ export default function GuardrailsPage() {
           </div>
 
           <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-400/10 bg-emerald-400/[0.025] p-4">
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" />
+            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
 
-            <p className="text-xs leading-5 text-slate-500">
+            <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
               These capabilities are available when callers submit requests
               to the enforcement API; SentinelX is not an inline boundary for
               arbitrary external tool execution.
@@ -431,20 +431,20 @@ export default function GuardrailsPage() {
       <section className="security-surface overflow-hidden">
         <div className="flex flex-col gap-3 border-b border-slate-800/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
               Runtime telemetry
             </p>
 
-            <h2 className="mt-1 font-semibold text-slate-900">
+            <h2 className="mt-1 font-semibold text-slate-900 dark:text-slate-100">
               Recent Policy Decisions
             </h2>
 
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Latest decisions recorded from enforcement requests
             </p>
           </div>
 
-          <span className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-800 bg-slate-100/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+          <span className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-800 bg-slate-100/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
             <span className="size-1.5 rounded-full bg-indigo-400" />
             Latest records
           </span>
@@ -472,10 +472,10 @@ export default function GuardrailsPage() {
                     <div
                       className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
                         isBlocked
-                          ? "border-red-400/15 bg-red-400/10 text-red-600"
+                          ? "border-red-400/15 bg-red-400/10 text-red-600 dark:text-red-400"
                           : isWarn
-                            ? "border-amber-400/15 bg-amber-400/10 text-amber-600"
-                            : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600"
+                            ? "border-amber-400/15 bg-amber-400/10 text-amber-600 dark:text-amber-400"
+                            : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
                       }`}
                     >
                       {isBlocked ? (
@@ -488,11 +488,11 @@ export default function GuardrailsPage() {
                     </div>
 
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-slate-900">
+                      <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                         {event.event_type}
                       </p>
 
-                      <p className="mt-1 truncate text-xs text-slate-500">
+                      <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
                         Agent #{event.agent_id}
                         {event.action ? ` · ${event.action}` : ""}
                       </p>
@@ -510,14 +510,14 @@ export default function GuardrailsPage() {
       {/* Enforcement note */}
       <section className="rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-5">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-indigo-600" />
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
 
           <div>
-            <p className="text-sm font-medium text-indigo-600">
+            <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
               Runtime enforcement boundary
             </p>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
               SentinelX returns policy decisions for requests submitted to its
               enforcement API and records them for audit and analytics.
               Callers must enforce those decisions before executing external

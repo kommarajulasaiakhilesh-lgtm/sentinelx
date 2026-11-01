@@ -9,12 +9,12 @@ import { Topbar } from "./topbar";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       <CommandPalette />
 
       <a
         href="#main-content"
-        className="fixed left-4 top-4 z-[100] -translate-y-20 rounded-lg border border-indigo-400/30 bg-white px-4 py-2 text-xs font-semibold text-indigo-600 shadow-xl transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
+        className="fixed left-4 top-4 z-[100] -translate-y-20 rounded-lg border border-indigo-400/30 bg-white dark:bg-slate-900 px-4 py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 shadow-xl transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
       >
         Skip to main content
       </a>

@@ -51,20 +51,20 @@ type FrameworkCoverage = {
 function getStatusClass(status: string) {
   switch (status) {
     case "IMPLEMENTED":
-      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-600";
+      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400";
 
     case "PARTIALLY_IMPLEMENTED":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-600";
+      return "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-400";
 
     case "GAP_IDENTIFIED":
     case "NOT_IMPLEMENTED":
-      return "border-red-400/20 bg-red-400/10 text-red-600";
+      return "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400";
 
     case "NOT_APPLICABLE":
-      return "border-slate-400/20 bg-slate-400/10 text-slate-600";
+      return "border-slate-400/20 bg-slate-400/10 text-slate-600 dark:text-slate-300";
 
     default:
-      return "border-slate-400/20 bg-slate-400/10 text-slate-700";
+      return "border-slate-400/20 bg-slate-400/10 text-slate-700 dark:text-slate-300";
   }
 }
 
@@ -97,14 +97,14 @@ function CoverageBar({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="text-xs text-slate-600">{label}</span>
+        <span className="text-xs text-slate-600 dark:text-slate-300">{label}</span>
 
-        <span className="text-xs font-semibold text-slate-800">
+        <span className="text-xs font-semibold text-slate-800 dark:text-slate-100">
           {percentage.toFixed(2)}%
         </span>
       </div>
 
-      <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+      <div className="h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
         <div
           className="h-full rounded-full bg-indigo-400 transition-all duration-500"
           style={{ width: `${safePercentage}%` }}
@@ -126,12 +126,12 @@ function Metric({
   return (
     <div className="rounded-xl border border-slate-800/70 bg-slate-100/40 p-3">
       <div className="flex items-center gap-2">
-        <span className="text-slate-500">{icon}</span>
+        <span className="text-slate-500 dark:text-slate-400">{icon}</span>
 
-        <span className="text-[10px] text-slate-500">{label}</span>
+        <span className="text-[10px] text-slate-500 dark:text-slate-400">{label}</span>
       </div>
 
-      <p className="mt-1 text-lg font-semibold text-slate-800">{value}</p>
+      <p className="mt-1 text-lg font-semibold text-slate-800 dark:text-slate-100">{value}</p>
     </div>
   );
 }
@@ -168,21 +168,21 @@ function FrameworkCard({
 
       <div className="relative flex items-start justify-between gap-3">
         <div>
-          <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
             Framework
           </p>
 
-          <h2 className="mt-2 text-base font-semibold text-slate-900">
+          <h2 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">
             {framework.framework_name}
           </h2>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Version: {framework.framework_version ?? "N/A"}
           </p>
         </div>
 
         <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-2.5">
-          <Shield className="size-5 text-indigo-600" />
+          <Shield className="size-5 text-indigo-600 dark:text-indigo-400" />
         </div>
       </div>
 
@@ -232,21 +232,21 @@ function FrameworkDetails({
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
                   Control registry
                 </p>
 
-                <h2 className="mt-1 text-base font-semibold text-slate-900">
+                <h2 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
                   {framework.framework_name}
                 </h2>
               </div>
 
-              <span className="rounded-full border border-slate-800 bg-slate-100/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+              <span className="rounded-full border border-slate-800 bg-slate-100/60 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
                 {framework.total_controls} controls
               </span>
             </div>
 
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               Framework controls mapped to SentinelX controls and evidence
             </p>
           </div>
@@ -276,13 +276,13 @@ function FrameworkDetails({
       <div className="divide-y divide-slate-800/60">
         {framework.controls.length === 0 ? (
           <div className="px-6 py-12 text-center">
-            <Target className="mx-auto size-7 text-slate-500" />
+            <Target className="mx-auto size-7 text-slate-500 dark:text-slate-400" />
 
-            <p className="mt-3 text-sm font-medium text-slate-600">
+            <p className="mt-3 text-sm font-medium text-slate-600 dark:text-slate-300">
               No framework controls available
             </p>
 
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Control mappings have not been returned for this framework.
             </p>
           </div>
@@ -295,16 +295,16 @@ function FrameworkDetails({
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-md border border-indigo-400/10 bg-indigo-400/[0.04] px-2 py-1 font-mono text-[10px] text-indigo-600">
+                    <span className="rounded-md border border-indigo-400/10 bg-indigo-400/[0.04] px-2 py-1 font-mono text-[10px] text-indigo-600 dark:text-indigo-400">
                       {control.control_id}
                     </span>
 
-                    <h3 className="text-sm font-medium text-slate-800">
+                    <h3 className="text-sm font-medium text-slate-800 dark:text-slate-100">
                       {control.title}
                     </h3>
                   </div>
 
-                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500">
+                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
                     {control.function && (
                       <span>Function: {control.function}</span>
                     )}
@@ -338,8 +338,8 @@ function FrameworkDetails({
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.08em] ${
                       control.evidence_available
-                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600"
-                        : "border-red-400/20 bg-red-400/10 text-red-600"
+                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
+                        : "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400"
                     }`}
                   >
                     {control.evidence_available ? (
@@ -373,12 +373,12 @@ function PageHeader() {
 
       <div className="relative">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+          <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
             <FileCheck2 className="size-3.5" />
             Governance
           </span>
 
-          <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600">
+          <span className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
             <span className="size-1.5 rounded-full bg-emerald-400" />
             Framework coverage records
           </span>
@@ -386,25 +386,25 @@ function PageHeader() {
 
         <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
               Compliance &amp; Governance
             </h1>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">
               Review SentinelX control mappings, supporting evidence,
               implementation status, and identified framework gaps.
             </p>
           </div>
 
           <div className="flex shrink-0 items-center gap-3 rounded-xl border border-indigo-400/10 bg-indigo-400/[0.035] px-4 py-3">
-            <Shield className="size-4 text-indigo-600" />
+            <Shield className="size-4 text-indigo-600 dark:text-indigo-400" />
 
             <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-indigo-600">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-400">
                 Governance state
               </p>
 
-              <p className="mt-0.5 text-xs text-slate-600">
+              <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">
                 Coverage available
               </p>
             </div>
@@ -413,31 +413,31 @@ function PageHeader() {
 
         <div className="mt-7 grid gap-2 sm:grid-cols-3">
           <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
               MAP
             </p>
 
-            <p className="mt-2 text-xs text-slate-600">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
               Connect framework controls to SentinelX controls
             </p>
           </div>
 
           <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-emerald-600">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               EVIDENCE
             </p>
 
-            <p className="mt-2 text-xs text-slate-600">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
               Track evidence-backed implementation
             </p>
           </div>
 
           <div className="rounded-xl border border-slate-800/70 bg-slate-100/30 p-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-amber-600">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
               REVIEW
             </p>
 
-            <p className="mt-2 text-xs text-slate-600">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
               Surface partial implementation and gaps
             </p>
           </div>
@@ -453,7 +453,7 @@ function LoadingState() {
       <PageHeader />
 
       <div className="security-surface flex min-h-48 items-center justify-center">
-        <div className="flex items-center gap-3 text-sm text-slate-500">
+        <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
           <div className="size-4 animate-spin rounded-full border-2 border-indigo-400/20 border-t-indigo-400" />
           Loading compliance coverage...
         </div>
@@ -469,14 +469,14 @@ function ErrorState({ message }: { message: string }) {
 
       <div className="rounded-2xl border border-red-400/15 bg-red-400/[0.04] p-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600" />
+          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600 dark:text-red-400" />
 
           <div>
             <h2 className="font-medium text-red-200">
               Compliance data unavailable
             </h2>
 
-            <p className="mt-1 text-sm leading-6 text-slate-600">
+            <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">
               {message}
             </p>
           </div>
@@ -587,14 +587,14 @@ export default function CompliancePage() {
       <section className="rounded-2xl border border-indigo-400/10 bg-indigo-400/[0.025] p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <FileCheck2 className="mt-0.5 size-5 shrink-0 text-indigo-600" />
+            <FileCheck2 className="mt-0.5 size-5 shrink-0 text-indigo-600 dark:text-indigo-400" />
 
             <div>
-              <h2 className="text-sm font-semibold text-indigo-600">
+              <h2 className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
                 Framework Alignment
               </h2>
 
-              <p className="mt-1 text-xs leading-5 text-slate-600">
+              <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">
                 SentinelX maps its existing security controls and evidence to
                 selected framework areas. These measurements describe internal
                 implementation and evidence coverage; they do not represent
@@ -606,7 +606,7 @@ export default function CompliancePage() {
           <button
             type="button"
             onClick={exportReport}
-            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 text-xs font-medium text-slate-600 dark:text-slate-300 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400"
           >
             <Download className="size-3.5" />
             Export report
@@ -651,14 +651,14 @@ export default function CompliancePage() {
       {data.length === 0 ? (
         <section className="security-surface flex min-h-56 flex-col items-center justify-center px-6 text-center">
           <div className="flex size-14 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-400/10">
-            <Shield className="size-7 text-indigo-600" />
+            <Shield className="size-7 text-indigo-600 dark:text-indigo-400" />
           </div>
 
-          <h2 className="mt-4 text-sm font-semibold text-slate-900">
+          <h2 className="mt-4 text-sm font-semibold text-slate-900 dark:text-slate-100">
             No frameworks configured
           </h2>
 
-          <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+          <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
             Compliance coverage data has not been returned for the current
             account.
           </p>
@@ -687,14 +687,14 @@ export default function CompliancePage() {
 
       <section className="rounded-2xl border border-amber-400/10 bg-amber-400/[0.02] p-5">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
 
           <div>
             <p className="text-sm font-medium text-amber-200">
               Governance measurement boundary
             </p>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
               Coverage metrics describe the current SentinelX implementation,
               mappings, and available evidence. They should not be interpreted
               as certification or an independent compliance determination.
@@ -729,22 +729,22 @@ function MetricCard({
 
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{detail}</p>
         </div>
 
         <div
           className={`rounded-xl border p-3 ${
             tone === "cyan"
-              ? "border-indigo-400/15 bg-indigo-400/10 text-indigo-600"
-              : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600"
+              ? "border-indigo-400/15 bg-indigo-400/10 text-indigo-600 dark:text-indigo-400"
+              : "border-emerald-400/15 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
           }`}
         >
           {icon}

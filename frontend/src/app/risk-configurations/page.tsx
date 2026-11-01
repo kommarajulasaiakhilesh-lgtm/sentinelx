@@ -105,14 +105,14 @@ function toDraft(
 
 function FieldLabel({ children }: { children: ReactNode }) {
   return (
-    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
       {children}
     </label>
   );
 }
 
 function InputClass(): string {
-  return "w-full rounded-xl border border-slate-800 bg-slate-100 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-indigo-400/40 disabled:cursor-not-allowed disabled:opacity-50";
+  return "w-full rounded-xl border border-slate-800 bg-slate-100 dark:bg-slate-800 px-3 py-2.5 text-sm text-slate-800 dark:text-slate-100 outline-none transition focus:border-indigo-400/40 disabled:cursor-not-allowed disabled:opacity-50";
 }
 
 export default function RiskConfigurationsPage() {
@@ -298,27 +298,27 @@ export default function RiskConfigurationsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/15 bg-indigo-400/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600">
+            <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/15 bg-indigo-400/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
               <SlidersHorizontal className="size-3.5" />
               Risk intelligence
             </span>
 
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[10px] uppercase tracking-wider text-slate-500">
+            <span className="rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Phase 19
             </span>
           </div>
 
-          <h1 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <h1 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
             Risk Scoring Configuration
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
             Configure how security events contribute to agent risk scores
             and define the thresholds used to classify risk severity.
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-            <ShieldCheck className="size-4 text-indigo-600" />
+          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <ShieldCheck className="size-4 text-indigo-600 dark:text-indigo-400" />
             <span>Server-side validation and access control</span>
           </div>
         </div>
@@ -326,13 +326,13 @@ export default function RiskConfigurationsPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="security-surface p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
             Active configuration
           </p>
-          <p className="mt-3 text-lg font-semibold text-slate-900">
+          <p className="mt-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
             {effective?.name ?? "Unavailable"}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             {effective
               ? effective.owner_id === null
                 ? "Using global defaults"
@@ -344,55 +344,55 @@ export default function RiskConfigurationsPage() {
         </div>
 
         <div className="security-surface p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
             Maximum score
           </p>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-slate-900">
+          <p className="mt-3 text-3xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">
             {effective?.score_cap ?? "—"}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             Upper bound enforced by the risk engine
           </p>
         </div>
 
         <div className="security-surface p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
             High-risk threshold
           </p>
           <p className="mt-3 text-3xl font-semibold tabular-nums text-orange-300">
             {effective?.high_max ?? "—"}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             Upper boundary before Critical
           </p>
         </div>
 
         <div className="security-surface p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
             Critical threshold
           </p>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-red-600">
+          <p className="mt-3 text-3xl font-semibold tabular-nums text-red-600 dark:text-red-400">
             {effective?.critical_max ?? "—"}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             Must equal the score cap
           </p>
         </div>
       </section>
 
       <section className="security-surface overflow-hidden">
-        <div className="border-b border-slate-200 p-5 sm:p-6">
+        <div className="border-b border-slate-200 dark:border-slate-800 p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-base font-semibold text-slate-900">
+              <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                 Configuration editor
               </h2>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Personal settings override global settings when enabled.
               </p>
             </div>
 
-            <div className="flex rounded-xl border border-slate-800 bg-slate-100 p-1">
+            <div className="flex rounded-xl border border-slate-800 bg-slate-100 dark:bg-slate-800 p-1">
               <button
                 type="button"
                 onClick={() => {
@@ -402,8 +402,8 @@ export default function RiskConfigurationsPage() {
                 }}
                 className={`rounded-lg px-3 py-2 text-xs font-medium transition ${
                   scope === "personal"
-                    ? "bg-indigo-400/10 text-indigo-600"
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-indigo-400/10 text-indigo-600 dark:text-indigo-400"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
                 }`}
               >
                 Personal
@@ -418,8 +418,8 @@ export default function RiskConfigurationsPage() {
                 }}
                 className={`rounded-lg px-3 py-2 text-xs font-medium transition ${
                   scope === "global"
-                    ? "bg-indigo-400/10 text-indigo-600"
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-indigo-400/10 text-indigo-600 dark:text-indigo-400"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
                 }`}
               >
                 Global · Admin
@@ -431,12 +431,12 @@ export default function RiskConfigurationsPage() {
         {scope === "global" && globalAccessDenied ? (
           <div className="m-5 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] p-5 sm:m-6">
             <div className="flex items-start gap-3">
-              <LockKeyhole className="mt-0.5 size-5 shrink-0 text-amber-600" />
+              <LockKeyhole className="mt-0.5 size-5 shrink-0 text-amber-600 dark:text-amber-400" />
               <div>
                 <h3 className="text-sm font-semibold text-amber-200">
                   Administrator access required
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
                   Global risk settings are restricted by the backend to
                   administrators. You can still manage your personal
                   configuration.
@@ -449,7 +449,7 @@ export default function RiskConfigurationsPage() {
             <h3 className="text-sm font-semibold text-red-200">
               Global configuration unavailable
             </h3>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
               {getErrorMessage(globalQuery.error)}. Check that the global
               configuration has been seeded and that the API is available.
             </p>
@@ -473,7 +473,7 @@ export default function RiskConfigurationsPage() {
 
               <div>
                 <FieldLabel>Configuration status</FieldLabel>
-                <label className="flex min-h-[42px] items-center gap-3 rounded-xl border border-slate-800 bg-slate-100 px-3">
+                <label className="flex min-h-[42px] items-center gap-3 rounded-xl border border-slate-800 bg-slate-100 dark:bg-slate-800 px-3">
                   <input
                     type="checkbox"
                     checked={activeDraft.enabled}
@@ -483,12 +483,12 @@ export default function RiskConfigurationsPage() {
                     disabled={isBusy}
                     className="size-4 accent-indigo-400"
                   />
-                  <span className="text-sm text-slate-700">Enabled</span>
+                  <span className="text-sm text-slate-700 dark:text-slate-300">Enabled</span>
                   <span
                     className={`ml-auto rounded-full px-2 py-1 text-[10px] font-semibold uppercase ${
                       activeDraft.enabled
-                        ? "bg-emerald-400/10 text-emerald-600"
-                        : "bg-slate-100 text-slate-600"
+                        ? "bg-emerald-400/10 text-emerald-600 dark:text-emerald-400"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
                     }`}
                   >
                     {activeDraft.enabled ? "Active" : "Disabled"}
@@ -499,8 +499,8 @@ export default function RiskConfigurationsPage() {
 
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <Gauge className="size-4 text-indigo-600" />
-                <h3 className="text-sm font-semibold text-slate-800">
+                <Gauge className="size-4 text-indigo-600 dark:text-indigo-400" />
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Event scoring weights
                 </h3>
               </div>
@@ -509,7 +509,7 @@ export default function RiskConfigurationsPage() {
                 {numericFields.map((field) => (
                   <div
                     key={field.key}
-                    className="rounded-xl border border-slate-200 bg-white/[0.015] p-4"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/[0.015] p-4"
                   >
                     <FieldLabel>{field.label}</FieldLabel>
                     <input
@@ -524,7 +524,7 @@ export default function RiskConfigurationsPage() {
                       }
                       disabled={isBusy}
                     />
-                    <p className="mt-2 text-xs leading-5 text-slate-500">
+                    <p className="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">
                       {field.description}
                     </p>
                   </div>
@@ -534,13 +534,13 @@ export default function RiskConfigurationsPage() {
 
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <AlertTriangle className="size-4 text-amber-600" />
-                <h3 className="text-sm font-semibold text-slate-800">
+                <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400" />
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Risk severity thresholds
                 </h3>
               </div>
 
-              <p className="mb-4 text-xs leading-5 text-slate-500">
+              <p className="mb-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
                 The thresholds must be strictly increasing. Critical must
                 equal the configured maximum score.
               </p>
@@ -551,12 +551,12 @@ export default function RiskConfigurationsPage() {
                     {
                       key: "low_max",
                       label: "Low maximum",
-                      color: "text-emerald-600",
+                      color: "text-emerald-600 dark:text-emerald-400",
                     },
                     {
                       key: "medium_max",
                       label: "Medium maximum",
-                      color: "text-amber-600",
+                      color: "text-amber-600 dark:text-amber-400",
                     },
                     {
                       key: "high_max",
@@ -566,7 +566,7 @@ export default function RiskConfigurationsPage() {
                     {
                       key: "critical_max",
                       label: "Critical maximum",
-                      color: "text-red-600",
+                      color: "text-red-600 dark:text-red-400",
                     },
                   ] satisfies {
                     key: ThresholdField;
@@ -576,7 +576,7 @@ export default function RiskConfigurationsPage() {
                 ).map((field) => (
                   <div
                     key={field.key}
-                    className="rounded-xl border border-slate-200 bg-white/[0.015] p-4"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/[0.015] p-4"
                   >
                     <FieldLabel>
                       <span className={field.color}>{field.label}</span>
@@ -603,13 +603,13 @@ export default function RiskConfigurationsPage() {
                     label: "LOW",
                     value: `0–${activeDraft.low_max}`,
                     color:
-                      "border-emerald-400/20 bg-emerald-400/[0.04] text-emerald-600",
+                      "border-emerald-400/20 bg-emerald-400/[0.04] text-emerald-600 dark:text-emerald-400",
                   },
                   {
                     label: "MEDIUM",
                     value: `${activeDraft.low_max + 1}–${activeDraft.medium_max}`,
                     color:
-                      "border-amber-400/20 bg-amber-400/[0.04] text-amber-600",
+                      "border-amber-400/20 bg-amber-400/[0.04] text-amber-600 dark:text-amber-400",
                   },
                   {
                     label: "HIGH",
@@ -621,7 +621,7 @@ export default function RiskConfigurationsPage() {
                     label: "CRITICAL",
                     value: `${activeDraft.high_max + 1}–${activeDraft.critical_max}`,
                     color:
-                      "border-red-400/20 bg-red-400/[0.04] text-red-600",
+                      "border-red-400/20 bg-red-400/[0.04] text-red-600 dark:text-red-400",
                   },
                 ].map((level) => (
                   <div
@@ -642,7 +642,7 @@ export default function RiskConfigurationsPage() {
             {formError && (
               <div
                 role="alert"
-                className="rounded-xl border border-red-400/20 bg-red-400/[0.06] p-3 text-sm text-red-600"
+                className="rounded-xl border border-red-400/20 bg-red-400/[0.06] p-3 text-sm text-red-600 dark:text-red-400"
               >
                 {formError}
               </div>
@@ -651,15 +651,15 @@ export default function RiskConfigurationsPage() {
             {successMessage && (
               <div
                 role="status"
-                className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3 text-sm text-emerald-600"
+                className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3 text-sm text-emerald-600 dark:text-emerald-400"
               >
                 <CheckCircle2 className="size-4 shrink-0" />
                 {successMessage}
               </div>
             )}
 
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-5">
-              <p className="max-w-xl text-xs leading-5 text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-800 pt-5">
+              <p className="max-w-xl text-xs leading-5 text-slate-500 dark:text-slate-400">
                 Saving validates the configuration on both the frontend and
                 backend. Changes affect scoring when this configuration is
                 selected by the risk-scoring service.
@@ -668,7 +668,7 @@ export default function RiskConfigurationsPage() {
               <button
                 type="submit"
                 disabled={isBusy}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-300/20 bg-indigo-400/10 px-4 py-2.5 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-300/20 bg-indigo-400/10 px-4 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-400 transition hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {activeSave.isPending ? (
                   <LoaderCircle className="size-4 animate-spin" />

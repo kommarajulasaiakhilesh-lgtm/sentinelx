@@ -50,8 +50,8 @@ function ChartCard({
       transition={{ duration: 0.4, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       className="security-surface p-5"
     >
-      <div className="mb-1 text-sm font-semibold text-slate-900">{title}</div>
-      <div className="mb-4 text-[11px] text-slate-500">{subtitle}</div>
+      <div className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</div>
+      <div className="mb-4 text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</div>
       {children}
     </motion.div>
   );
@@ -176,7 +176,7 @@ export function AnalyticsCharts() {
         index={2}
       >
         {severityData.length === 0 ? (
-          <div className="flex h-[200px] items-center justify-center text-xs text-slate-400">
+          <div className="flex h-[200px] items-center justify-center text-xs text-slate-400 dark:text-slate-500">
             No alerts to display.
           </div>
         ) : (
@@ -226,7 +226,7 @@ function Legend({
   return (
     <div className="mt-3 flex flex-wrap justify-center gap-3">
       {items.map((d) => (
-        <div key={d.name} className="flex items-center gap-1.5 text-[11px] text-slate-600">
+        <div key={d.name} className="flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-300">
           <span
             className="size-2 rounded-full"
             style={{ background: colors[d.name] ?? "#94a3b8" }}

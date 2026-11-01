@@ -57,25 +57,25 @@ export default function PoliciesPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
               <FileSliders className="size-3.5" />
               Policy Enforcement
             </div>
 
             <span className="h-1 w-1 rounded-full bg-slate-200" />
 
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500">
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               Control Plane / Policies
             </span>
           </div>
 
           <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
                 Security Policies
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
                 Define the runtime decisions that control how SentinelX agents
                 respond to sensitive or potentially unsafe actions.
               </p>
@@ -160,19 +160,19 @@ export default function PoliciesPage() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="size-4 text-indigo-600" />
+                <SlidersHorizontal className="size-4 text-indigo-600 dark:text-indigo-400" />
 
-                <h2 className="text-sm font-semibold text-slate-800">
+                <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Enforcement Posture
                 </h2>
               </div>
 
-              <p className="mt-1 text-[10px] text-slate-500">
+              <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
                   Distribution of configured policy actions
               </p>
             </div>
 
-            <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.12em] text-slate-500">
+            <span className="rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               Decision Model
             </span>
           </div>
@@ -210,14 +210,14 @@ export default function PoliciesPage() {
 
           <div className="relative">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-indigo-600" />
+              <ShieldCheck className="size-4 text-indigo-600 dark:text-indigo-400" />
 
-              <h2 className="text-sm font-semibold text-slate-800">
+              <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                 Policy Activation
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
               Share of registered policy records enabled
             </p>
 
@@ -230,12 +230,12 @@ export default function PoliciesPage() {
                   }deg, rgba(255,255,255,0.04) 0deg)`,
                 }}
               >
-                <div className="flex size-28 flex-col items-center justify-center rounded-full bg-white">
-                  <span className="font-mono text-2xl font-semibold text-slate-900">
+                <div className="flex size-28 flex-col items-center justify-center rounded-full bg-white dark:bg-slate-900">
+                  <span className="font-mono text-2xl font-semibold text-slate-900 dark:text-slate-100">
                     {isLoading || isError ? "—" : `${enabledPolicyShare}%`}
                   </span>
 
-                  <span className="mt-1 text-[8px] uppercase tracking-[0.16em] text-slate-500">
+                  <span className="mt-1 text-[8px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                     Enabled
                   </span>
                 </div>
@@ -243,7 +243,7 @@ export default function PoliciesPage() {
             </div>
 
             <div className="mt-5 text-center">
-              <p className="text-[10px] leading-5 text-slate-500">
+              <p className="text-[10px] leading-5 text-slate-500 dark:text-slate-400">
                 Enabled policies divided by all registered policies
               </p>
             </div>
@@ -253,23 +253,23 @@ export default function PoliciesPage() {
 
       {/* Registry */}
       <section className="security-surface overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-slate-800 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <FileSliders className="size-4 text-indigo-600" />
+              <FileSliders className="size-4 text-indigo-600 dark:text-indigo-400" />
 
-              <h2 className="text-sm font-semibold text-slate-800">
+              <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                 Policy Registry
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
               Runtime rules currently known to the control plane
             </p>
           </div>
 
           {!isLoading && !isError && (
-            <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-slate-500">
+            <span className="w-fit rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               {policies.length} Rules
             </span>
           )}
@@ -334,11 +334,11 @@ function HeaderSignal({
   pulse?: boolean;
 }) {
   const styles = {
-    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600",
+    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600 dark:text-indigo-400",
     emerald:
-      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600",
-    amber: "border-amber-400/10 bg-amber-400/[0.04] text-amber-600",
-    red: "border-red-400/10 bg-red-400/[0.04] text-red-600",
+      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600 dark:text-emerald-400",
+    amber: "border-amber-400/10 bg-amber-400/[0.04] text-amber-600 dark:text-amber-400",
+    red: "border-red-400/10 bg-red-400/[0.04] text-red-600 dark:text-red-400",
   }[tone];
 
   return (
@@ -377,23 +377,23 @@ function PostureCard({
 }) {
   const styles = {
     cyan: {
-      icon: "border-indigo-400/10 bg-indigo-400/[0.05] text-indigo-600",
-      value: "text-slate-900",
+      icon: "border-indigo-400/10 bg-indigo-400/[0.05] text-indigo-600 dark:text-indigo-400",
+      value: "text-slate-900 dark:text-slate-100",
     },
     emerald: {
-      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600",
-      value: "text-emerald-600",
+      icon: "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600 dark:text-emerald-400",
+      value: "text-emerald-600 dark:text-emerald-400",
     },
     red: {
-      icon: "border-red-400/10 bg-red-400/[0.05] text-red-600",
-      value: "text-red-600",
+      icon: "border-red-400/10 bg-red-400/[0.05] text-red-600 dark:text-red-400",
+      value: "text-red-600 dark:text-red-400",
     },
   }[tone];
 
   return (
     <div className="security-surface security-surface-hover p-4">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400">
           {label}
         </span>
 
@@ -410,7 +410,7 @@ function PostureCard({
         {value}
       </div>
 
-      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{detail}</p>
     </div>
   );
 }
@@ -433,20 +433,20 @@ function DistributionRow({
 
   const styles = {
     red: {
-      icon: "text-red-600",
+      icon: "text-red-600 dark:text-red-400",
       bar: "bg-red-400",
-      badge: "border-red-400/10 bg-red-400/[0.05] text-red-600",
+      badge: "border-red-400/10 bg-red-400/[0.05] text-red-600 dark:text-red-400",
     },
     amber: {
-      icon: "text-amber-600",
+      icon: "text-amber-600 dark:text-amber-400",
       bar: "bg-amber-400",
-      badge: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600",
+      badge: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600 dark:text-amber-400",
     },
     emerald: {
-      icon: "text-emerald-600",
+      icon: "text-emerald-600 dark:text-emerald-400",
       bar: "bg-emerald-400",
       badge:
-        "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600",
+        "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600 dark:text-emerald-400",
     },
   }[tone];
 
@@ -456,13 +456,13 @@ function DistributionRow({
         <div className="flex items-center gap-2">
           <Icon className={`size-3.5 ${styles.icon}`} />
 
-          <span className="text-[10px] font-medium tracking-[0.12em] text-slate-600">
+          <span className="text-[10px] font-medium tracking-[0.12em] text-slate-600 dark:text-slate-300">
             {label}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] text-slate-500">
+          <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
             {count}
           </span>
 
@@ -474,7 +474,7 @@ function DistributionRow({
         </div>
       </div>
 
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
         <div
           className={`h-full rounded-full transition-all duration-500 ${styles.bar}`}
           style={{ width: `${percentage}%` }}
@@ -490,14 +490,14 @@ function PolicyRow({ policy }: { policy: Policy }) {
 
   const actionStyles =
     action === "BLOCK"
-      ? "border-red-400/15 bg-red-400/[0.05] text-red-600"
+      ? "border-red-400/15 bg-red-400/[0.05] text-red-600 dark:text-red-400"
       : action === "WARN"
-        ? "border-amber-400/15 bg-amber-400/[0.05] text-amber-600"
-        : "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-600";
+        ? "border-amber-400/15 bg-amber-400/[0.05] text-amber-600 dark:text-amber-400"
+        : "border-emerald-400/15 bg-emerald-400/[0.05] text-emerald-600 dark:text-emerald-400";
 
   const statusStyles = policy.enabled
-    ? "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600"
-    : "border-slate-200 bg-slate-50 text-slate-500";
+    ? "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600 dark:text-emerald-400"
+    : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400";
 
   return (
     <article className="group border-l-2 border-l-transparent px-5 py-4 transition-colors hover:border-l-indigo-400/50 hover:bg-white/[0.015]">
@@ -507,19 +507,19 @@ function PolicyRow({ policy }: { policy: Policy }) {
             className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
               policy.enabled
                 ? "border-indigo-400/10 bg-indigo-400/[0.04]"
-                : "border-slate-200 bg-slate-50"
+                : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50"
             }`}
           >
             {policy.enabled ? (
-              <ShieldCheck className="size-4 text-indigo-600" />
+              <ShieldCheck className="size-4 text-indigo-600 dark:text-indigo-400" />
             ) : (
-              <ShieldOff className="size-4 text-slate-500" />
+              <ShieldOff className="size-4 text-slate-500 dark:text-slate-400" />
             )}
           </div>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-sm font-semibold text-slate-800">
+              <h3 className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
                 {policy.name}
               </h3>
 
@@ -536,7 +536,7 @@ function PolicyRow({ policy }: { policy: Policy }) {
               </span>
             </div>
 
-            <p className="mt-1 max-w-2xl truncate text-[10px] leading-5 text-slate-500">
+            <p className="mt-1 max-w-2xl truncate text-[10px] leading-5 text-slate-500 dark:text-slate-400">
               {policy.description || "No policy description provided"}
             </p>
           </div>
@@ -569,7 +569,7 @@ function PolicyRow({ policy }: { policy: Policy }) {
         <button
           type="button"
           onClick={() => setHistoryOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 px-2.5 py-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400"
         >
           <History className="size-3.5" />
           Version history
@@ -599,27 +599,27 @@ function PolicyMetadata({
 }) {
   const valueClass =
     accent === "emerald"
-      ? "text-emerald-600"
+      ? "text-emerald-600 dark:text-emerald-400"
       : accent === "slate"
-        ? "text-slate-500"
-        : "text-slate-600";
+        ? "text-slate-500 dark:text-slate-400"
+        : "text-slate-600 dark:text-slate-300";
 
   return (
     <div className="min-w-0">
-      <div className="text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400">
+      <div className="text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
         {label}
       </div>
 
       {progress !== undefined ? (
         <div className="mt-2 flex items-center gap-2">
-          <div className="h-1 w-16 overflow-hidden rounded-full bg-slate-100">
+          <div className="h-1 w-16 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
             <div
               className="h-full rounded-full bg-indigo-400/70 transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <span className="font-mono text-[10px] text-slate-600">
+          <span className="font-mono text-[10px] text-slate-600 dark:text-slate-300">
             {value}
           </span>
         </div>
@@ -646,10 +646,10 @@ function OperationalSignal({
   tone: "cyan" | "emerald" | "red";
 }) {
   const styles = {
-    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600",
+    cyan: "border-indigo-400/10 bg-indigo-400/[0.04] text-indigo-600 dark:text-indigo-400",
     emerald:
-      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600",
-    red: "border-red-400/10 bg-red-400/[0.04] text-red-600",
+      "border-emerald-400/10 bg-emerald-400/[0.04] text-emerald-600 dark:text-emerald-400",
+    red: "border-red-400/10 bg-red-400/[0.04] text-red-600 dark:text-red-400",
   }[tone];
 
   return (
@@ -661,16 +661,16 @@ function OperationalSignal({
       </div>
 
       <div className="min-w-0">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
           {label}
         </p>
 
         <div className="mt-1 flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-800">
+          <span className="text-xs font-semibold text-slate-800 dark:text-slate-100">
             {value}
           </span>
 
-          <span className="truncate text-[9px] text-slate-400">
+          <span className="truncate text-[9px] text-slate-400 dark:text-slate-500">
             {detail}
           </span>
         </div>
@@ -683,14 +683,14 @@ function LoadingState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center">
       <div className="flex size-10 items-center justify-center rounded-xl border border-indigo-400/10 bg-indigo-400/[0.04]">
-        <LoaderCircle className="size-5 animate-spin text-indigo-600" />
+        <LoaderCircle className="size-5 animate-spin text-indigo-600 dark:text-indigo-400" />
       </div>
 
-      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
         Synchronizing policy registry
       </p>
 
-      <p className="mt-1 text-[10px] text-slate-400">
+      <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
         Reading current runtime enforcement rules
       </p>
     </div>
@@ -701,14 +701,14 @@ function ErrorState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-11 items-center justify-center rounded-xl border border-red-400/10 bg-red-400/[0.04]">
-        <CircleAlert className="size-5 text-red-600" />
+        <CircleAlert className="size-5 text-red-600 dark:text-red-400" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-700">
+      <p className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-300">
         Policy registry unavailable
       </p>
 
-      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-500">
+      <p className="mt-1 max-w-md text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         SentinelX could not retrieve the current policy registry. Verify the
         security session and control-plane connection.
       </p>
@@ -725,11 +725,11 @@ function EmptyState() {
         <FileSliders className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="relative mt-4 text-sm font-semibold text-slate-700">
+      <p className="relative mt-4 text-sm font-semibold text-slate-700 dark:text-slate-300">
         No policies configured
       </p>
 
-      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
+      <p className="relative mt-1 max-w-sm text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         There are currently no runtime security policies associated with the
         available agents.
       </p>
@@ -737,7 +737,7 @@ function EmptyState() {
       <div className="relative mt-5 flex items-center gap-2 rounded-full border border-amber-400/10 bg-amber-400/[0.03] px-3 py-1.5">
         <AlertTriangle className="size-3 text-amber-600/70" />
 
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500">
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
           Policy coverage unavailable
         </span>
       </div>

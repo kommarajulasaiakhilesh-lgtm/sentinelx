@@ -98,10 +98,10 @@ export function DataTable<T>({
   return (
     <div>
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-slate-800 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         {searchable ? (
-          <div className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 sm:w-72">
-            <Search className="size-4 text-slate-400" />
+          <div className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-3 sm:w-72">
+            <Search className="size-4 text-slate-400 dark:text-slate-500" />
             <input
               value={query}
               onChange={(e) => {
@@ -109,20 +109,20 @@ export function DataTable<T>({
                 setPage(0);
               }}
               placeholder={searchPlaceholder}
-              className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+              className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
           </div>
         ) : (
           <div />
         )}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400">
             {sorted.length} record{sorted.length === 1 ? "" : "s"}
           </span>
           <button
             type="button"
             onClick={exportCsv}
-            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 text-xs font-medium text-slate-600 dark:text-slate-300 transition-colors hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400"
           >
             <Download className="size-3.5" />
             Export CSV
@@ -134,21 +134,21 @@ export function DataTable<T>({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/60">
+            <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
               {columns.map((c) => (
                 <th
                   key={c.key}
-                  className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500 ${c.className ?? ""}`}
+                  className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400 ${c.className ?? ""}`}
                 >
                   {c.sortValue ? (
                     <button
                       type="button"
                       onClick={() => toggleSort(c.key)}
-                      className="inline-flex items-center gap-1 transition-colors hover:text-slate-700"
+                      className="inline-flex items-center gap-1 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
                     >
                       {c.header}
                       <ArrowUpDown
-                        className={`size-3 ${sortKey === c.key ? "text-indigo-600" : "text-slate-300"}`}
+                        className={`size-3 ${sortKey === c.key ? "text-indigo-600 dark:text-indigo-400" : "text-slate-300"}`}
                       />
                     </button>
                   ) : (
@@ -163,7 +163,7 @@ export function DataTable<T>({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-4 py-10 text-center text-xs text-slate-400"
+                  className="px-4 py-10 text-center text-xs text-slate-400 dark:text-slate-500"
                 >
                   {emptyLabel}
                 </td>
@@ -172,10 +172,10 @@ export function DataTable<T>({
               rows.map((row, i) => (
                 <tr
                   key={i}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                  className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                 >
                   {columns.map((c) => (
-                    <td key={c.key} className={`px-4 py-3 text-slate-700 ${c.className ?? ""}`}>
+                    <td key={c.key} className={`px-4 py-3 text-slate-700 dark:text-slate-300 ${c.className ?? ""}`}>
                       {c.render ? c.render(row) : String(c.sortValue?.(row) ?? "")}
                     </td>
                   ))}
@@ -188,8 +188,8 @@ export function DataTable<T>({
 
       {/* Pagination */}
       {pageCount > 1 && (
-        <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
-          <span className="text-[11px] text-slate-500">
+        <div className="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 px-4 py-3">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400">
             Page {current + 1} of {pageCount}
           </span>
           <div className="flex items-center gap-1.5">
@@ -197,7 +197,7 @@ export function DataTable<T>({
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={current === 0}
-              className="flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft className="size-4" />
             </button>
@@ -205,7 +205,7 @@ export function DataTable<T>({
               type="button"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={current >= pageCount - 1}
-              className="flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronRight className="size-4" />
             </button>
