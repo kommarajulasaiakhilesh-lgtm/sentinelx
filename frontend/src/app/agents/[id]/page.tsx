@@ -22,16 +22,16 @@ import type { AgentPosture } from "@/features/posture/posture-api";
 import type { Policy, SecurityEvent, Tool } from "@/types/api";
 
 const decisionColor: Record<string, string> = {
-  ALLOW: "text-emerald-600 bg-emerald-50 border-emerald-200",
-  BLOCK: "text-red-600 bg-red-50 border-red-200",
-  SUSPICIOUS: "text-amber-600 bg-amber-50 border-amber-200",
+  ALLOW: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30",
+  BLOCK: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30",
+  SUSPICIOUS: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30",
 };
 
 const levelColor: Record<string, string> = {
-  STRONG: "text-emerald-600",
-  MODERATE: "text-indigo-600",
-  WEAK: "text-amber-600",
-  CRITICAL: "text-red-600",
+  STRONG: "text-emerald-600 dark:text-emerald-400",
+  MODERATE: "text-indigo-600 dark:text-indigo-400",
+  WEAK: "text-amber-600 dark:text-amber-400",
+  CRITICAL: "text-red-600 dark:text-red-400",
 };
 
 export default function AgentDetailPage({
@@ -74,8 +74,8 @@ export default function AgentDetailPage({
 
   if (!agent) {
     return (
-      <div className="security-surface flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
-        <LoaderCircle className="size-4 animate-spin text-indigo-600" />
+      <div className="security-surface flex items-center justify-center gap-3 py-16 text-sm text-slate-500 dark:text-slate-400">
+        <LoaderCircle className="size-4 animate-spin text-indigo-600 dark:text-indigo-400" />
         Loading agent…
       </div>
     );
@@ -85,7 +85,7 @@ export default function AgentDetailPage({
     <div className="space-y-6">
       <Link
         href="/agents"
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 transition hover:text-indigo-600"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 transition hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <ArrowLeft className="size-3.5" />
         Back to agents
@@ -99,14 +99,14 @@ export default function AgentDetailPage({
         className="security-surface flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between"
       >
         <div className="flex items-center gap-4">
-          <div className="flex size-14 items-center justify-center rounded-2xl border border-indigo-200 bg-indigo-50">
-            <Bot className="size-7 text-indigo-600" />
+          <div className="flex size-14 items-center justify-center rounded-2xl border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10">
+            <Bot className="size-7 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               {agent.name}
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {agent.description || "No description provided"}
             </p>
           </div>
@@ -115,8 +115,8 @@ export default function AgentDetailPage({
           <span
             className={`rounded-md border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] ${
               agent.status === "ACTIVE"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border-amber-200 bg-amber-50 text-amber-700"
+                ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                : "border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400"
             }`}
           >
             {agent.status}
@@ -126,7 +126,7 @@ export default function AgentDetailPage({
               <div className={`text-2xl font-semibold ${levelColor[posture.level]}`}>
                 {posture.score}
               </div>
-              <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
                 Posture · {posture.grade}
               </div>
             </div>
@@ -194,7 +194,7 @@ export default function AgentDetailPage({
             >
               <span
                 className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold ${
-                  decisionColor[e.decision] ?? "border-slate-200 bg-slate-50 text-slate-600"
+                  decisionColor[e.decision] ?? "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300"
                 }`}
               >
                 {e.decision}
@@ -221,10 +221,10 @@ function Stat({
   return (
     <div className="security-surface flex items-center justify-between p-4">
       <div>
-        <div className={`text-2xl font-semibold ${warn ? "text-amber-600" : "text-slate-900"}`}>
+        <div className={`text-2xl font-semibold ${warn ? "text-amber-600 dark:text-amber-400" : "text-slate-900 dark:text-slate-100"}`}>
           {value}
         </div>
-        <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">
+        <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">
           {label}
         </div>
       </div>
@@ -249,11 +249,11 @@ function Panel({
       transition={{ duration: 0.35 }}
       className="security-surface overflow-hidden"
     >
-      <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5">
-        <span className="text-sm font-semibold text-slate-900">{title}</span>
-        <span className="text-[11px] font-medium text-slate-500">{count}</span>
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-3.5">
+        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</span>
+        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">{count}</span>
       </div>
-      <div className="divide-y divide-slate-100">{children}</div>
+      <div className="divide-y divide-slate-100 dark:divide-slate-800">{children}</div>
     </motion.div>
   );
 }
@@ -268,11 +268,11 @@ function Row({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between px-5 py-3 hover:bg-slate-50">
+    <div className="flex items-center justify-between px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/50">
       <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-slate-800">{title}</div>
+        <div className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">{title}</div>
         {subtitle && (
-          <div className="truncate text-[11px] text-slate-500">{subtitle}</div>
+          <div className="truncate text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</div>
         )}
       </div>
       {children}
@@ -285,8 +285,8 @@ function Badge({ enabled, text }: { enabled: boolean; text: string }) {
     <span
       className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold ${
         enabled
-          ? "border-indigo-200 bg-indigo-50 text-indigo-700"
-          : "border-slate-200 bg-slate-50 text-slate-500"
+          ? "border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300"
+          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400"
       }`}
     >
       {text}
@@ -295,5 +295,5 @@ function Badge({ enabled, text }: { enabled: boolean; text: string }) {
 }
 
 function Empty({ children }: { children: React.ReactNode }) {
-  return <div className="px-5 py-8 text-center text-xs text-slate-400">{children}</div>;
+  return <div className="px-5 py-8 text-center text-xs text-slate-400 dark:text-slate-500">{children}</div>;
 }

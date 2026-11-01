@@ -29,10 +29,10 @@ const variantStyles: Record<
   ToastVariant,
   { icon: typeof Info; accent: string; ring: string }
 > = {
-  success: { icon: CheckCircle2, accent: "text-emerald-600", ring: "border-emerald-200" },
-  error: { icon: XCircle, accent: "text-red-600", ring: "border-red-200" },
-  warning: { icon: TriangleAlert, accent: "text-amber-600", ring: "border-amber-200" },
-  info: { icon: Info, accent: "text-indigo-600", ring: "border-indigo-200" },
+  success: { icon: CheckCircle2, accent: "text-emerald-600 dark:text-emerald-400", ring: "border-emerald-200 dark:border-emerald-500/30" },
+  error: { icon: XCircle, accent: "text-red-600 dark:text-red-400", ring: "border-red-200 dark:border-red-500/30" },
+  warning: { icon: TriangleAlert, accent: "text-amber-600 dark:text-amber-400", ring: "border-amber-200 dark:border-amber-500/30" },
+  info: { icon: Info, accent: "text-indigo-600 dark:text-indigo-400", ring: "border-indigo-200 dark:border-indigo-500/30" },
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -67,15 +67,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: 40, scale: 0.96 }}
                 transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                className={`pointer-events-auto flex items-start gap-3 rounded-xl border ${style.ring} bg-white p-3.5 shadow-lg shadow-slate-900/10`}
+                className={`pointer-events-auto flex items-start gap-3 rounded-xl border ${style.ring} bg-white dark:bg-slate-900 p-3.5 shadow-lg shadow-slate-900/10`}
               >
                 <Icon className={`mt-0.5 size-5 shrink-0 ${style.accent}`} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium text-slate-900">
+                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
                     {t.title}
                   </div>
                   {t.description && (
-                    <div className="mt-0.5 text-xs text-slate-500">
+                    <div className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                       {t.description}
                     </div>
                   )}
@@ -83,7 +83,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => remove(t.id)}
-                  className="rounded p-0.5 text-slate-400 transition hover:text-slate-600"
+                  className="rounded p-0.5 text-slate-400 dark:text-slate-500 transition hover:text-slate-600 dark:hover:text-slate-300"
                   aria-label="Dismiss"
                 >
                   <X className="size-4" />

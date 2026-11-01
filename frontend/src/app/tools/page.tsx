@@ -53,7 +53,7 @@ export default function ToolsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+      <section className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
         <div className="security-grid absolute inset-0 opacity-40" />
 
         <div className="absolute -right-20 -top-20 size-56 rounded-full border border-indigo-400/[0.05]" />
@@ -62,16 +62,16 @@ export default function ToolsPage() {
         <div className="relative p-6 sm:p-7">
           <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
             <div>
-              <div className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-indigo-600">
+              <div className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
                 <Wrench className="size-3.5" />
                 Capability Security
               </div>
 
-              <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
                 Tool &amp; Action Security
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
                 Review tools registered to SentinelX agents, including stored
                 enabled state and configured risk.
               </p>
@@ -88,7 +88,7 @@ export default function ToolsPage() {
 
               <span
                 className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
-                  isError ? "text-amber-600" : "text-emerald-600"
+                  isError ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
                 Capability engine {capabilityState}
@@ -143,23 +143,23 @@ export default function ToolsPage() {
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,0.45fr)]">
         {/* Registry */}
         <section className="security-surface overflow-hidden">
-          <div className="border-b border-slate-200 p-5 sm:p-6">
+          <div className="border-b border-slate-200 dark:border-slate-800 p-5 sm:p-6">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                   Capability Registry
                 </p>
 
-                <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                   Registered tools
                 </h2>
 
-                <p className="mt-1 text-xs leading-5 text-slate-500">
+                <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
                   Tool records registered through the SentinelX control plane.
                 </p>
               </div>
 
-              <span className="rounded-full border border-slate-200 bg-black/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500">
+              <span className="rounded-full border border-slate-200 dark:border-slate-800 bg-black/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
                 {tools.length}{" "}
                 {tools.length === 1 ? "capability" : "capabilities"}
               </span>
@@ -185,34 +185,34 @@ export default function ToolsPage() {
         <section className="security-surface p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                 Capability Posture
               </p>
 
-              <h2 className="mt-2 text-lg font-semibold text-slate-900">
+              <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Execution exposure
               </h2>
 
-              <p className="mt-1 text-xs leading-5 text-slate-500">
+              <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
                 Stored enabled state across registered tools.
               </p>
             </div>
 
-            <LockKeyhole className="size-5 text-indigo-600" />
+            <LockKeyhole className="size-5 text-indigo-600 dark:text-indigo-400" />
           </div>
 
           <div className="mt-7">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 Enabled coverage
               </span>
 
-              <span className="font-mono text-sm font-medium text-slate-800">
+              <span className="font-mono text-sm font-medium text-slate-800 dark:text-slate-100">
                 {enabledCoverage}%
               </span>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
               <div
                 className="h-full rounded-full bg-indigo-400 transition-all duration-500"
                 style={{
@@ -250,14 +250,14 @@ export default function ToolsPage() {
 
           <div className="mt-6 rounded-xl border border-amber-400/10 bg-amber-400/[0.035] p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
+              <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
 
               <div>
                 <p className="text-xs font-medium text-amber-200">
                   Execution boundary
                 </p>
 
-                <p className="mt-1 text-[11px] leading-5 text-slate-500">
+                <p className="mt-1 text-[11px] leading-5 text-slate-500 dark:text-slate-400">
                   Enabled tools describe configured capabilities; SentinelX
                   does not execute external tools. Callers must enforce policy
                   decisions before taking an action.
@@ -311,7 +311,7 @@ function ToolRow({ tool }: { tool: Tool }) {
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-sm font-medium text-slate-800">
+              <h3 className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
                 {tool.name}
               </h3>
 
@@ -324,7 +324,7 @@ function ToolRow({ tool }: { tool: Tool }) {
               </span>
             </div>
 
-            <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500">
+            <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500 dark:text-slate-400">
               {tool.description || "No tool description provided."}
             </p>
           </div>
@@ -426,8 +426,8 @@ function getRiskStyles(risk: "HIGH" | "MEDIUM" | "LOW") {
     return {
       iconBorder: "border-red-400/10",
       iconBackground: "bg-red-400/[0.05]",
-      icon: "text-red-600",
-      badge: "border-red-400/10 bg-red-400/[0.05] text-red-600",
+      icon: "text-red-600 dark:text-red-400",
+      badge: "border-red-400/10 bg-red-400/[0.05] text-red-600 dark:text-red-400",
     };
   }
 
@@ -435,17 +435,17 @@ function getRiskStyles(risk: "HIGH" | "MEDIUM" | "LOW") {
     return {
       iconBorder: "border-amber-400/10",
       iconBackground: "bg-amber-400/[0.05]",
-      icon: "text-amber-600",
-      badge: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600",
+      icon: "text-amber-600 dark:text-amber-400",
+      badge: "border-amber-400/10 bg-amber-400/[0.05] text-amber-600 dark:text-amber-400",
     };
   }
 
   return {
     iconBorder: "border-emerald-400/10",
     iconBackground: "bg-emerald-400/[0.05]",
-    icon: "text-emerald-600",
+    icon: "text-emerald-600 dark:text-emerald-400",
     badge:
-      "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600",
+      "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600 dark:text-emerald-400",
   };
 }
 
@@ -466,33 +466,33 @@ function MetricCard({
     cyan: {
       border: "border-indigo-400/10",
       background: "bg-indigo-400/[0.04]",
-      icon: "text-indigo-600",
-      value: "text-slate-900",
+      icon: "text-indigo-600 dark:text-indigo-400",
+      value: "text-slate-900 dark:text-slate-100",
     },
     emerald: {
       border: "border-emerald-400/10",
       background: "bg-emerald-400/[0.035]",
-      icon: "text-emerald-600",
-      value: "text-slate-900",
+      icon: "text-emerald-600 dark:text-emerald-400",
+      value: "text-slate-900 dark:text-slate-100",
     },
     red: {
       border: "border-red-400/10",
       background: "bg-red-400/[0.035]",
-      icon: "text-red-600",
+      icon: "text-red-600 dark:text-red-400",
       value: "text-red-200",
     },
     violet: {
       border: "border-violet-400/10",
       background: "bg-violet-400/[0.035]",
       icon: "text-violet-600",
-      value: "text-slate-900",
+      value: "text-slate-900 dark:text-slate-100",
     },
   }[tone];
 
   return (
     <div className="security-surface security-surface-hover p-5">
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400">
           {label}
         </span>
 
@@ -509,7 +509,7 @@ function MetricCard({
         {value}
       </div>
 
-      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{detail}</p>
     </div>
   );
 }
@@ -519,8 +519,8 @@ function StatusBadge({ enabled }: { enabled: boolean }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.12em] ${
         enabled
-          ? "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600"
-          : "border-slate-400/10 bg-slate-400/[0.03] text-slate-500"
+          ? "border-emerald-400/10 bg-emerald-400/[0.05] text-emerald-600 dark:text-emerald-400"
+          : "border-slate-400/10 bg-slate-400/[0.03] text-slate-500 dark:text-slate-400"
       }`}
     >
       <span
@@ -543,11 +543,11 @@ function MetadataItem({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400">
+      <p className="text-[8px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
         {label}
       </p>
 
-      <p className="mt-1 truncate font-mono text-[10px] text-slate-600">
+      <p className="mt-1 truncate font-mono text-[10px] text-slate-600 dark:text-slate-300">
         {value}
       </p>
     </div>
@@ -571,14 +571,14 @@ function PostureRow({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-black/10 px-3 py-2.5">
+    <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-black/10 px-3 py-2.5">
       <div className="flex items-center gap-2.5">
         <span className={`size-1.5 rounded-full ${dotStyles[tone]}`} />
 
-        <span className="text-xs text-slate-500">{label}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{label}</span>
       </div>
 
-      <span className="font-mono text-xs font-medium text-slate-700">
+      <span className="font-mono text-xs font-medium text-slate-700 dark:text-slate-300">
         {value}
       </span>
     </div>
@@ -602,11 +602,11 @@ function OperationalSignal({
 
   return (
     <div className="security-surface flex items-center justify-between px-4 py-3.5">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         {label}
       </span>
 
-      <span className="flex items-center gap-2 text-xs font-medium text-slate-700">
+      <span className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
         <span className={`size-1.5 rounded-full ${dotStyles[tone]}`} />
 
         {value}
@@ -618,9 +618,9 @@ function OperationalSignal({
 function LoadingState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
-      <LoaderCircle className="size-5 animate-spin text-indigo-600" />
+      <LoaderCircle className="size-5 animate-spin text-indigo-600 dark:text-indigo-400" />
 
-      <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
+      <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         Loading capability registry
       </p>
     </div>
@@ -631,14 +631,14 @@ function ErrorState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-10 items-center justify-center rounded-full border border-red-400/10 bg-red-400/[0.05]">
-        <CircleAlert className="size-5 text-red-600" />
+        <CircleAlert className="size-5 text-red-600 dark:text-red-400" />
       </div>
 
-      <p className="mt-3 text-sm font-medium text-slate-700">
+      <p className="mt-3 text-sm font-medium text-slate-700 dark:text-slate-300">
         Unable to load tools
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         SentinelX could not retrieve the registered tool capabilities.
         Check the security session and backend connection.
       </p>
@@ -653,16 +653,16 @@ function EmptyState() {
         <Wrench className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-700">
+      <p className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-300">
         No tools registered
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         No runtime capabilities are currently associated with the
         available SentinelX agents.
       </p>
 
-      <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.14em] text-slate-400">
+      <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
         <Activity className="size-3" />
         Capability telemetry awaiting registration
       </div>

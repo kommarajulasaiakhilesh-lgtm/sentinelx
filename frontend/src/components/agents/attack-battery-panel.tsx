@@ -30,10 +30,10 @@ type BatteryReport = {
 };
 
 const verdictStyle: Record<string, { cls: string; icon: typeof CheckCircle2 }> = {
-  DETECTED: { cls: "text-emerald-600", icon: CheckCircle2 },
-  ALLOWED: { cls: "text-emerald-600", icon: CheckCircle2 },
-  MISSED: { cls: "text-red-600", icon: XCircle },
-  FALSE_POSITIVE: { cls: "text-amber-600", icon: ShieldAlert },
+  DETECTED: { cls: "text-emerald-600 dark:text-emerald-400", icon: CheckCircle2 },
+  ALLOWED: { cls: "text-emerald-600 dark:text-emerald-400", icon: CheckCircle2 },
+  MISSED: { cls: "text-red-600 dark:text-red-400", icon: XCircle },
+  FALSE_POSITIVE: { cls: "text-amber-600 dark:text-amber-400", icon: ShieldAlert },
 };
 
 export function AttackBatteryPanel({ agentId }: { agentId: number }) {
@@ -47,14 +47,14 @@ export function AttackBatteryPanel({ agentId }: { agentId: number }) {
   const report = mut.data;
   const rate = report?.summary.detection_rate_percent ?? 0;
   const rateColor =
-    rate >= 80 ? "text-emerald-600" : rate >= 40 ? "text-amber-600" : "text-red-600";
+    rate >= 80 ? "text-emerald-600 dark:text-emerald-400" : rate >= 40 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400";
 
   return (
     <section className="security-surface overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-3.5">
         <div className="flex items-center gap-2">
-          <Swords className="size-4 text-indigo-600" />
-          <span className="text-sm font-semibold text-slate-900">
+          <Swords className="size-4 text-indigo-600 dark:text-indigo-400" />
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Prompt-injection attack battery
           </span>
         </div>
@@ -70,26 +70,26 @@ export function AttackBatteryPanel({ agentId }: { agentId: number }) {
       </div>
 
       {!report ? (
-        <div className="px-5 py-8 text-center text-xs text-slate-400">
+        <div className="px-5 py-8 text-center text-xs text-slate-400 dark:text-slate-500">
           Run a fixed library of adversarial and benign inputs against this
           agent&apos;s live policy enforcement to measure detection.
         </div>
       ) : (
         <div>
-          <div className="grid grid-cols-2 gap-px bg-slate-100 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-px bg-slate-100 dark:bg-slate-800 sm:grid-cols-4">
             <Stat label="Detection rate" value={`${rate}%`} cls={rateColor} />
             <Stat
               label="Attacks caught"
               value={`${report.summary.detected}/${report.summary.total_attacks}`}
             />
-            <Stat label="Missed" value={report.summary.missed} cls={report.summary.missed ? "text-red-600" : "text-slate-900"} />
+            <Stat label="Missed" value={report.summary.missed} cls={report.summary.missed ? "text-red-600 dark:text-red-400" : "text-slate-900 dark:text-slate-100"} />
             <Stat
               label="False positives"
               value={report.summary.false_positives}
-              cls={report.summary.false_positives ? "text-amber-600" : "text-slate-900"}
+              cls={report.summary.false_positives ? "text-amber-600 dark:text-amber-400" : "text-slate-900 dark:text-slate-100"}
             />
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {report.results.map((r) => {
               const style = verdictStyle[r.verdict] ?? verdictStyle.ALLOWED;
               const Icon = style.icon;
@@ -97,11 +97,11 @@ export function AttackBatteryPanel({ agentId }: { agentId: number }) {
                 <div key={r.id} className="flex items-start gap-3 px-5 py-3">
                   <Icon className={`mt-0.5 size-4 shrink-0 ${style.cls}`} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs text-slate-700">
+                    <div className="truncate text-xs text-slate-700 dark:text-slate-300">
                       {r.payload}
                     </div>
-                    <div className="mt-0.5 flex items-center gap-2 text-[10px] text-slate-500">
-                      <span className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-medium">
+                    <div className="mt-0.5 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+                      <span className="rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 font-medium">
                         {r.category}
                       </span>
                       <span>decision: {r.decision}</span>
@@ -114,7 +114,7 @@ export function AttackBatteryPanel({ agentId }: { agentId: number }) {
               );
             })}
           </div>
-          <div className="border-t border-slate-100 bg-slate-50 px-5 py-2.5 text-[10px] text-slate-500">
+          <div className="border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-5 py-2.5 text-[10px] text-slate-500 dark:text-slate-400">
             Evasion payloads that slip past baseline patterns show real
             detection gaps — this measures, it doesn&apos;t guarantee full coverage.
           </div>
@@ -127,16 +127,16 @@ export function AttackBatteryPanel({ agentId }: { agentId: number }) {
 function Stat({
   label,
   value,
-  cls = "text-slate-900",
+  cls = "text-slate-900 dark:text-slate-100",
 }: {
   label: string;
   value: string | number;
   cls?: string;
 }) {
   return (
-    <div className="bg-white px-4 py-3">
+    <div className="bg-white dark:bg-slate-900 px-4 py-3">
       <div className={`text-xl font-semibold ${cls}`}>{value}</div>
-      <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">
+      <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">
         {label}
       </div>
     </div>

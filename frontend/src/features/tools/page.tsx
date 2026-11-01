@@ -28,25 +28,25 @@ function StatCard({
   icon: typeof Wrench;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white/[0.035] p-5">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/[0.035] p-5">
       <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-indigo-400/5 blur-2xl" />
 
       <div className="relative flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {label}
           </p>
 
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+          <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             {value}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {detail}
           </p>
         </div>
 
-        <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600">
+        <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-3 text-indigo-600 dark:text-indigo-400">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -93,7 +93,7 @@ function getRisk(tool: Tool) {
     return {
       label: "HIGH",
       className:
-        "border-red-400/20 bg-red-400/10 text-red-600",
+        "border-red-400/20 bg-red-400/10 text-red-600 dark:text-red-400",
     };
   }
 
@@ -105,14 +105,14 @@ function getRisk(tool: Tool) {
     return {
       label: "MEDIUM",
       className:
-        "border-amber-400/20 bg-amber-400/10 text-amber-600",
+        "border-amber-400/20 bg-amber-400/10 text-amber-600 dark:text-amber-400",
     };
   }
 
   return {
     label: "LOW",
     className:
-      "border-emerald-400/20 bg-emerald-400/10 text-emerald-600",
+      "border-emerald-400/20 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400",
   };
 }
 
@@ -164,28 +164,28 @@ export default function ToolsPage() {
 
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/10 px-3 py-1.5 text-xs font-medium text-indigo-600">
+            <div className="flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/10 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400">
               <Wrench className="h-3.5 w-3.5" />
               Tool Security
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-emerald-600">
+            <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               Policy evaluation flow
             </div>
           </div>
 
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
             Tools & Actions
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
             Review tool registrations and their enabled state. SentinelX
             evaluates submitted actions but does not execute external tools.
           </p>
 
-          <div className="mt-6 flex items-center gap-3 text-xs text-slate-500">
-            <ShieldCheck className="h-4 w-4 text-indigo-600" />
+          <div className="mt-6 flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+            <ShieldCheck className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             Agent → Tool → Action → Policy enforcement
           </div>
         </div>
@@ -224,26 +224,26 @@ export default function ToolsPage() {
 
       {/* SECURITY MATRIX */}
       <section className="grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-slate-900 dark:text-slate-100">
                 Tool Security Matrix
               </h2>
 
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Capabilities currently registered with the control plane
               </p>
             </div>
 
-            <div className="rounded-lg border border-slate-200 px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-slate-500">
+            <div className="rounded-lg border border-slate-200 dark:border-slate-800 px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {tools.length} TOOLS
             </div>
           </div>
 
           {isLoading ? (
             <div className="flex min-h-72 items-center justify-center">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <LoaderCircle className="h-4 w-4 animate-spin" />
                 Loading tool inventory...
               </div>
@@ -251,11 +251,11 @@ export default function ToolsPage() {
           ) : isError ? (
             <div className="flex min-h-72 items-center justify-center px-6 text-center">
               <div>
-                <AlertTriangle className="mx-auto h-8 w-8 text-amber-600" />
-                <p className="mt-3 font-medium text-slate-900">
+                <AlertTriangle className="mx-auto h-8 w-8 text-amber-600 dark:text-amber-400" />
+                <p className="mt-3 font-medium text-slate-900 dark:text-slate-100">
                   Tool inventory unavailable
                 </p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   The control plane could not retrieve the current tool
                   registry.
                 </p>
@@ -265,14 +265,14 @@ export default function ToolsPage() {
             <div className="flex min-h-72 items-center justify-center px-6 text-center">
               <div className="max-w-md">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-400/15 bg-indigo-400/10">
-                  <Wrench className="h-6 w-6 text-indigo-600" />
+                  <Wrench className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
 
-                <h3 className="mt-4 font-semibold text-slate-900">
+                <h3 className="mt-4 font-semibold text-slate-900 dark:text-slate-100">
                   No tools registered
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-slate-500">
+                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
                   SentinelX has not discovered any agent tools yet.
                   Tool capabilities will appear here once they are
                   registered against an agent.
@@ -280,7 +280,7 @@ export default function ToolsPage() {
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-slate-200">
+            <div className="divide-y divide-slate-200 dark:divide-slate-800">
               {tools.map((tool) => {
                 const Icon = getToolIcon(tool.tool_type);
                 const risk = getRisk(tool);
@@ -288,17 +288,17 @@ export default function ToolsPage() {
                 return (
                   <div
                     key={tool.id}
-                    className="group px-5 py-4 transition hover:bg-slate-50"
+                    className="group px-5 py-4 transition hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   >
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex min-w-0 items-center gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-indigo-600">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
                           <Icon className="h-5 w-5" />
                         </div>
 
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <p className="truncate font-medium text-slate-900">
+                            <p className="truncate font-medium text-slate-900 dark:text-slate-100">
                               {tool.name}
                             </p>
 
@@ -309,7 +309,7 @@ export default function ToolsPage() {
                             </span>
                           </div>
 
-                          <p className="mt-1 truncate text-xs text-slate-500">
+                          <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
                             {tool.description ||
                               "No description provided"}
                           </p>
@@ -318,26 +318,26 @@ export default function ToolsPage() {
 
                       <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-4 lg:min-w-[430px]">
                         <div>
-                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
+                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                             Type
                           </p>
-                          <p className="mt-1 text-slate-700">
+                          <p className="mt-1 text-slate-700 dark:text-slate-300">
                             {tool.tool_type}
                           </p>
                         </div>
 
                         <div>
-                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
+                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                             Agent
                           </p>
-                          <p className="mt-1 truncate text-slate-700">
+                          <p className="mt-1 truncate text-slate-700 dark:text-slate-300">
                             {agentName.get(tool.agent_id) ||
                               `Agent #${tool.agent_id}`}
                           </p>
                         </div>
 
                         <div>
-                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
+                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                             Status
                           </p>
 
@@ -353,8 +353,8 @@ export default function ToolsPage() {
                             <span
                               className={
                                 tool.enabled
-                                  ? "text-emerald-600"
-                                  : "text-slate-500"
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-slate-500 dark:text-slate-400"
                               }
                             >
                               {tool.enabled
@@ -365,11 +365,11 @@ export default function ToolsPage() {
                         </div>
 
                         <div>
-                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
+                          <p className="text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                             Registered
                           </p>
 
-                          <p className="mt-1 text-slate-600">
+                          <p className="mt-1 text-slate-600 dark:text-slate-300">
                             {formatDate(tool.created_at)}
                           </p>
                         </div>
@@ -383,18 +383,18 @@ export default function ToolsPage() {
         </div>
 
         {/* POSTURE */}
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-5">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-2.5 text-indigo-600">
+            <div className="rounded-xl border border-indigo-400/15 bg-indigo-400/10 p-2.5 text-indigo-600 dark:text-indigo-400">
               <LockKeyhole className="h-5 w-5" />
             </div>
 
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-slate-900 dark:text-slate-100">
                 Capability Posture
               </h2>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Current tool exposure
               </p>
             </div>
@@ -403,11 +403,11 @@ export default function ToolsPage() {
           <div className="mt-7 space-y-6">
             <div>
               <div className="flex items-end justify-between">
-                <span className="text-xs uppercase tracking-[0.16em] text-slate-500">
+                <span className="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                   Enabled tool share
                 </span>
 
-                <span className="text-2xl font-semibold text-slate-900">
+                <span className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                   {tools.length
                     ? Math.round(
                         (enabledTools.length / tools.length) * 100,
@@ -417,7 +417,7 @@ export default function ToolsPage() {
                 </span>
               </div>
 
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-50">
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-50 dark:bg-slate-800/50">
                 <div
                   className="h-full rounded-full bg-indigo-400 transition-all"
                   style={{
@@ -433,21 +433,21 @@ export default function ToolsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-emerald-400/10 bg-emerald-400/[0.04] p-4">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                   Enabled
                 </p>
 
-                <p className="mt-2 text-2xl font-semibold text-emerald-600">
+                <p className="mt-2 text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
                   {enabledTools.length}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-4">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                   Disabled
                 </p>
 
-                <p className="mt-2 text-2xl font-semibold text-slate-600">
+                <p className="mt-2 text-2xl font-semibold text-slate-600 dark:text-slate-300">
                   {disabledTools.length}
                 </p>
               </div>
@@ -455,14 +455,14 @@ export default function ToolsPage() {
 
             <div className="rounded-xl border border-amber-400/10 bg-amber-400/[0.035] p-4">
               <div className="flex gap-3">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
 
                 <div>
                   <p className="text-sm font-medium text-amber-200">
                     Runtime enforcement
                   </p>
 
-                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                  <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
                     Callers can submit tool actions to SentinelX for policy
                     evaluation before they execute an external action.
                   </p>
@@ -470,7 +470,7 @@ export default function ToolsPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 border-t border-slate-200 pt-5 text-xs text-slate-500">
+            <div className="flex items-center gap-2 border-t border-slate-200 dark:border-slate-800 pt-5 text-xs text-slate-500 dark:text-slate-400">
               <ShieldCheck className="h-4 w-4 text-indigo-400/70" />
               Policy evaluation is available through the enforcement API
             </div>

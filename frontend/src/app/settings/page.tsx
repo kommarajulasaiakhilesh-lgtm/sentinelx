@@ -84,14 +84,14 @@ export default function SettingsPage() {
       <section className="security-surface relative overflow-hidden">
         <div className="absolute inset-0 security-grid opacity-40" />
         <div className="relative px-6 py-6">
-          <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
+          <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
             <ShieldCheck className="size-3.5" />
             Account
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
             Account &amp; Security
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
             Manage the credentials for your operator identity.
           </p>
         </div>
@@ -106,25 +106,25 @@ export default function SettingsPage() {
           className="security-surface p-6"
         >
           <div className="flex items-center gap-3">
-            <div className="flex size-12 items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 text-sm font-semibold text-indigo-600">
+            <div className="flex size-12 items-center justify-center rounded-full border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 text-sm font-semibold text-indigo-600 dark:text-indigo-400">
               {(user?.username ?? "OP").slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <div className="text-sm font-semibold text-slate-900">
+              <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {user?.username ?? "Operator"}
               </div>
-              <div className="text-[11px] text-slate-500">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">
                 {user?.role === "ADMIN" ? "Administrator" : "Operator"}
               </div>
             </div>
           </div>
-          <div className="mt-5 space-y-3 border-t border-slate-200 pt-5 text-[11px] text-slate-500">
+          <div className="mt-5 space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5 text-[11px] text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
-              <UserRound className="size-3.5 text-slate-400" />
+              <UserRound className="size-3.5 text-slate-400 dark:text-slate-500" />
               Operator ID: {user?.id ?? "—"}
             </div>
             <div className="flex items-center gap-2">
-              <LockKeyhole className="size-3.5 text-slate-400" />
+              <LockKeyhole className="size-3.5 text-slate-400 dark:text-slate-500" />
               JWT-protected session
             </div>
           </div>
@@ -137,10 +137,10 @@ export default function SettingsPage() {
           transition={{ duration: 0.4, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           className="security-surface p-6"
         >
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Change password
           </h2>
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
             Choose a strong, unique password. You&apos;ll stay signed in on this
             device.
           </p>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
             <motion.div
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-xs text-emerald-700"
+              className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3.5 py-3 text-xs text-emerald-700 dark:text-emerald-400"
             >
               <CheckCircle2 className="size-4" />
               Password changed successfully.
@@ -160,7 +160,7 @@ export default function SettingsPage() {
             <motion.div
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-xs text-red-700"
+              className="mt-4 flex items-center gap-2 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-3.5 py-3 text-xs text-red-700 dark:text-red-400"
             >
               <XCircle className="size-4" />
               {error}
@@ -218,33 +218,33 @@ const PasswordInput = ({
 } & React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <div>
-      <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+      <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
         {label}
       </label>
       <div
-        className={`flex h-11 items-center rounded-xl border bg-white px-3.5 transition ${
+        className={`flex h-11 items-center rounded-xl border bg-white dark:bg-slate-900 px-3.5 transition ${
           error
             ? "border-red-300"
-            : "border-slate-200 focus-within:border-indigo-400"
+            : "border-slate-200 dark:border-slate-800 focus-within:border-indigo-400"
         }`}
       >
-        <LockKeyhole className="mr-2.5 size-4 text-slate-400" />
+        <LockKeyhole className="mr-2.5 size-4 text-slate-400 dark:text-slate-500" />
         <input
           type={visible ? "text" : "password"}
           autoComplete="off"
-          className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+          className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
           {...props}
         />
         <button
           type="button"
           onClick={onToggle}
-          className="ml-2 rounded-md p-1 text-slate-400 transition hover:text-slate-600"
+          className="ml-2 rounded-md p-1 text-slate-400 dark:text-slate-500 transition hover:text-slate-600 dark:hover:text-slate-300"
           aria-label={visible ? "Hide password" : "Show password"}
         >
           {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
         </button>
       </div>
-      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
 };

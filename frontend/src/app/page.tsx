@@ -48,16 +48,16 @@ export default function CommandCenterPage() {
         <div className="relative">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-indigo-600">
+              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-400">
                 <Network className="size-3.5" />
                 Security Operations
               </div>
 
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
                 Command Center
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
                 Manage the SentinelX security control plane, registered
                 agents, policies, and security activity from a single view.
               </p>
@@ -72,9 +72,9 @@ export default function CommandCenterPage() {
               <span
                 className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
                   streamStatus === "CONNECTED"
-                    ? "text-emerald-600"
+                    ? "text-emerald-600 dark:text-emerald-400"
                     : streamStatus === "CONNECTING"
-                      ? "text-amber-600"
+                      ? "text-amber-600 dark:text-amber-400"
                       : "text-rose-600"
                 }`}
               >
@@ -87,7 +87,7 @@ export default function CommandCenterPage() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200 pt-4">
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
             <SystemSignal
               label="Platform"
               value="Control plane"
@@ -155,28 +155,28 @@ export default function CommandCenterPage() {
       {/* Operational Overview */}
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.7fr)]">
         <div className="security-surface overflow-hidden">
-          <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-slate-800 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <Cpu className="size-4 text-indigo-600" />
+                <Cpu className="size-4 text-indigo-600 dark:text-indigo-400" />
 
-                <h2 className="text-sm font-semibold text-slate-800">
+                <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Agent Fleet
                 </h2>
               </div>
 
-              <p className="mt-1 text-[10px] text-slate-500">
+              <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
                 Agent inventory registered to the current security account
               </p>
             </div>
 
             {!isLoading && !isError && (
               <div className="flex items-center gap-2">
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[9px] text-slate-500">
+                <span className="rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 font-mono text-[9px] text-slate-500 dark:text-slate-400">
                   {agents.length.toString().padStart(2, "0")} NODES
                 </span>
 
-                <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-600">
+                <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-600 dark:text-emerald-400">
                   <span className="size-1.5 rounded-full bg-emerald-400" />
                   Registered
                 </span>
@@ -201,16 +201,16 @@ export default function CommandCenterPage() {
 
         {/* Security Posture */}
         <div className="security-surface overflow-hidden">
-          <div className="border-b border-slate-200 px-5 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 px-5 py-4">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-emerald-600" />
+              <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
 
-              <h2 className="text-sm font-semibold text-slate-800">
+              <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                 Security Capabilities
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
               Available control-plane capabilities
             </p>
           </div>
@@ -221,18 +221,18 @@ export default function CommandCenterPage() {
 
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-600">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
                     Control plane
                   </span>
 
                   <ShieldCheck className="size-5 text-emerald-600/70" />
                 </div>
 
-                <p className="mt-4 text-xl font-semibold tracking-tight text-slate-900">
+                <p className="mt-4 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                   Security controls available
                 </p>
 
-                <p className="mt-2 text-[11px] leading-5 text-slate-500">
+                <p className="mt-2 text-[11px] leading-5 text-slate-500 dark:text-slate-400">
                   SentinelX provides agent management, policy-based
                   enforcement, security event detection, and incident
                   response capabilities for registered agents.
@@ -268,28 +268,28 @@ export default function CommandCenterPage() {
 
       {/* Operations Overview */}
       <section className="security-surface overflow-hidden">
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-5 py-4">
           <div>
             <div className="flex items-center gap-2">
-              <Activity className="size-4 text-indigo-600" />
+              <Activity className="size-4 text-indigo-600 dark:text-indigo-400" />
 
-              <h2 className="text-sm font-semibold text-slate-800">
+              <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                 Operations Overview
               </h2>
             </div>
 
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
               Explore recorded security activity and platform intelligence
             </p>
           </div>
 
-          <span className="hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:flex">
+          <span className="hidden items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 sm:flex">
             <span className="size-1.5 rounded-full bg-slate-600" />
             Security console
           </span>
         </div>
 
-        <div className="grid gap-px bg-slate-100 sm:grid-cols-3">
+        <div className="grid gap-px bg-slate-100 dark:bg-slate-800 sm:grid-cols-3">
           <OverviewTile
             label="Security Events"
             value="View"
@@ -333,13 +333,13 @@ function SystemSignal({
         }`}
       />
 
-      <span className="text-[9px] uppercase tracking-[0.14em] text-slate-500">
+      <span className="text-[9px] uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
         {label}
       </span>
 
       <span
         className={`text-[10px] font-medium ${
-          status === "healthy" ? "text-slate-700" : "text-amber-600"
+          status === "healthy" ? "text-slate-700 dark:text-slate-300" : "text-amber-600 dark:text-amber-400"
         }`}
       >
         {value}
@@ -367,22 +367,22 @@ function MetricCard({
     cyan: {
       border: "border-indigo-400/10",
       background: "bg-indigo-400/[0.045]",
-      icon: "text-indigo-600",
+      icon: "text-indigo-600 dark:text-indigo-400",
     },
     emerald: {
       border: "border-emerald-400/10",
       background: "bg-emerald-400/[0.04]",
-      icon: "text-emerald-600",
+      icon: "text-emerald-600 dark:text-emerald-400",
     },
     amber: {
       border: "border-amber-400/10",
       background: "bg-amber-400/[0.04]",
-      icon: "text-amber-600",
+      icon: "text-amber-600 dark:text-amber-400",
     },
     slate: {
-      border: "border-slate-200",
-      background: "bg-slate-50",
-      icon: "text-slate-600",
+      border: "border-slate-200 dark:border-slate-800",
+      background: "bg-slate-50 dark:bg-slate-800/50",
+      icon: "text-slate-600 dark:text-slate-300",
     },
   };
 
@@ -397,7 +397,7 @@ function MetricCard({
       className="security-surface security-surface-hover p-4"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
           {label}
         </span>
 
@@ -408,11 +408,11 @@ function MetricCard({
         </div>
       </div>
 
-      <div className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">
+      <div className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
         {value}
       </div>
 
-      <div className="mt-1 text-[10px] text-slate-500">{detail}</div>
+      <div className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{detail}</div>
     </motion.div>
   );
 }
@@ -430,14 +430,14 @@ function AgentRow({
   };
 }) {
   return (
-    <article className="group px-5 py-4 transition-colors duration-200 hover:bg-slate-50">
+    <article className="group px-5 py-4 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-800/50">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
           <div className="relative flex size-10 shrink-0 items-center justify-center rounded-lg border border-indigo-400/10 bg-indigo-400/[0.04]">
-            <Bot className="size-5 text-indigo-600" />
+            <Bot className="size-5 text-indigo-600 dark:text-indigo-400" />
 
             {agent.status.toUpperCase() === "ACTIVE" && (
-              <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-slate-200 bg-emerald-400" />
+              <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full border-2 border-slate-200 dark:border-slate-800 bg-emerald-400" />
             )}
           </div>
 
@@ -445,7 +445,7 @@ function AgentRow({
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href={`/agents/${agent.id}`}
-                className="truncate text-sm font-medium text-slate-800 transition-colors hover:text-indigo-600"
+                className="truncate text-sm font-medium text-slate-800 dark:text-slate-100 transition-colors hover:text-indigo-600 dark:hover:text-indigo-400"
               >
                 {agent.name}
               </Link>
@@ -453,7 +453,7 @@ function AgentRow({
               <StatusBadge status={agent.status} />
             </div>
 
-            <p className="mt-1 truncate text-[10px] text-slate-500">
+            <p className="mt-1 truncate text-[10px] text-slate-500 dark:text-slate-400">
               {agent.description || "No description provided"}
             </p>
           </div>
@@ -493,10 +493,10 @@ function StatusBadge({ status }: { status: string }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.12em] ${
         isActive
-          ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-600"
+          ? "border-emerald-400/15 bg-emerald-400/[0.06] text-emerald-600 dark:text-emerald-400"
           : isSuspended
-            ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-600"
-            : "border-slate-400/10 bg-slate-400/[0.04] text-slate-500"
+            ? "border-amber-400/15 bg-amber-400/[0.06] text-amber-600 dark:text-amber-400"
+            : "border-slate-400/10 bg-slate-400/[0.04] text-slate-500 dark:text-slate-400"
       }`}
     >
       <span
@@ -525,12 +525,12 @@ function MetadataItem({
 }) {
   return (
     <div>
-      <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.14em] text-slate-400">
+      <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
         <Icon className="size-3" />
         {label}
       </div>
 
-      <div className="mt-1 truncate font-mono text-[10px] text-slate-600">
+      <div className="mt-1 truncate font-mono text-[10px] text-slate-600 dark:text-slate-300">
         {value}
       </div>
     </div>
@@ -548,11 +548,11 @@ function PostureRow({
 }) {
   return (
     <div className="flex items-center justify-between border-b border-white/[0.035] py-2.5 last:border-0">
-      <span className="text-[10px] text-slate-500">{label}</span>
+      <span className="text-[10px] text-slate-500 dark:text-slate-400">{label}</span>
 
       <span
         className={`text-[9px] font-medium uppercase tracking-[0.1em] ${
-          warning ? "text-amber-600" : "text-slate-600"
+          warning ? "text-amber-600 dark:text-amber-400" : "text-slate-600 dark:text-slate-300"
         }`}
       >
         {value}
@@ -575,19 +575,19 @@ function OverviewTile({
   return (
     <a
       href={href}
-      className="group bg-white p-5 transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50"
+      className="group bg-white dark:bg-slate-900 p-5 transition-colors duration-200 hover:bg-white dark:hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
           {label}
         </span>
 
-        <ArrowUpRight className="size-3.5 text-slate-400 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-indigo-600" />
+        <ArrowUpRight className="size-3.5 text-slate-400 dark:text-slate-500 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
       </div>
 
-      <div className="mt-4 text-sm font-medium text-slate-700">{value}</div>
+      <div className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-300">{value}</div>
 
-      <p className="mt-1 text-[10px] text-slate-500">{detail}</p>
+      <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{detail}</p>
     </a>
   );
 }
@@ -595,9 +595,9 @@ function OverviewTile({
 function FleetLoadingState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center">
-      <LoaderCircle className="size-5 animate-spin text-indigo-600" />
+      <LoaderCircle className="size-5 animate-spin text-indigo-600 dark:text-indigo-400" />
 
-      <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-500">
+      <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         Loading registered agents
       </p>
     </div>
@@ -608,14 +608,14 @@ function FleetErrorState() {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
       <div className="flex size-10 items-center justify-center rounded-full border border-red-400/10 bg-red-400/[0.05]">
-        <CircleAlert className="size-5 text-red-600" />
+        <CircleAlert className="size-5 text-red-600 dark:text-red-400" />
       </div>
 
-      <p className="mt-3 text-sm font-medium text-slate-700">
+      <p className="mt-3 text-sm font-medium text-slate-700 dark:text-slate-300">
         Agent inventory unavailable
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         SentinelX could not retrieve the registered agent inventory. Check
         the security session and backend connection.
       </p>
@@ -630,11 +630,11 @@ function FleetEmptyState() {
         <Bot className="size-6 text-indigo-300/70" />
       </div>
 
-      <p className="mt-4 text-sm font-medium text-slate-700">
+      <p className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-300">
         No agents registered
       </p>
 
-      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500">
+      <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-500 dark:text-slate-400">
         There are currently no AI agents associated with this security
         account.
       </p>

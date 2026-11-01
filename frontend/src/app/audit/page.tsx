@@ -31,46 +31,46 @@ const actionMeta: Record<
 > = {
   USER_LOGIN: {
     icon: LogIn,
-    tint: "text-indigo-600",
-    ring: "border-indigo-200 bg-indigo-50",
+    tint: "text-indigo-600 dark:text-indigo-400",
+    ring: "border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10",
     label: "Login",
   },
   AGENT_CREATED: {
     icon: Bot,
-    tint: "text-emerald-600",
-    ring: "border-emerald-200 bg-emerald-50",
+    tint: "text-emerald-600 dark:text-emerald-400",
+    ring: "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10",
     label: "Agent created",
   },
   AGENT_STATUS_CHANGED: {
     icon: Power,
-    tint: "text-amber-600",
-    ring: "border-amber-200 bg-amber-50",
+    tint: "text-amber-600 dark:text-amber-400",
+    ring: "border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10",
     label: "Status changed",
   },
   POLICY_CREATED: {
     icon: FileText,
-    tint: "text-emerald-600",
-    ring: "border-emerald-200 bg-emerald-50",
+    tint: "text-emerald-600 dark:text-emerald-400",
+    ring: "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10",
     label: "Policy created",
   },
   POLICY_UPDATED: {
     icon: FileText,
-    tint: "text-indigo-600",
-    ring: "border-indigo-200 bg-indigo-50",
+    tint: "text-indigo-600 dark:text-indigo-400",
+    ring: "border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10",
     label: "Policy updated",
   },
   POLICY_DELETED: {
     icon: Trash2,
-    tint: "text-red-600",
-    ring: "border-red-200 bg-red-50",
+    tint: "text-red-600 dark:text-red-400",
+    ring: "border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10",
     label: "Policy deleted",
   },
 };
 
 const fallbackMeta = {
   icon: KeyRound,
-  tint: "text-slate-600",
-  ring: "border-slate-200 bg-slate-100",
+  tint: "text-slate-600 dark:text-slate-300",
+  ring: "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800",
   label: "Event",
 };
 
@@ -157,14 +157,14 @@ export default function AuditPage() {
         <div className="absolute inset-0 security-grid opacity-40" />
         <div className="relative flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600">
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
               <ScrollText className="size-3.5" />
               Governance Evidence
             </div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               Audit Log
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
               An append-only trail of security-relevant actions — agent
               lifecycle, policy changes, and authentication — scoped to your
               operator account for compliance and investigation.
@@ -174,7 +174,7 @@ export default function AuditPage() {
             <button
               type="button"
               onClick={handleVerify}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 text-xs font-medium text-slate-600 dark:text-slate-300 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400"
             >
               <ShieldCheck className="size-3.5" />
               Verify integrity
@@ -182,7 +182,7 @@ export default function AuditPage() {
             <button
               type="button"
               onClick={handleExport}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 text-xs font-medium text-slate-600 dark:text-slate-300 transition hover:border-indigo-300 hover:text-indigo-600 dark:hover:text-indigo-400"
             >
               <Download className="size-3.5" />
               Export CSV
@@ -211,14 +211,14 @@ export default function AuditPage() {
       )}
 
       {isLoading && (
-        <div className="security-surface flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
-          <LoaderCircle className="size-4 animate-spin text-indigo-600" />
+        <div className="security-surface flex items-center justify-center gap-3 py-16 text-sm text-slate-500 dark:text-slate-400">
+          <LoaderCircle className="size-4 animate-spin text-indigo-600 dark:text-indigo-400" />
           Loading audit trail…
         </div>
       )}
 
       {isError && (
-        <div className="security-surface flex items-center gap-3 border-red-200 px-6 py-5 text-sm text-red-600">
+        <div className="security-surface flex items-center gap-3 border-red-200 dark:border-red-500/30 px-6 py-5 text-sm text-red-600 dark:text-red-400">
           <TriangleAlert className="size-4" />
           Unable to load the audit log.
         </div>
@@ -227,7 +227,7 @@ export default function AuditPage() {
       {data && data.entries.length === 0 && !isLoading && (
         <div className="security-surface flex flex-col items-center justify-center gap-2 py-16 text-center">
           <ShieldCheck className="size-6 text-slate-300" />
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             No audit events recorded yet for this filter.
           </p>
         </div>
@@ -236,7 +236,7 @@ export default function AuditPage() {
       {data && data.entries.length > 0 && (
         <section className="security-surface p-6">
           <div className="mb-5 flex items-center justify-between">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               {data.count} event{data.count === 1 ? "" : "s"}
             </span>
           </div>
@@ -270,8 +270,8 @@ function FilterChip({
       onClick={onClick}
       className={`rounded-full border px-3.5 py-1.5 text-xs font-medium capitalize transition-colors ${
         active
-          ? "border-indigo-300 bg-indigo-50 text-indigo-700"
-          : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+          ? "border-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300"
+          : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:border-slate-300 hover:text-slate-700 dark:hover:text-slate-300"
       }`}
     >
       {label}
@@ -288,7 +288,7 @@ function TimelineRow({ entry, index }: { entry: AuditEntry; index: number }) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: Math.min(index * 0.04, 0.4), ease: [0.22, 1, 0.36, 1] }}
-      className="relative flex items-start gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-slate-50"
+      className="relative flex items-start gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
     >
       <div
         className={`relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border ${meta.ring}`}
@@ -297,16 +297,16 @@ function TimelineRow({ entry, index }: { entry: AuditEntry; index: number }) {
       </div>
       <div className="min-w-0 flex-1 pt-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-sm font-medium text-slate-800">
+          <span className="text-sm font-medium text-slate-800 dark:text-slate-100">
             {entry.summary}
           </span>
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
-          <span className="font-medium text-slate-600">
+        <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+          <span className="font-medium text-slate-600 dark:text-slate-300">
             {entry.actor_username}
           </span>
           <span className="text-slate-300">·</span>
-          <span className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
+          <span className="rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:text-slate-400">
             {entry.action}
           </span>
           <span className="text-slate-300">·</span>

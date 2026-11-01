@@ -119,8 +119,8 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white lg:flex lg:flex-col">
-      <div className="relative flex h-[76px] shrink-0 items-center border-b border-slate-200 px-5">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 lg:flex lg:flex-col">
+      <div className="relative flex h-[76px] shrink-0 items-center border-b border-slate-200 dark:border-slate-800 px-5">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent" />
 
         <Link
@@ -129,15 +129,15 @@ export function Sidebar() {
         >
           <div className="relative flex size-10 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/[0.07] transition-all duration-200 group-hover:border-indigo-300/40 group-hover:bg-indigo-400/10">
             <div className="absolute inset-1 rounded-lg border border-indigo-300/10" />
-            <ShieldCheck className="relative size-[18px] text-indigo-600" />
+            <ShieldCheck className="relative size-[18px] text-indigo-600 dark:text-indigo-400" />
           </div>
 
           <div className="min-w-0">
-            <div className="text-[13px] font-semibold tracking-[0.24em] text-slate-900">
+            <div className="text-[13px] font-semibold tracking-[0.24em] text-slate-900 dark:text-slate-100">
               SENTINELX
             </div>
 
-            <div className="mt-1 truncate text-[9px] font-medium uppercase tracking-[0.16em] text-slate-500">
+            <div className="mt-1 truncate text-[9px] font-medium uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               Agent Security Control Plane
             </div>
           </div>
@@ -158,26 +158,26 @@ export function Sidebar() {
         />
       </div>
 
-      <div className="shrink-0 border-t border-slate-200 p-3">
+      <div className="shrink-0 border-t border-slate-200 dark:border-slate-800 p-3">
         <div className="rounded-xl border border-emerald-400/10 bg-emerald-400/[0.025] p-3">
           <div className="flex items-center gap-2.5">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/30" />
-              <CircleDot className="relative size-2 text-emerald-600" />
+              <CircleDot className="relative size-2 text-emerald-600 dark:text-emerald-400" />
             </span>
 
-            <span className="text-[11px] font-medium text-emerald-600">
+            <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
               Control plane operational
             </span>
           </div>
 
-          <div className="mt-2.5 flex items-center gap-2 text-[10px] text-slate-500">
+          <div className="mt-2.5 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
             <Gauge className="size-3.5" />
             <span>Security services online</span>
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-2 px-1 text-[9px] uppercase tracking-[0.18em] text-slate-400">
+        <div className="mt-3 flex items-center gap-2 px-1 text-[9px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
           <Terminal className="size-3" />
           <span>SentinelX v0.1.0</span>
         </div>
@@ -203,7 +203,7 @@ function NavigationSection({
 }) {
   return (
     <div className="mb-6">
-      <div className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+      <div className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
         {title}
       </div>
 
@@ -219,8 +219,8 @@ function NavigationSection({
               aria-current={active ? "page" : undefined}
               className={`group relative flex items-center gap-3 overflow-hidden rounded-lg border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                 active
-                  ? "border-indigo-400/15 bg-indigo-400/[0.075] text-indigo-600"
-                  : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-800"
+                  ? "border-indigo-400/15 bg-indigo-400/[0.075] text-indigo-600 dark:text-indigo-400"
+                  : "border-transparent text-slate-500 dark:text-slate-400 hover:border-slate-200 dark:hover:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-800 dark:hover:text-slate-100"
               }`}
             >
               {active && (
@@ -230,8 +230,8 @@ function NavigationSection({
               <Icon
                 className={`size-[17px] shrink-0 transition-colors duration-200 ${
                   active
-                    ? "text-indigo-600"
-                    : "text-slate-500 group-hover:text-slate-700"
+                    ? "text-indigo-600 dark:text-indigo-400"
+                    : "text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300"
                 }`}
               />
 

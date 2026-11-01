@@ -177,20 +177,20 @@ export function LoginForm() {
     <div className="relative w-full max-w-5xl">
       <div className="absolute -inset-20 rounded-full bg-indigo-400/[0.035] blur-3xl" />
 
-      <div className="relative grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 backdrop-blur-2xl lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="relative grid overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl lg:grid-cols-[1.05fr_0.95fr]">
         {/* Left security visualization */}
-        <div className="relative hidden min-h-[620px] overflow-hidden border-r border-slate-200 lg:block">
+        <div className="relative hidden min-h-[620px] overflow-hidden border-r border-slate-200 dark:border-slate-800 lg:block">
           <div className="absolute inset-0 security-grid opacity-50" />
 
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(99, 102, 241,0.12),transparent_30%),linear-gradient(180deg,transparent,rgba(6,8,12,0.85))]" />
 
           <div className="absolute left-8 right-8 top-8 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">
-              <Terminal className="size-3.5 text-indigo-600" />
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+              <Terminal className="size-3.5 text-indigo-600 dark:text-indigo-400" />
               Secure access layer
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-emerald-600">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400">
               <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
               Systems nominal
             </div>
@@ -226,7 +226,7 @@ export function LoginForm() {
                 <div className="relative flex size-28 items-center justify-center rounded-full border border-indigo-300/20 bg-indigo-400/[0.04] shadow-[0_0_80px_rgba(99, 102, 241,0.08)]">
                   <div className="absolute inset-3 rounded-full border border-indigo-400/10" />
                   <ShieldCheck
-                    className="size-12 text-indigo-600"
+                    className="size-12 text-indigo-600 dark:text-indigo-400"
                     strokeWidth={1.3}
                   />
                 </div>
@@ -248,16 +248,16 @@ export function LoginForm() {
 
           <div className="absolute bottom-8 left-8 right-8">
             <div className="mb-4 flex items-center gap-3">
-              <Radar className="size-4 text-indigo-600" />
-              <span className="text-[10px] uppercase tracking-[0.22em] text-indigo-600">
+              <Radar className="size-4 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-[10px] uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-400">
                 Sentinel perimeter
               </span>
             </div>
 
-            <h2 className="max-w-md text-3xl font-semibold tracking-tight text-slate-900">
+            <h2 className="max-w-md text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
               One gateway.
               <br />
-              <span className="text-slate-500">
+              <span className="text-slate-500 dark:text-slate-400">
                 Every agent under control.
               </span>
             </h2>
@@ -276,33 +276,33 @@ export function LoginForm() {
             <div className="mb-8">
               <div className="mb-6 flex items-center gap-3 lg:hidden">
                 <div className="flex size-11 items-center justify-center rounded-xl border border-indigo-400/20 bg-indigo-400/10">
-                  <ShieldCheck className="size-5 text-indigo-600" />
+                  <ShieldCheck className="size-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
 
                 <div>
-                  <div className="text-sm font-semibold tracking-[0.2em] text-slate-900">
+                  <div className="text-sm font-semibold tracking-[0.2em] text-slate-900 dark:text-slate-100">
                     SENTINELX
                   </div>
-                  <div className="text-[9px] uppercase tracking-[0.16em] text-slate-500">
+                  <div className="text-[9px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                     Security Control Plane
                   </div>
                 </div>
               </div>
 
-              <div className="mb-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-indigo-600">
+              <div className="mb-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
                 <Fingerprint className="size-3.5" />
                 {mode === "login"
                   ? "Operator authentication"
                   : "Operator registration"}
               </div>
 
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                 {mode === "login"
                   ? "Enter the control plane."
                   : "Create your operator identity."}
               </h1>
 
-              <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
+              <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
                 {mode === "login"
                   ? "Authenticate your operator identity to access SentinelX security operations."
                   : "Register an operator account to access SentinelX security operations."}
@@ -310,14 +310,14 @@ export function LoginForm() {
             </div>
 
             {/* Login / Register switch */}
-            <div className="mb-6 grid grid-cols-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
+            <div className="mb-6 grid grid-cols-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-1">
               <button
                 type="button"
                 onClick={() => switchMode("login")}
                 className={`rounded-lg px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
                   mode === "login"
-                    ? "bg-indigo-400/10 text-indigo-600 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                 }`}
               >
                 Authenticate
@@ -328,8 +328,8 @@ export function LoginForm() {
                 onClick={() => switchMode("register")}
                 className={`rounded-lg px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
                   mode === "register"
-                    ? "bg-indigo-400/10 text-indigo-600 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                 }`}
               >
                 Register
@@ -345,7 +345,7 @@ export function LoginForm() {
                   exit={{ opacity: 0, height: 0, y: -6 }}
                   className="mb-5 overflow-hidden"
                 >
-                  <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600">
+                  <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600 dark:text-emerald-400">
                     {successMessage}
                   </div>
                 </motion.div>
@@ -360,36 +360,36 @@ export function LoginForm() {
                 <div>
                   <label
                     htmlFor="username"
-                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500"
+                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400"
                   >
                     Operator identity
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 dark:bg-slate-800/50 px-4 transition ${
                       loginForm.formState.errors.username
                         ? "border-red-400/40"
-                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
+                        : "border-slate-200 dark:border-slate-800 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <UserRound className="mr-3 size-4 text-slate-500 transition group-focus-within:text-indigo-600" />
+                    <UserRound className="mr-3 size-4 text-slate-500 dark:text-slate-400 transition group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" />
 
                     <input
                       id="username"
                       type="text"
                       autoComplete="username"
                       placeholder="Enter operator identity"
-                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
                       {...loginForm.register("username")}
                     />
 
-                    <span className="ml-3 hidden font-mono text-[9px] text-slate-400 sm:block">
+                    <span className="ml-3 hidden font-mono text-[9px] text-slate-400 dark:text-slate-500 sm:block">
                       ID
                     </span>
                   </div>
 
                   {loginForm.formState.errors.username && (
-                    <p className="mt-2 text-xs text-red-600">
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-400">
                       {loginForm.formState.errors.username.message}
                     </p>
                   )}
@@ -425,32 +425,32 @@ export function LoginForm() {
                 <div>
                   <label
                     htmlFor="register-username"
-                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500"
+                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400"
                   >
                     Operator identity
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 dark:bg-slate-800/50 px-4 transition ${
                       registerForm.formState.errors.username
                         ? "border-red-400/40"
-                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
+                        : "border-slate-200 dark:border-slate-800 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <UserRound className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
+                    <UserRound className="mr-3 size-4 text-slate-500 dark:text-slate-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" />
 
                     <input
                       id="register-username"
                       type="text"
                       autoComplete="username"
                       placeholder="Choose operator identity"
-                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
                       {...registerForm.register("username")}
                     />
                   </div>
 
                   {registerForm.formState.errors.username && (
-                    <p className="mt-2 text-xs text-red-600">
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-400">
                       {registerForm.formState.errors.username.message}
                     </p>
                   )}
@@ -459,32 +459,32 @@ export function LoginForm() {
                 <div>
                   <label
                     htmlFor="register-email"
-                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500"
+                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400"
                   >
                     Operator email
                   </label>
 
                   <div
-                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
+                    className={`group flex h-13 items-center rounded-xl border bg-slate-50 dark:bg-slate-800/50 px-4 transition ${
                       registerForm.formState.errors.email
                         ? "border-red-400/40"
-                        : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
+                        : "border-slate-200 dark:border-slate-800 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
                     }`}
                   >
-                    <Mail className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
+                    <Mail className="mr-3 size-4 text-slate-500 dark:text-slate-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" />
 
                     <input
                       id="register-email"
                       type="email"
                       autoComplete="email"
                       placeholder="operator@example.com"
-                      className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                      className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
                       {...registerForm.register("email")}
                     />
                   </div>
 
                   {registerForm.formState.errors.email && (
-                    <p className="mt-2 text-xs text-red-600">
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-400">
                       {registerForm.formState.errors.email.message}
                     </p>
                   )}
@@ -532,7 +532,7 @@ export function LoginForm() {
                 onClick={() =>
                   switchMode(mode === "login" ? "register" : "login")
                 }
-                className="text-[10px] uppercase tracking-[0.12em] text-slate-500 transition hover:text-indigo-600"
+                className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 transition hover:text-indigo-600 dark:hover:text-indigo-400"
               >
                 {mode === "login"
                   ? "New operator? Register an account"
@@ -540,8 +540,8 @@ export function LoginForm() {
               </button>
             </div>
 
-            <div className="mt-7 border-t border-slate-200 pt-5">
-              <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-slate-500">
+            <div className="mt-7 border-t border-slate-200 dark:border-slate-800 pt-5">
+              <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
                 <span className="flex items-center gap-2">
                   <KeyRound className="size-3" />
                   JWT protected session
@@ -553,7 +553,7 @@ export function LoginForm() {
                 </span>
               </div>
 
-              <p className="mt-3 text-[10px] leading-5 text-slate-400">
+              <p className="mt-3 text-[10px] leading-5 text-slate-400 dark:text-slate-500">
                 Unauthorized access is prohibited. All authenticated activity
                 is subject to SentinelX security policies and audit controls.
               </p>
@@ -588,33 +588,33 @@ function PasswordField({
     <div>
       <label
         htmlFor={id}
-        className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500"
+        className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500 dark:text-slate-400"
       >
         {label}
       </label>
 
       <div
-        className={`group flex h-13 items-center rounded-xl border bg-slate-50 px-4 transition ${
+        className={`group flex h-13 items-center rounded-xl border bg-slate-50 dark:bg-slate-800/50 px-4 transition ${
           error
             ? "border-red-400/40"
-            : "border-slate-200 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
+            : "border-slate-200 dark:border-slate-800 focus-within:border-indigo-400/40 focus-within:bg-indigo-400/[0.025]"
         }`}
       >
-        <LockKeyhole className="mr-3 size-4 text-slate-500 group-focus-within:text-indigo-600" />
+        <LockKeyhole className="mr-3 size-4 text-slate-500 dark:text-slate-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" />
 
         <input
           id={id}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className="h-full w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+          className="h-full w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
           {...register}
         />
 
         <button
           type="button"
           onClick={onToggle}
-          className="ml-2 rounded-md p-1.5 text-slate-500 transition hover:text-slate-700"
+          className="ml-2 rounded-md p-1.5 text-slate-500 dark:text-slate-400 transition hover:text-slate-700 dark:hover:text-slate-300"
           aria-label={visible ? "Hide password" : "Show password"}
         >
           {visible ? (
@@ -625,7 +625,7 @@ function PasswordField({
         </button>
       </div>
 
-      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
 }
@@ -647,10 +647,10 @@ function Feedback({
           className="overflow-hidden"
         >
           <div className="flex items-start gap-3 rounded-xl border border-red-400/15 bg-red-400/[0.05] p-3.5">
-            <XCircle className="mt-0.5 size-4 shrink-0 text-red-600" />
+            <XCircle className="mt-0.5 size-4 shrink-0 text-red-600 dark:text-red-400" />
 
             <div>
-              <div className="text-xs font-medium text-red-600">
+              <div className="text-xs font-medium text-red-600 dark:text-red-400">
                 Authentication rejected
               </div>
 
@@ -669,7 +669,7 @@ function Feedback({
           exit={{ opacity: 0, height: 0 }}
           className="overflow-hidden"
         >
-          <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600">
+          <div className="rounded-xl border border-emerald-400/15 bg-emerald-400/[0.05] p-3.5 text-xs text-emerald-600 dark:text-emerald-400">
             {success}
           </div>
         </motion.div>
@@ -691,7 +691,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={submitting}
-      className="group relative flex h-13 w-full items-center justify-center overflow-hidden rounded-xl border border-indigo-300/20 bg-indigo-400/10 text-sm font-medium text-indigo-600 transition hover:border-indigo-300/40 hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+      className="group relative flex h-13 w-full items-center justify-center overflow-hidden rounded-xl border border-indigo-300/20 bg-indigo-400/10 text-sm font-medium text-indigo-600 dark:text-indigo-400 transition hover:border-indigo-300/40 hover:bg-indigo-400/15 disabled:cursor-not-allowed disabled:opacity-60"
     >
       <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-indigo-300/[0.08] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
@@ -718,12 +718,12 @@ function StatusNode({
   value: string;
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
-      <div className="text-[8px] font-semibold tracking-[0.15em] text-slate-500">
+    <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 px-3 py-2.5">
+      <div className="text-[8px] font-semibold tracking-[0.15em] text-slate-500 dark:text-slate-400">
         {label}
       </div>
 
-      <div className="mt-1 flex items-center gap-1.5 text-[9px] font-medium tracking-[0.1em] text-emerald-600">
+      <div className="mt-1 flex items-center gap-1.5 text-[9px] font-medium tracking-[0.1em] text-emerald-600 dark:text-emerald-400">
         <span className="size-1 rounded-full bg-emerald-400" />
         {value}
       </div>
