@@ -11,7 +11,6 @@ import {
   CircleAlert,
   Cpu,
   LoaderCircle,
-  Network,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -42,74 +41,51 @@ export default function CommandCenterPage() {
   return (
     <div className="space-y-6">
       {/* Command Center Header */}
-      <section className="security-surface relative overflow-hidden">
-        <div className="security-grid absolute inset-0 opacity-30" />
-
-        <div className="relative">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-400">
-                <Network className="size-3.5" />
-                Security Operations
-              </div>
-
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
-                Command Center
-              </h1>
-
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
-                Manage the SentinelX security control plane, registered
-                agents, policies, and security activity from a single view.
-              </p>
-            </div>
-
-            <div className="flex shrink-0 items-center gap-2 self-start rounded-full border border-emerald-400/10 bg-emerald-400/[0.05] px-3 py-1.5 lg:self-auto">
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-40" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-emerald-400" />
-              </span>
-
-              <span
-                className={`text-[9px] font-medium uppercase tracking-[0.16em] ${
-                  streamStatus === "CONNECTED"
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : streamStatus === "CONNECTING"
-                      ? "text-amber-600 dark:text-amber-400"
-                      : "text-rose-600"
-                }`}
-              >
-                {streamStatus === "CONNECTED"
-                  ? "Event stream connected"
-                  : streamStatus === "CONNECTING"
-                    ? "Event stream connecting"
-                    : "Event stream disconnected"}
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
-            <SystemSignal
-              label="Platform"
-              value="Control plane"
-              status="healthy"
-            />
-
+      <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 dark:border-slate-800 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            Command Center
+          </h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Agents, policies, and live security activity in one view.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            <SystemSignal label="Platform" value="Control plane" status="healthy" />
             <SystemSignal
               label="Fleet"
-              value={
-                isLoading ? "Syncing" : isError ? "Unavailable" : "Registered"
-              }
+              value={isLoading ? "Syncing" : isError ? "Unavailable" : "Registered"}
               status={isError ? "warning" : "healthy"}
             />
-
-            <SystemSignal
-              label="Security mode"
-              value="Policy-based"
-              status="healthy"
-            />
+            <SystemSignal label="Security mode" value="Policy-based" status="healthy" />
           </div>
         </div>
-      </section>
+
+        <div className="flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900">
+          <span className="relative flex size-1.5">
+            <span
+              className={`absolute inline-flex size-full animate-ping rounded-full opacity-40 ${
+                streamStatus === "CONNECTED" ? "bg-emerald-400" : "bg-amber-400"
+              }`}
+            />
+            <span
+              className={`relative inline-flex size-1.5 rounded-full ${
+                streamStatus === "CONNECTED"
+                  ? "bg-emerald-400"
+                  : streamStatus === "CONNECTING"
+                    ? "bg-amber-400"
+                    : "bg-rose-400"
+              }`}
+            />
+          </span>
+          <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">
+            {streamStatus === "CONNECTED"
+              ? "Live"
+              : streamStatus === "CONNECTING"
+                ? "Connecting"
+                : "Offline"}
+          </span>
+        </div>
+      </header>
 
       {/* Security Signal Rail */}
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
