@@ -4,10 +4,8 @@ import {
   Activity,
   AlertTriangle,
   BarChart3,
-  ChevronRight,
   FlaskConical,
   ShieldCheck,
-  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,219 +13,96 @@ import { usePathname } from "next/navigation";
 import { useSecurityAlerts } from "@/features/alerts/use-security-alerts";
 import { useSecurityEvents } from "@/features/events/use-security-events";
 
-const modules = [
-  {
-    href: "/events",
-    label: "Events",
-    icon: Activity,
-    tone: "cyan",
-  },
-  {
-    href: "/alerts",
-    label: "Alerts",
-    icon: AlertTriangle,
-    tone: "red",
-  },
-  {
-    href: "/guardrails",
-    label: "Guardrails",
-    icon: ShieldCheck,
-    tone: "emerald",
-  },
-  {
-    href: "/analytics",
-    label: "Analytics",
-    icon: BarChart3,
-    tone: "cyan",
-  },
-  {
-    href: "/security-tests",
-    label: "Simulation",
-    icon: FlaskConical,
-    tone: "violet",
-  },
-] as const;
-
-const toneClasses = {
-  cyan: {
-    dot: "bg-indigo-400",
-    text: "text-indigo-600 dark:text-indigo-400",
-    border: "border-indigo-400/20",
-    background: "bg-indigo-400/[0.06]",
-  },
-  red: {
-    dot: "bg-red-400",
-    text: "text-red-600 dark:text-red-400",
-    border: "border-red-400/20",
-    background: "bg-red-400/[0.06]",
-  },
-  emerald: {
-    dot: "bg-emerald-400",
-    text: "text-emerald-600 dark:text-emerald-400",
-    border: "border-emerald-400/20",
-    background: "bg-emerald-400/[0.06]",
-  },
-  violet: {
-    dot: "bg-violet-400",
-    text: "text-violet-600",
-    border: "border-violet-400/20",
-    background: "bg-violet-400/[0.06]",
-  },
-} as const;
-
 export function SecurityPulse() {
   const pathname = usePathname();
 
-  const { data: eventsData, isLoading: eventsLoading } =
-    useSecurityEvents(1, 6);
+  const { data: eventsData, isLoading: eventsLoading } = useSecurityEvents(1, 6);
+  const { data: alertsData, isLoading: alertsLoading } = useSecurityAlerts(1, 10);
 
-  const { data: alertsData, isLoading: alertsLoading } =
-    useSecurityAlerts(1, 10);
-
-  const events = eventsData?.items ?? [];
   const alerts = alertsData?.items ?? [];
-
-  const blockedEvents = events.filter((event) =>
-    event.decision.toUpperCase().includes("BLOCK"),
-  ).length;
-
-  const openAlerts = alerts.filter((alert) => {
-    const status = alert.status.toUpperCase();
-
-    return status === "OPEN" || status === "INVESTIGATING";
+  const openAlerts = alerts.filter((a) => {
+    const s = a.status.toUpperCase();
+    return s === "OPEN" || s === "INVESTIGATING";
   }).length;
 
-  const telemetryLoading = eventsLoading || alertsLoading;
+  const syncing = eventsLoading || alertsLoading;
+
+  const chips = [
+    {
+      href: "/events",
+      label: "Events",
+      value: `${eventsData?.total ?? 0}`,
+      icon: Activity,
+      alert: false,
+    },
+    {
+      href: "/alerts",
+      label: "Alerts",
+      value: openAlerts > 0 ? `${openAlerts} open` : "clear",
+      icon: AlertTriangle,
+      alert: openAlerts > 0,
+    },
+    { href: "/guardrails", label: "Guardrails", value: "enforced", icon: ShieldCheck, alert: false },
+    { href: "/analytics", label: "Analytics", value: "live", icon: BarChart3, alert: false },
+    { href: "/security-tests", label: "Testing", value: "ready", icon: FlaskConical, alert: false },
+  ];
 
   return (
     <section
-      aria-label="Security pulse"
-      className="mb-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-white dark:bg-slate-900"
+      aria-label="Security telemetry"
+      className="mb-5 flex flex-wrap items-center gap-x-1 gap-y-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 dark:border-slate-800 dark:bg-slate-900"
     >
-      <div className="flex flex-col lg:flex-row lg:items-stretch">
-        <div className="flex min-w-0 items-center gap-3 border-b border-slate-800/80 px-4 py-3 lg:w-[250px] lg:border-b-0 lg:border-r">
-          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-indigo-400/20 bg-indigo-400/[0.06]">
-            <Zap className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-indigo-400" />
-          </div>
+      <span className="mr-1 flex items-center gap-1.5 pl-1 text-[11px] font-medium text-slate-400 dark:text-slate-500">
+        <span className="relative flex size-1.5">
+          <span
+            className={`absolute inline-flex size-full rounded-full ${
+              syncing ? "bg-amber-400" : "animate-ping bg-emerald-400/60"
+            }`}
+          />
+          <span
+            className={`relative inline-flex size-1.5 rounded-full ${
+              syncing ? "bg-amber-400" : "bg-emerald-400"
+            }`}
+          />
+        </span>
+        {syncing ? "Syncing" : "Live"}
+      </span>
 
-          <div className="min-w-0">
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-indigo-300/80">
-              Security Pulse
-            </p>
+      <span className="mr-1 h-4 w-px bg-slate-200 dark:bg-slate-800" />
 
-            <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
-              Cross-module telemetry
-            </p>
-          </div>
-
-          <div className="ml-auto hidden items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400 sm:flex lg:hidden">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Linked
-          </div>
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-wrap items-center">
-          {modules.map((module) => {
-            const Icon = module.icon;
-            const tone = toneClasses[module.tone];
-            const active = pathname === module.href;
-
-            let count: number | null = null;
-
-            if (module.href === "/events") {
-              count = eventsData?.total ?? 0;
-            }
-
-            if (module.href === "/alerts") {
-              count = alertsData?.total ?? 0;
-            }
-
-            return (
-              <Link
-                key={module.href}
-                href={module.href}
-                className={`group flex min-w-[108px] flex-1 items-center gap-2 border-r border-slate-800/70 px-3 py-3 transition-colors last:border-r-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${
-                  active ? tone.background : ""
-                }`}
-                aria-current={active ? "page" : undefined}
-              >
-                <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border ${
-                    active
-                      ? `${tone.border} ${tone.background}`
-                      : "border-slate-800 bg-slate-100/50"
-                  }`}
-                >
-                  <Icon
-                    className={`h-3.5 w-3.5 ${
-                      active ? tone.text : "text-slate-500 dark:text-slate-400"
-                    }`}
-                  />
-                </span>
-
-                <span className="min-w-0">
-                  <span
-                    className={`block text-[10px] font-semibold uppercase tracking-[0.12em] ${
-                      active ? tone.text : "text-slate-600 dark:text-slate-300"
-                    }`}
-                  >
-                    {module.label}
-                  </span>
-
-                  <span className="mt-0.5 block text-[9px] text-slate-500 dark:text-slate-400">
-                    {module.href === "/security-tests"
-                      ? "Controlled"
-                      : module.href === "/guardrails"
-                        ? "Enforced"
-                        : module.href === "/analytics"
-                          ? "Measured"
-                          : module.href === "/alerts"
-                            ? openAlerts > 0
-                              ? `${openAlerts} open`
-                              : "Clear"
-                            : `${count ?? 0} recorded`}
-                  </span>
-                </span>
-
-                {module.href === "/events" && blockedEvents > 0 && (
-                  <span className="ml-auto hidden rounded-full border border-red-400/20 bg-red-400/10 px-1.5 py-0.5 text-[8px] font-bold text-red-600 dark:text-red-400 xl:block">
-                    {blockedEvents}
-                  </span>
-                )}
-
-                {module.href === "/alerts" && openAlerts > 0 && (
-                  <span className="ml-auto h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" />
-                )}
-
-                {active && (
-                  <ChevronRight
-                    className={`ml-auto hidden h-3 w-3 ${tone.text} sm:block`}
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="flex items-center justify-between border-t border-slate-800/80 px-4 py-2.5 lg:w-[155px] lg:border-l lg:border-t-0">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            Control link
-          </span>
-
-          <span className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-600 dark:text-emerald-400">
+      {chips.map((c) => {
+        const Icon = c.icon;
+        const active = pathname === c.href;
+        return (
+          <Link
+            key={c.href}
+            href={c.href}
+            aria-current={active ? "page" : undefined}
+            className={`group flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] transition-colors ${
+              active
+                ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300"
+                : "text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-200"
+            }`}
+          >
+            <Icon className="size-3.5 opacity-70" />
+            <span className="font-medium">{c.label}</span>
             <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                telemetryLoading
-                  ? "animate-pulse bg-amber-400"
-                  : "bg-emerald-400"
+              className={`tabular-nums ${
+                c.alert
+                  ? "font-semibold text-red-600 dark:text-red-400"
+                  : "text-slate-400 dark:text-slate-500"
               }`}
-            />
+            >
+              {c.value}
+            </span>
+          </Link>
+        );
+      })}
 
-            {telemetryLoading ? "Syncing" : "Linked"}
-          </span>
-        </div>
-      </div>
+      <span className="ml-auto hidden items-center gap-1.5 pr-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 sm:flex">
+        Control link
+        <span className="size-1.5 rounded-full bg-emerald-400" />
+      </span>
     </section>
   );
 }
