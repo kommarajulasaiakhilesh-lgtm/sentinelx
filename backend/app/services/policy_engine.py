@@ -3,6 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.models.agent import Agent
 from app.models.policy import Policy
+from app.services.threat_detection import (
+    detect_prompt_injection,
+    detect_sensitive_data,
+)
 
 
 def evaluate_policy(
@@ -47,25 +51,53 @@ def evaluate_policy(
 
             else:
 
-                suspicious_patterns = [
-                    "ignore previous instructions",
-                    "ignore all previous instructions",
-                    "reveal system prompt",
-                    "show system prompt",
-                    "disregard previous instructions",
-                    "bypass your instructions"
-                ]
+                # Normalization-aware detection: catches leetspeak, spacing,
+                # punctuation, zero-width and unicode obfuscation.
+                match = detect_prompt_injection(input_text)
 
-                for pattern in suspicious_patterns:
+                if match is not None:
 
-                    if pattern in normalized_input:
+                    return {
+                        "decision": policy.action,
+                        "reason": (
+                            f"Prompt injection detected ({match['category']})"
+                        ),
+                        "policy_type": policy.policy_type,
+                        "policy_id": policy.id
+                    }
 
-                        return {
-                            "decision": policy.action,
-                            "reason": "Prompt injection detected",
-                            "policy_type": policy.policy_type,
-                            "policy_id": policy.id
-                        }
+        # ====================================================
+        # DATA LOSS PREVENTION POLICY (LLM02)
+        # ====================================================
+
+        elif policy.policy_type == "DATA_LOSS_PREVENTION":
+
+            if policy.condition:
+
+                if policy.condition.lower() in normalized_input:
+
+                    return {
+                        "decision": policy.action,
+                        "reason": "Policy condition matched",
+                        "policy_type": policy.policy_type,
+                        "policy_id": policy.id
+                    }
+
+            else:
+
+                findings = detect_sensitive_data(input_text)
+
+                if findings:
+
+                    return {
+                        "decision": policy.action,
+                        "reason": (
+                            "Sensitive data detected: "
+                            + ", ".join(findings)
+                        ),
+                        "policy_type": policy.policy_type,
+                        "policy_id": policy.id
+                    }
 
         # ====================================================
         # TOOL ACTION POLICY
