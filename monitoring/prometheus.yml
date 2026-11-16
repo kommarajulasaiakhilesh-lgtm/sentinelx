@@ -1,0 +1,19 @@
+# Prometheus scrape configuration for SentinelX.
+# Run: prometheus --config.file=monitoring/prometheus.yml
+#
+# Scrapes the backend's /metrics endpoint (custom collector that reports live
+# platform state: agents, security events by decision, open alerts, incidents,
+# policies).
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: sentinelx
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "127.0.0.1:8000" # local backend; use the Render host in production
+        labels:
+          service: sentinelx-api

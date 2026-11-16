@@ -39,10 +39,21 @@ from app.services.incident_service import (
     update_incident,
 )
 
+from app.services.incident_sla_service import incident_sla_report
+
 router = APIRouter(
     prefix="/api/incidents",
     tags=["Incidents"],
 )
+
+
+@router.get("/sla")
+def incident_sla_endpoint(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Response/resolution SLA status for the operator's incidents."""
+    return incident_sla_report(db, current_user.id)
 
 
 @router.post("", response_model=IncidentResponse, status_code=201)
