@@ -212,6 +212,14 @@ def seed() -> None:
             )
 
         db.commit()
+
+        # Seed OWASP LLM Top 10 + Agentic frameworks and their mappings.
+        try:
+            from scripts.seed_owasp_frameworks import seed as seed_owasp
+        except ImportError:
+            from seed_owasp_frameworks import seed as seed_owasp
+        seed_owasp()
+
         print("Seed complete.")
         print(f"  users:   {db.query(User).count()}")
         print(f"  agents:  {db.query(Agent).count()}")
